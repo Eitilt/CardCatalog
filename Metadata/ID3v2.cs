@@ -3,11 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Metadata {
-    public class ID32 : Metadata.ITag {
+    /// <summary>
+    /// A joint implementation of ID3 versions 2.2, 2.3, and 2.4 as they have
+    /// very similar headers and field formats.
+    /// </summary>
+    /// <remarks>
+    /// If the combined implementation becomes too unwieldy compared to the
+    /// benefit of shared code, this can easily become an abstract superclass
+    /// and make VerifyHeader fail based on the wrong versionMajor
+    /// </remarks>
+    public class ID3v2 : Metadata.ITag {
         #region Static members
         /// <summary>
         /// The short name used to represent ID3v2 metadata.
@@ -19,8 +27,8 @@ namespace Metadata {
         /// Register the format with the superclass.
         /// </summary>
         /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
-        static ID32() {
-            Metadata.Register<ID32>(format, VerifyHeader);
+        static ID3v2() {
+            Metadata.Register<ID3v2>(format, VerifyHeader);
         }
 
         /// <summary>
@@ -89,7 +97,7 @@ namespace Metadata {
         /// <param name="input">The byte array to unsynchronize.</param>
         /// <param name="changed">
         /// Whether the synchronization pattern was encountered and
-        /// subsequentally interrupted.
+        /// subsequently interrupted.
         /// </param>
         /// <returns>A new, synchronization-safe byte array.</returns>
         /// <seealso cref="DeUnsynchronize(byte[])"/>
@@ -103,7 +111,7 @@ namespace Metadata {
         /// <param name="input">The byte array to unsynchronize.</param>
         /// <param name="changed">
         /// Whether the synchronization pattern was encountered and
-        /// subsequentally interrupted.
+        /// subsequently interrupted.
         /// </param>
         /// <param name="endPadding">
         /// Whether the last byte in <paramref name="input"/> was 0xFF, which
@@ -156,7 +164,7 @@ namespace Metadata {
         /// <returns>The pre-unsynchronization byte array.</returns>
         /// <exception cref="InvalidDataException">
         /// <paramref name="input"/> is expected to be unsynchronized and a
-        /// basic sanity check is perfomed to ensure this, but attempting to
+        /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
         /// <seealso cref="Unsynchronize(byte[], out bool, out bool)"/>
@@ -187,17 +195,30 @@ namespace Metadata {
             return ret.ToArray();
         }
 
-        static Task<byte[]> ReadBytesAsync(Stream stream, uint count, bool unsync) {
+        /// <summary>
+        /// Asynchronously read a given number of bytes from a stream,
+        /// optionally reversing ID3v2 unsynchronization.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <param name="unsync">
+        /// Whether the stream is unsynchronized, in which case it's reversed.
+        /// </param>
+        /// <returns>
+        /// The Task tracking the byte retrieval operation (number of bytes
+        /// may be less than <paramref name="count"/>).
+        /// </returns>
+        static Task<byte[]> ReadBytesAsync(Stream stream, uint count, bool unsync = false) {
             byte[] bytes = new byte[count];
             var read = stream.ReadAsync(bytes, 0, bytes.Length);
 
             Task<byte[]> ret;
             if (unsync)
-                ret = read.ContinueWith((prevTask) => DeUnsynchronize(bytes),
+                ret = read.ContinueWith((antecedent) => DeUnsynchronize(bytes),
                     TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.RunContinuationsAsynchronously
                 );
             else
-                ret = read.ContinueWith((prevTask) => bytes, TaskContinuationOptions.OnlyOnRanToCompletion);
+                ret = read.ContinueWith((antecedent) => bytes, TaskContinuationOptions.OnlyOnRanToCompletion);
 
             return ret;
         }
@@ -209,8 +230,8 @@ namespace Metadata {
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="count">
-        /// The number of bytes to retrieve; changes to refleck the actual
-        /// number of bytes that were read from the stream.
+        /// The final number of bytes to retrieve; changes to reflect the
+        /// actual number of bytes that were read from the stream.
         /// </param>
         /// <returns>The specified number of de-unsynchronized bytes.</returns>
         /// <exception cref="EndOfStreamException">
@@ -219,10 +240,10 @@ namespace Metadata {
         /// </exception>
         /// <exception cref="InvalidDataException">
         /// <paramref name="stream"/> is expected to be unsynchronized and a
-        /// basic sanity check is perfomed to ensure this, but attempting to
+        /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
-        static byte[] ReadUnsyncronizedBytes(Stream stream, ref uint count) {
+        static byte[] GetUnsyncronizedBytes(Stream stream, ref uint count) {
             var ret = new byte[count];
 
             bool isPrevFF = false;
@@ -282,7 +303,7 @@ namespace Metadata {
         bool flagUnknown;
 
         /// <summary>
-        /// Parse a stream according the the proper version of the ID3v2
+        /// Parse a stream according the proper version of the ID3v2
         /// specification, from the current location.
         /// </summary>
         /// <remarks>
@@ -295,15 +316,13 @@ namespace Metadata {
         /// and fails if the stream position is not placed at the beginning of
         /// that tag.
         /// <param/>
-        /// If this is thrown, the stream cursor is automatically returned ro
+        /// If this is thrown, the stream cursor is automatically returned to
         /// the position it was at before the constructor was called.
         /// </exception>
         /// <seealso cref="Metadata.Construct(string, Stream)"/>
-        public ID32(Stream stream) {
+        public ID3v2(Stream stream) {
             var size = ParseHeader(stream);
-
-            // Major versions are not backwards-compatible and require custom
-            // handling
+            
             if ((versionMajor < 2) || (versionMajor > 4)) {
                 UnreadHeader(stream);
                 throw new FormatException("Parsing ID3v2." + versionMajor + " tags currently not supported");
@@ -360,7 +379,7 @@ namespace Metadata {
                 if (versionMajor == 4)
                     extSize -= 4;
 
-                byte[] extHeader = ReadUnsyncronizedBytes(stream, ref extSize);
+                byte[] extHeader = GetUnsyncronizedBytes(stream, ref extSize);
 
                 // Start reading (and processing if necessary) from the stream
                 // in the background to save a small bit of time while
@@ -410,7 +429,7 @@ namespace Metadata {
         /// </exception>
         /// <exception cref="InvalidDataException">
         /// <paramref name="stream"/> is expected to be unsynchronized and a
-        /// basic sanity check is perfomed to ensure this, but attempting to
+        /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
         uint ParseInteger(Stream stream, bool unsynced, ref uint count) {
@@ -422,7 +441,7 @@ namespace Metadata {
 
             byte[] bytes;
             if (unsynced)
-                bytes = ReadUnsyncronizedBytes(stream, ref count);
+                bytes = GetUnsyncronizedBytes(stream, ref count);
             else {
                 bytes = new byte[count];
                 stream.Read(bytes, 0, (int)count);

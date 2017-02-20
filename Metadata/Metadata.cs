@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 
 namespace Metadata {
+    /// <summary>
+    /// A data-free class providing a common means to work with multiple
+    /// metadata <em>formats</em>.
+    /// </summary>
     public static class Metadata {
         /// <summary>
         /// Validation functions for each registered metadata format.
@@ -44,7 +48,7 @@ namespace Metadata {
 
         /// <summary>
         /// Add an implementation of a metadata tag reader to the list of
-        /// automatically-handlable types.
+        /// automatically-handleable types.
         /// </summary>
         /// <typeparam name="TFormat">
         /// The type encapsulating the metadata format.
@@ -68,7 +72,7 @@ namespace Metadata {
         /// </param>
         /// <seealso cref="FormatType(string)"/>
         /// <seealso cref="Validate(string, Stream)"/>
-        public static void Register<TFormat>(string format, Func<Stream, bool> header) where TFormat : Metadata {
+        public static void Register<TFormat>(string format, Func<Stream, bool> header) where TFormat : ITag {
             tagFormats[format] = typeof(TFormat);
             tagHeaders[format] = header;
         }
