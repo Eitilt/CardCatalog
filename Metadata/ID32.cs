@@ -354,6 +354,12 @@ namespace Metadata {
             else if (flags[1]) {
                 uint sizeCount = 4;
                 uint extSize = ParseInteger(stream, useUnsync, ref sizeCount);
+
+                // The size data in ID3v2.4 includes the size bytes, which can
+                // be disregarded as they've already been read.
+                if (versionMajor == 4)
+                    extSize -= 4;
+
                 byte[] extHeader = ReadUnsyncronizedBytes(stream, ref extSize);
 
                 // Start reading (and processing if necessary) from the stream
