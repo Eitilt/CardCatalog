@@ -7,29 +7,18 @@ using System.Threading.Tasks;
 
 namespace Metadata {
     /// <summary>
-    /// A joint implementation of ID3 versions 2.2, 2.3, and 2.4 as they have
-    /// very similar headers and field formats.
+    /// Shared code for all versions of the ID3v2 standard.
     /// </summary>
-    /// <remarks>
-    /// If the combined implementation becomes too unwieldy compared to the
-    /// benefit of shared code, this can easily become an abstract superclass
-    /// and make VerifyHeader fail based on the wrong versionMajor
-    /// </remarks>
-    public class ID3v2 : Metadata.ITag {
-        #region Static members
+    internal abstract class ID3v2 : Metadata.ITag {
         /// <summary>
-        /// The short name used to represent ID3v2 metadata.
+        /// The minor version number of the specification used.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
-        public const string format = "ID3v2";
+        protected byte VersionMinor { get; private set; }
 
         /// <summary>
-        /// Register the format with the superclass.
+        /// Whether the header includes a non-standard tag, which may result in unrecognizable data.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
-        static ID3v2() {
-            Metadata.Register<ID3v2>(format, VerifyHeader);
-        }
+        protected bool FlagUnknown { get; set; }
 
         /// <summary>
         /// Retrieve the proper number of bytes from the stream to contain the
@@ -37,7 +26,7 @@ namespace Metadata {
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <returns>The number of bytes used by a ID3 header.</returns>
-        static byte[] ReadHeader(Stream stream) {
+        protected static byte[] RetrieveHeader(Stream stream) {
             var bytes = new byte[10];
             stream.Read(bytes, 0, 10);
 
@@ -49,7 +38,7 @@ namespace Metadata {
         /// same state as it started in.
         /// </summary>
         /// <param name="stream">The stream to rewind.</param>
-        static void UnreadHeader(Stream stream) {
+        protected static void UnreadHeader(Stream stream) {
             stream.Position -= 10;
         }
 
@@ -57,10 +46,13 @@ namespace Metadata {
         /// Check whether the stream begins with a valid ID3v2 header.
         /// </summary>
         /// <param name="stream">The Stream to check.</param>
-        /// <returns>Whether the stream begins with a valid ID3 header.</returns>
+        /// <returns>
+        /// `null` if the stream does not begin with a ID3v2 header, and the
+        /// major version if it does.
+        /// </returns>
         /// <see cref="Metadata.Validate(string, Stream)"/>
-        public static bool VerifyHeader(Stream stream) {
-            bool ret = VerifyHeader(ReadHeader(stream));
+        public static byte? VerifyBaseHeader(Stream stream) {
+            byte? ret = VerifyBaseHeader(RetrieveHeader(stream));
             UnreadHeader(stream);
 
             return ret;
@@ -69,11 +61,14 @@ namespace Metadata {
         /// Check whether the byte array begins with a valid ID3v2 header.
         /// </summary>
         /// <param name="header">The byte array to check</param>
-        /// <returns>Whether the byte array begins with a valid ID3v2 header.</returns>
-        static bool VerifyHeader(byte[] header) {
+        /// <returns>
+        /// `null` if the stream does not begin with a ID3v2 header, and the
+        /// major version if it does.
+        /// </returns>
+        public static byte? VerifyBaseHeader(byte[] header) {
             // If it's shorter than the length, the header can never be valid
             if (header.Length < 10)
-                return false;
+                return null;
             // Check against the specification
             else if ((header[0] == 0x49)    // 'I'
                 || (header[1] == 0x44)      // 'D'
@@ -85,9 +80,9 @@ namespace Metadata {
                 || (header[7] < 0x80)
                 || (header[8] < 0x80)
                 || (header[9] < 0x80))
-                return true;
+                return header[5];
             else
-                return false;
+                return null;
         }
 
         /// <summary>
@@ -101,7 +96,7 @@ namespace Metadata {
         /// </param>
         /// <returns>A new, synchronization-safe byte array.</returns>
         /// <seealso cref="DeUnsynchronize(byte[])"/>
-        static byte[] Unsynchronize(byte[] input, out bool changed) {
+        protected static byte[] Unsynchronize(byte[] input, out bool changed) {
             return Unsynchronize(input, out changed, out bool ignore);
         }
         /// <summary>
@@ -124,7 +119,7 @@ namespace Metadata {
         /// </param>
         /// <returns>A new, synchronization-safe byte array.</returns>
         /// <seealso cref="DeUnsynchronize(byte[])"/>
-        static byte[] Unsynchronize(byte[] input, out bool changed, out bool endPadding) {
+        protected static byte[] Unsynchronize(byte[] input, out bool changed, out bool endPadding) {
             changed = false;
             endPadding = false;
 
@@ -168,7 +163,7 @@ namespace Metadata {
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
         /// <seealso cref="Unsynchronize(byte[], out bool, out bool)"/>
-        static byte[] DeUnsynchronize(byte[] input) {
+        protected static byte[] DeUnsynchronize(byte[] input) {
             var ret = new List<byte>(input.Length);
 
             for (uint i = 0; i < input.Length; ++i) {
@@ -208,7 +203,7 @@ namespace Metadata {
         /// The Task tracking the byte retrieval operation (number of bytes
         /// may be less than <paramref name="count"/>).
         /// </returns>
-        static Task<byte[]> ReadBytesAsync(Stream stream, uint count, bool unsync = false) {
+        protected static Task<byte[]> ReadBytesAsync(Stream stream, uint count, bool unsync = false) {
             byte[] bytes = new byte[count];
             var read = stream.ReadAsync(bytes, 0, bytes.Length);
 
@@ -230,10 +225,12 @@ namespace Metadata {
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="count">
-        /// The final number of bytes to retrieve; changes to reflect the
-        /// actual number of bytes that were read from the stream.
+        /// The number of bytes to retrieve, which is updated to reflect the
+        /// actual number of bytes read.
         /// </param>
-        /// <returns>The specified number of de-unsynchronized bytes.</returns>
+        /// <returns>
+        /// The specified number of de-unsynchronized bytes.
+        /// </returns>
         /// <exception cref="EndOfStreamException">
         /// The end of the stream is reached before retrieving the desired
         /// number of de-unsynchronized bytes.
@@ -243,7 +240,7 @@ namespace Metadata {
         /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
-        static byte[] GetUnsyncronizedBytes(Stream stream, ref uint count) {
+        protected static byte[] GetUnsyncronizedBytes(Stream stream, ref uint count) {
             var ret = new byte[count];
 
             bool isPrevFF = false;
@@ -270,143 +267,38 @@ namespace Metadata {
 
             return ret;
         }
-        #endregion
-
-        #region Instance members
-        /// <summary>
-        /// Major version number of the ID3 specification, indicating breaking
-        /// changes.
-        /// </summary>
-        byte versionMajor;
-        /// <summary>
-        /// Minor version number of the ID3 specification, indicating
-        /// backwards-compatible changes.
-        /// </summary>
-        byte versionMinor;
-
-        /// <summary>
-        /// Indicates that the tag is in an experimental stage.
-        /// </summary>
-        /// <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
-        bool isExperimental;
-        /// <summary>
-        /// Whether the tag is closed with a footer.
-        /// </summary>
-        bool hasFooter;
-        /// <summary>
-        /// Whether a CRC has been calculated for the data in the tag.
-        /// </summary>
-        bool hasCRC;
-        /// <summary>
-        /// Whether the header includes a non-standard tag, which may result in unrecognizable data.
-        /// </summary>
-        bool flagUnknown;
-
-        /// <summary>
-        /// Parse a stream according the proper version of the ID3v2
-        /// specification, from the current location.
-        /// </summary>
-        /// <remarks>
-        /// As according to the recommendation in the ID3v2.2 specification,
-        /// if the tag is compressed, it is swallowed but largely ignored.
-        /// </remarks>
-        /// <param name="stream">The stream to parse.</param>
-        /// <exception cref="FormatException">
-        /// This class can only parse metadata in ID3v2.2 to ID3v2.4 formats,
-        /// and fails if the stream position is not placed at the beginning of
-        /// that tag.
-        /// <param/>
-        /// If this is thrown, the stream cursor is automatically returned to
-        /// the position it was at before the constructor was called.
-        /// </exception>
-        /// <seealso cref="Metadata.Construct(string, Stream)"/>
-        public ID3v2(Stream stream) {
-            var size = ParseHeader(stream);
-            
-            if ((versionMajor < 2) || (versionMajor > 4)) {
-                UnreadHeader(stream);
-                throw new FormatException("Parsing ID3v2." + versionMajor + " tags currently not supported");
-            }
-        }
 
         /// <summary>
         /// Extract and encapsulate the code used to parse a ID3v2 header into
         /// usable variables.
         /// </summary>
         /// <param name="stream">The stream to parse.</param>
+        /// <param name="validation">A function </param>
         /// <returns>
-        /// The remainder of the tag, properly de-unsynchronized.
+        /// A tuple of, in order:
+        /// <list type="bullet">
+        /// <item>The flag bits in a more accessible format.</item>
+        /// <item>The size of the remainder of the tag.</item>
+        /// </list>
         /// </returns>
-        byte[] ParseHeader(Stream stream) {
-            var header = ReadHeader(stream);
+        protected Tuple<BitArray, uint> ParseBaseHeader(Stream stream, Func<byte[], bool> validation) {
+            var header = RetrieveHeader(stream);
 
             // Fail loudly if the tag's not in the correct format.
-            if (VerifyHeader(header) == false) {
+            if (validation(header) == false) {
                 UnreadHeader(stream);
                 throw new FormatException("Stream does not begin with a valid ID3 header");
             }
 
-            versionMajor = header[3];
-            versionMinor = header[4];
+            VersionMinor = header[4];
 
             // Decompose the flags byte
             var flags = new BitArray(new byte[1] { header[5] });
-            flagUnknown = ((header[5] & 0x0F) != 0);
-
-            bool useUnsync = flags[0];
-            // flags[1] is handled below
-            isExperimental = flags[2];
-            hasFooter = flags[3];
 
             // Calculate the size from 7-bit "bytes" (high bit is ignored)
-            uint size = (header[9]
-                | ((uint)header[8] << 7)
-                | ((uint)header[7] << 14)
-                | ((uint)header[6] << 21));
+            uint size = ParseInteger(header.Skip(6).ToArray(), 7u);
 
-            // ID3v2.2 uses this flag to indicate compression, but recommends
-            // ignoring the tag if it's set
-            if ((versionMajor == 2) && flags[1])
-                return new byte[0];
-            // ID3v2.3+ uses this flag to indicate the presence of an extended
-            // header, which we can parse while loading the rest of the tag
-            else if (flags[1]) {
-                uint sizeCount = 4;
-                uint extSize = ParseInteger(stream, useUnsync, ref sizeCount);
-
-                // The size data in ID3v2.4 includes the size bytes, which can
-                // be disregarded as they've already been read.
-                if (versionMajor == 4)
-                    extSize -= 4;
-
-                byte[] extHeader = GetUnsyncronizedBytes(stream, ref extSize);
-
-                // Start reading (and processing if necessary) from the stream
-                // in the background to save a small bit of time while
-                // parsing the extended header
-                var deunsync = ReadBytesAsync(stream, (size - sizeCount - extSize), useUnsync);
-
-                ParseExtendedHeader(extHeader);
-
-                return deunsync.Result;
-            } else
-                return ReadBytesAsync(stream, size, useUnsync).Result;
-        }
-
-        /// <summary>
-        /// Extract and encapsulate the code used to parse a ID3v2 extended
-        /// header into usable variables.
-        /// </summary>
-        /// <remarks>
-        /// This uses a `byte[]` rather than a `Stream` like
-        /// <see cref="ParseHeader(Stream)"/> because this is intended to be
-        /// called on pre-processed data of the proper length, rather than the
-        /// raw bytestream.
-        /// </remarks>
-        /// <param name="extHeader">
-        /// The de-unsynchronized byte array to parse.
-        /// </param>
-        private void ParseExtendedHeader(byte[] extHeader) {
+            return new Tuple<BitArray, uint>(flags, size);
         }
 
         /// <summary>
@@ -416,6 +308,7 @@ namespace Metadata {
         /// <param name="unsynced">
         /// Whether the source has been unsynchronized.
         /// </param>
+        /// <param name="bits">The number of data bits per byte.</param>
         /// <param name="count">The number of bytes to read.</param>
         /// <returns>The value after combining all bytes.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
@@ -432,11 +325,8 @@ namespace Metadata {
         /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
-        uint ParseInteger(Stream stream, bool unsynced, ref uint count) {
-            // By making this a variable, we can use the same code for all
-            // versions of the standard
-            uint offset = (versionMajor == 3 ? 8u : 7u);
-            if ((offset * count) > (sizeof(uint) * 8))
+        protected static uint ParseInteger(Stream stream, bool unsynced, uint bits, ref uint count) {
+            if ((bits * count) > (sizeof(uint) * 8))
                 throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 
             byte[] bytes;
@@ -447,12 +337,123 @@ namespace Metadata {
                 stream.Read(bytes, 0, (int)count);
             }
 
+            return ParseInteger(bytes, bits);
+        }
+        /// <summary>
+        /// Read a variable number of bytes as a single integer.
+        /// </summary>
+        /// <param name="bytes">The source to read from.</param>
+        /// <param name="bits">The number of data bits per byte.</param>
+        /// <returns>The value after combining all bytes.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Numbers must fit within the proper storage data type (typically
+        /// <paramref name="count"/> must not be more than four bytes for
+        /// ID3v2.3 and five for ID3v2.4).
+        /// </exception>
+        protected static uint ParseInteger(byte[] bytes, uint bits) {
+            if ((bits * bytes.Length) > (sizeof(uint) * 8))
+                throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
+
             uint ret = 0;
-            for (uint i = 0; i < count; ++i)
-                ret |= ((uint)bytes[i] << (int)(offset * (count - i - 1)));
+            for (uint i = 0; i < bytes.Length; ++i)
+                ret |= ((uint)bytes[i] << (int)(bits * (bytes.Length - i - 1)));
 
             return ret;
         }
-        #endregion
+    }
+
+
+    /// <summary>
+    /// Shared code for ID3v2.3 and later.
+    /// </summary>
+    internal abstract class ID3v23Plus : ID3v2 {
+        /// <summary>
+        /// Minor behaviour dependent on the version of the specification.
+        /// </summary>
+        public struct ExtendedHeaderProps {
+            /// <summary>
+            /// Whether the listed size of the extended header includes the
+            /// four bytes containing that size.
+            /// </summary>
+            public bool sizeIncludesItself;
+            /// <summary>
+            /// The number of content bits per byte used to store the size.
+            /// </summary>
+            public uint bitsInSize;
+        }
+        /// <summary>
+        /// Minor behaviour dependent on the version of the specification.
+        /// </summary>
+        public abstract ExtendedHeaderProps ExtendedHeader { get; }
+
+        /// <summary>
+        /// Indicates that the tag is in an experimental stage.
+        /// </summary>
+        /// <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
+        protected bool IsExperimental { get; set; }
+        /// <summary>
+        /// Whether a CRC has been calculated for the data in the tag.
+        /// </summary>
+        protected bool HasCRC { get; set; }
+
+
+        /// <summary>
+        /// Parse an ID3v2 extended header starting at the current position in
+        /// the stream, while retrieving the remainder of the tag in the
+        /// background.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="tagSize">The total size of the ID3v2 tag.</param>
+        /// <param name="useUnsync">
+        /// Whether the entire tag has been unsynchronized.
+        /// </param>
+        /// <param name="extendedHeaderPresent">
+        /// Whether the tag contains an extended header.
+        /// </param>
+        /// <returns>
+        /// The remainder of the ID3v2 tag, already processed to reverse any
+        /// unsynchronization.
+        /// </returns>
+        protected async Task<byte[]> ReadExtHeaderWithTagAsync(Stream stream, uint tagSize, bool useUnsync, bool extendedHeaderPresent) {
+            if (extendedHeaderPresent == false)
+                return await ReadBytesAsync(stream, tagSize, useUnsync).ConfigureAwait(false);
+
+            uint sizeCount = 4;
+            uint extSize = ParseInteger(stream, useUnsync, ExtendedHeader.bitsInSize, ref sizeCount);
+
+            // The size data in ID3v2.4 includes the size bytes, which can
+            // be disregarded as they've already been read.
+            if (ExtendedHeader.sizeIncludesItself)
+                extSize -= 4;
+
+            byte[] extHeader = GetUnsyncronizedBytes(stream, ref extSize);
+
+            // Start reading (and processing if necessary) from the stream
+            // in the background to save a small bit of waiting while
+            // parsing the extended header
+            var readTask = ReadBytesAsync(stream, (tagSize - sizeCount - extSize), useUnsync);
+
+            ParseExtendedHeader(extHeader);
+
+            return await readTask.ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Extract and encapsulate the code used to parse a ID3v2 extended
+        /// header into usable variables.
+        /// <para/>
+        /// Given that arrays have an inherent Length property, the first four
+        /// bytes (storing the size) are ignored.
+        /// </summary>
+        /// <remarks>
+        /// This takes a `byte[]` rather than a `Stream` like
+        /// <see cref="ParseHeaderAsync(Stream)"/> because this is intended to
+        /// be /// called on pre-processed data of the proper length, rather
+        /// than the raw bytestream.
+        /// </remarks>
+        /// <param name="extHeader">
+        /// The de-unsynchronized byte array to parse.
+        /// </param>
+        protected abstract void ParseExtendedHeader(byte[] extHeader);
     }
 }
