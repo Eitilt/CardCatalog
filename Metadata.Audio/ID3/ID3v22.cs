@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata {
+namespace Metadata.Audio {
     /// <summary>
     /// An implementation of the ID3v2.2 standard as described at
     /// <see cref="http://id3.org/id3v2-00"/>
@@ -80,6 +80,10 @@ namespace Metadata {
 
             bool useUnsync = header.Item1[0];
             // flags[1] is handled below
+            /*TODO: May be better to skip reading the tag rather than setting
+             * FlagUnknown, as these flags tend to be critical to the proper
+             * parsing of the tag.
+             */
             FlagUnknown = (header.Item1.Cast<bool>().Skip(2).Contains(true));
 
             // ID3v2.2 uses this flag to indicate compression, but recommends

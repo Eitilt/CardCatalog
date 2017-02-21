@@ -1,13 +1,17 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata {
+namespace Metadata.Audio {
     /// <summary>
     /// An implementation of the ID3v2.4 standard as described at
     /// <see cref="http://id3.org/id3v2.4.0-structure"/> and
     /// <see cref="http://id3.org/id3v2.4.0-frames"/>
     /// </summary>
+    /// <remarks>
+    /// TODO: Handle footer
+    /// </remarks>
     internal class ID3v24 : ID3v23Plus {
         /// <summary>
         /// The short name used to represent ID3v2.4 metadata.
@@ -60,6 +64,11 @@ namespace Metadata {
         bool HasFooter { get; set; }
 
         /// <summary>
+        /// Whether this tag updates any previous tags
+        /// </summary>
+        bool TagIsUpdate { get; set; }
+
+        /// <summary>
         /// Parse a stream according the proper version of the ID3v2
         /// specification, from the current location.
         /// </summary>
@@ -78,7 +87,12 @@ namespace Metadata {
         /// </exception>
         /// <seealso cref="Metadata.Construct(string, Stream)"/>
         public ID3v24(Stream stream) {
+            HasFooter = false;
+            TagIsUpdate = false;
+
             byte[] tag = ParseHeaderAsync(stream).Result;
+            if (CheckCRCIfPresent(tag) == false)
+                throw new InvalidDataException("ID3 tag does not match saved checksum");
         }
 
         /// <summary>
@@ -97,6 +111,10 @@ namespace Metadata {
             // flags[1] is handled below
             IsExperimental = header.Item1[2];
             HasFooter = header.Item1[3];
+            /*TODO: May be better to skip reading the tag rather than setting
+             * FlagUnknown, as these flags tend to be critical to the proper
+             * parsing of the tag.
+             */
             FlagUnknown = (header.Item1.Cast<bool>().Skip(4).Contains(true));
 
             return await ReadExtHeaderWithTagAsync(stream, header.Item2, useUnsync, header.Item1[1]).ConfigureAwait(false);
@@ -119,6 +137,42 @@ namespace Metadata {
         /// The de-unsynchronized byte array to parse.
         /// </param>
         protected override void ParseExtendedHeader(byte[] extHeader) {
+            //TODO: Doesn't ensure that the length is enough for the flag data
+            // and so array index out-of-bounds exceptions may be thrown.
+            if (extHeader.Length < 2)
+                throw new InvalidDataException("Extended header too short to be valid for ID3v2.4");
+
+            int flagBytes = (int)ParseInteger(new byte[1]{ extHeader[0] });
+            var flags = new BitArray(extHeader.Skip(1).Take(flagBytes).ToArray());
+
+            int pos = flagBytes + 1;
+
+            // Shouldn't be set according to the standard, but non-traditional
+            // encoders may have assigned some meaning to it
+            if (flags[0]) {
+                FlagUnknown = true;
+                pos += extHeader[pos] + 1;
+            }
+            if (flags[1]) {
+                if (extHeader[pos] != 0x00)
+                    throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'Tag is an update' data");
+                TagIsUpdate = true;
+                ++pos;
+            }
+            if (flags[2]) {
+                if (extHeader[pos] != 0x05)
+                    throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'CRC data present' data");
+                TagCRC = ParseInteger(extHeader.Skip(pos + 1).Take(5), 7);
+                pos += 6;
+            }
+            if (flags[3]) {
+                if (extHeader[pos] != 0x01)
+                    throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'Tag restrictions' data");
+                //TODO: This only affects behaviour before encoding, but
+                // should still be handled
+                ++pos;
+            }
+            FlagUnknown = (flags.Cast<bool>().Skip(4).Contains(true));
         }
     }
 }

@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata {
+namespace Metadata.Audio {
     /// <summary>
     /// Shared code for all versions of the ID3v2 standard.
     /// </summary>
@@ -16,9 +16,22 @@ namespace Metadata {
         protected byte VersionMinor { get; private set; }
 
         /// <summary>
-        /// Whether the header includes a non-standard tag, which may result in unrecognizable data.
+        /// Whether the header includes a non-standard tag, which may result
+        /// in unrecognizable data.
         /// </summary>
+        /// <remarks>
+        /// TODO: Store data about the unknown flags rather than simply
+        /// indicating their presence.
+        /// </remarks>
         protected bool FlagUnknown { get; set; }
+
+        /// <summary>
+        /// Initialize instance properties to default values.
+        /// </summary>
+        public ID3v2() {
+            VersionMinor = 0x00;
+            FlagUnknown = false;
+        }
 
         /// <summary>
         /// Retrieve the proper number of bytes from the stream to contain the
@@ -325,7 +338,7 @@ namespace Metadata {
         /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
-        protected static uint ParseInteger(Stream stream, bool unsynced, uint bits, ref uint count) {
+        protected static uint ParseInteger(Stream stream, bool unsynced, ref uint count, uint bits = 8) {
             if ((bits * count) > (sizeof(uint) * 8))
                 throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 
@@ -350,13 +363,35 @@ namespace Metadata {
         /// <paramref name="count"/> must not be more than four bytes for
         /// ID3v2.3 and five for ID3v2.4).
         /// </exception>
-        protected static uint ParseInteger(byte[] bytes, uint bits) {
+        protected static uint ParseInteger(byte[] bytes, uint bits = 8) {
             if ((bits * bytes.Length) > (sizeof(uint) * 8))
                 throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 
             uint ret = 0;
             for (uint i = 0; i < bytes.Length; ++i)
                 ret |= ((uint)bytes[i] << (int)(bits * (bytes.Length - i - 1)));
+
+            return ret;
+        }
+        /// <summary>
+        /// Read a variable number of bytes as a single integer.
+        /// </summary>
+        /// <param name="bytes">The source to read from.</param>
+        /// <param name="bits">The number of data bits per byte.</param>
+        /// <returns>The value after combining all bytes.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Numbers must fit within the proper storage data type (typically
+        /// <paramref name="count"/> must not be more than four bytes for
+        /// ID3v2.3 and five for ID3v2.4).
+        /// </exception>
+        protected static uint ParseInteger(IEnumerable<byte> bytes, uint bits = 8) {
+            if ((bits * bytes.Count()) > (sizeof(uint) * 8))
+                throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
+
+            uint ret = 0;
+            var iter = bytes.GetEnumerator();
+            for (uint i = 0; i < bytes.Count(); ++i, iter.MoveNext())
+                ret |= ((uint)iter.Current << (int)(bits * (bytes.Count() - i - 1)));
 
             return ret;
         }
@@ -392,10 +427,18 @@ namespace Metadata {
         /// <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
         protected bool IsExperimental { get; set; }
         /// <summary>
-        /// Whether a CRC has been calculated for the data in the tag.
+        /// The CRC calculated for the data in the tag, or `null` if is was
+        /// not (yet) read.
         /// </summary>
-        protected bool HasCRC { get; set; }
+        protected uint? TagCRC { get; set; }
 
+        /// <summary>
+        /// Initialize instance properties to default values.
+        /// </summary>
+        public ID3v23Plus() {
+            IsExperimental = false;
+            TagCRC = null;
+        }
 
         /// <summary>
         /// Parse an ID3v2 extended header starting at the current position in
@@ -419,7 +462,7 @@ namespace Metadata {
                 return await ReadBytesAsync(stream, tagSize, useUnsync).ConfigureAwait(false);
 
             uint sizeCount = 4;
-            uint extSize = ParseInteger(stream, useUnsync, ExtendedHeader.bitsInSize, ref sizeCount);
+            uint extSize = ParseInteger(stream, useUnsync, ref sizeCount, ExtendedHeader.bitsInSize);
 
             // The size data in ID3v2.4 includes the size bytes, which can
             // be disregarded as they've already been read.
@@ -455,5 +498,23 @@ namespace Metadata {
         /// The de-unsynchronized byte array to parse.
         /// </param>
         protected abstract void ParseExtendedHeader(byte[] extHeader);
+
+        /// <summary>
+        /// Compares the CRC saved in the tag with that calculated from the
+        /// given data to ensure no corruption has occurred.
+        /// </summary>
+        /// <param name="tag">
+        /// The data over which to calculate the CRC.
+        /// </param>
+        /// <returns>
+        /// True if no CRC was saved or if it matches that calculated for the
+        /// data, false if they differ.
+        /// </returns>
+        protected bool CheckCRCIfPresent(byte[] tag) {
+            if (TagCRC.HasValue)
+                return (TagCRC.Value == Force.Crc32.Crc32Algorithm.Compute(tag));
+            else
+                return true;
+        }
     }
 }

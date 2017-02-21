@@ -1,8 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata {
+namespace Metadata.Audio {
     /// <summary>
     /// An implementation of the ID3v2.3 standard as described at
     /// <see cref="http://id3.org/d3v2.3.0"/>
@@ -54,6 +55,11 @@ namespace Metadata {
         }
 
         /// <summary>
+        /// The size of the empty padding at the end of the tag.
+        /// </summary>
+        private uint PaddingSize { get; set; }
+
+        /// <summary>
         /// Parse a stream according the proper version of the ID3v2
         /// specification, from the current location.
         /// </summary>
@@ -72,7 +78,11 @@ namespace Metadata {
         /// </exception>
         /// <seealso cref="Metadata.Construct(string, Stream)"/>
         public ID3v23(Stream stream) {
+            PaddingSize = 0;
+
             byte[] tag = ParseHeaderAsync(stream).Result;
+            if (CheckCRCIfPresent(tag.Take((int)(tag.Length - PaddingSize)).ToArray()) == false)
+                throw new InvalidDataException("ID3 tag does not match saved checksum");
         }
 
         /// <summary>
@@ -90,6 +100,10 @@ namespace Metadata {
             bool useUnsync = header.Item1[0];
             // flags[1] is handled below
             IsExperimental = header.Item1[2];
+            /*TODO: May be better to skip reading the tag rather than setting
+             * FlagUnknown, as these flags tend to be critical to the proper
+             * parsing of the tag.
+             */
             FlagUnknown = (header.Item1.Cast<bool>().Skip(3).Contains(true));
 
             return await ReadExtHeaderWithTagAsync(stream, header.Item2, useUnsync, header.Item1[1]).ConfigureAwait(false);
@@ -112,6 +126,19 @@ namespace Metadata {
         /// The de-unsynchronized byte array to parse.
         /// </param>
         protected override void ParseExtendedHeader(byte[] extHeader) {
+            if (extHeader.Length < 6)
+                throw new InvalidDataException("Extended header too short to be valid for ID3v2.3");
+
+            var flags = new BitArray(extHeader.Take(2).ToArray());
+            PaddingSize = ParseInteger(extHeader.Skip(2).Take(4));
+
+            if (flags[0]) {
+                if (extHeader.Length < 10)
+                    throw new InvalidDataException("Extended header too short to contain a valid ID3v2.3 CRC");
+
+                TagCRC = ParseInteger(extHeader.Skip(6).Take(4));
+            }
+            FlagUnknown = (flags.Cast<bool>().Skip(1).Contains(true));
         }
     }
 }
