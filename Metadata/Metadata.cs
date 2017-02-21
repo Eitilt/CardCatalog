@@ -5,9 +5,9 @@ using System.IO;
 namespace Metadata {
     /// <summary>
     /// A data-free class providing a common means to work with multiple
-    /// metadata <em>formats</em>.
+    /// metadata formats.
     /// </summary>
-    public static class Metadata {
+    public static class MetadataFormat {
         /// <summary>
         /// Validation functions for each registered metadata format.
         /// </summary>
@@ -72,7 +72,7 @@ namespace Metadata {
         /// </param>
         /// <seealso cref="FormatType(string)"/>
         /// <seealso cref="Validate(string, Stream)"/>
-        public static void Register<TFormat>(string format, Func<Stream, bool> header) where TFormat : ITag {
+        public static void Register<TFormat>(string format, Func<Stream, bool> header) where TFormat : ITagFormat {
             tagFormats[format] = typeof(TFormat);
             tagHeaders[format] = header;
         }
@@ -112,13 +112,15 @@ namespace Metadata {
         /// <param name="stream">The bytestream to parse.</param>
         /// <returns>The parsed metadata.</returns>
         /// <seealso cref="FormatType(string)"/>
-        public static ITag Construct(string format, Stream stream) {
-            return (ITag)Activator.CreateInstance(tagFormats[format], stream);
+        public static ITagFormat Construct(string format, Stream stream) {
+            return (ITagFormat)Activator.CreateInstance(tagFormats[format], stream);
         }
 
         /// <summary>
         /// Common methods to operate on metadata tags.
         /// </summary>
-        public interface ITag { }
+        public interface ITagFormat {
+            TagAttributes Attributes { get; }
+        }
     }
 }

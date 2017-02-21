@@ -12,7 +12,7 @@ namespace Metadata.Audio {
         /// <summary>
         /// The short name used to represent ID3v2.3 metadata.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
+        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
         public const string format = "ID3v2.3";
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace Metadata.Audio {
         /// <summary>
         /// Register the format with the superclass.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
+        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
         static ID3v23() {
-            Metadata.Register<ID3v23>(format, VerifyHeader);
+            MetadataFormat.Register<ID3v23>(format, VerifyHeader);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Metadata.Audio {
         /// <returns>
         /// Whether the stream begins with a valid ID3v2.3 header.
         /// </returns>
-        /// <see cref="Metadata.Validate(string, Stream)"/>
+        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         public static bool VerifyHeader(Stream stream) {
             return (VerifyBaseHeader(stream)?.Equals(0x03) ?? false);
         }
@@ -53,6 +53,16 @@ namespace Metadata.Audio {
         public static bool VerifyHeader(byte[] header) {
             return (VerifyBaseHeader(header)?.Equals(0x03) ?? false);
         }
+
+        /// <summary>
+        /// Implement the audio field attribute mappings for ID3v2.3 tags.
+        /// </summary>
+        class AttributeStruct : AudioTagAttributes { }
+
+        /// <summary>
+        /// Retrieve the audio field attribute mappings for ID3v2.3 tags.
+        /// </summary>
+        public override AudioTagAttributes Attributes => new AttributeStruct();
 
         /// <summary>
         /// The size of the empty padding at the end of the tag.
@@ -76,7 +86,7 @@ namespace Metadata.Audio {
         /// If this is thrown, the stream cursor is automatically returned to
         /// the position it was at before the constructor was called.
         /// </exception>
-        /// <seealso cref="Metadata.Construct(string, Stream)"/>
+        /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
         public ID3v23(Stream stream) {
             PaddingSize = 0;
 

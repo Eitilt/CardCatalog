@@ -9,7 +9,7 @@ namespace Metadata.Audio {
     /// <summary>
     /// Shared code for all versions of the ID3v2 standard.
     /// </summary>
-    internal abstract class ID3v2 : Metadata.ITag {
+    internal abstract class ID3v2 : AudioTagFormat {
         /// <summary>
         /// The minor version number of the specification used.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Metadata.Audio {
         /// `null` if the stream does not begin with a ID3v2 header, and the
         /// major version if it does.
         /// </returns>
-        /// <see cref="Metadata.Validate(string, Stream)"/>
+        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         public static byte? VerifyBaseHeader(Stream stream) {
             byte? ret = VerifyBaseHeader(RetrieveHeader(stream));
             UnreadHeader(stream);

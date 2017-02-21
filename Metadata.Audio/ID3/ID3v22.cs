@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,15 +12,15 @@ namespace Metadata.Audio {
         /// <summary>
         /// The short name used to represent ID3v2.2 metadata.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
+        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
         public const string format = "ID3v2.2";
 
         /// <summary>
         /// Register the format with the superclass.
         /// </summary>
-        /// <seealso cref="Metadata.Register{TFormat}(string, Func{Stream, bool})"/>
+        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
         static ID3v22() {
-            Metadata.Register<ID3v22>(format, VerifyHeader);
+            MetadataFormat.Register<ID3v22>(format, VerifyHeader);
         }
 
         /// <summary>
@@ -29,7 +30,7 @@ namespace Metadata.Audio {
         /// <returns>
         /// Whether the stream begins with a valid ID3v2.2 header.
         /// </returns>
-        /// <see cref="Metadata.Validate(string, Stream)"/>
+        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         public static bool VerifyHeader(Stream stream) {
             return (VerifyBaseHeader(stream)?.Equals(0x02) ?? false);
         }
@@ -44,6 +45,16 @@ namespace Metadata.Audio {
         public static bool VerifyHeader(byte[] header) {
             return (VerifyBaseHeader(header)?.Equals(0x02) ?? false);
         }
+
+        /// <summary>
+        /// Implement the audio field attribute mappings for ID3v2.2 tags.
+        /// </summary>
+        class AttributeStruct : AudioTagAttributes { }
+
+        /// <summary>
+        /// Retrieve the audio field attribute mappings for ID3v2.2 tags.
+        /// </summary>
+        public override AudioTagAttributes Attributes => new AttributeStruct();
 
         /// <summary>
         /// Parse a stream according the proper version of the ID3v2
@@ -62,7 +73,7 @@ namespace Metadata.Audio {
         /// If this is thrown, the stream cursor is automatically returned to
         /// the position it was at before the constructor was called.
         /// </exception>
-        /// <seealso cref="Metadata.Construct(string, Stream)"/>
+        /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
         public ID3v22(Stream stream) {
             byte[] tag = ParseHeaderAsync(stream).Result;
         }
