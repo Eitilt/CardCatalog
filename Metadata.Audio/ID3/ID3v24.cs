@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 namespace Metadata.Audio {
     /// <summary>
     /// An implementation of the ID3v2.4 standard as described at
-    /// <see cref="http://id3.org/id3v2.4.0-structure"/> and
-    /// <see cref="http://id3.org/id3v2.4.0-frames"/>
+    /// <see href="http://id3.org/id3v2.4.0-structure"/> and
+    /// <see href="http://id3.org/id3v2.4.0-frames"/>
     /// </summary>
     /// <remarks>
     /// TODO: Handle footer
     /// </remarks>
-    internal class ID3v24 : ID3v23Plus {
+    public class ID3v24 : ID3v23Plus {
         /// <summary>
         /// The short name used to represent ID3v2.4 metadata.
         /// </summary>
-        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
+        /// <seealso cref="MetadataFormat.Register(string, System.Type)"/>
         public const string format = "ID3v2.4";
 
         /// <summary>
@@ -28,14 +28,6 @@ namespace Metadata.Audio {
         };
 
         /// <summary>
-        /// Register the format with the superclass.
-        /// </summary>
-        /// <seealso cref="MetadataFormat.Register{TFormat}(string, Func{Stream, bool})"/>
-        static ID3v24() {
-            MetadataFormat.Register<ID3v24>(format, VerifyHeader);
-        }
-
-        /// <summary>
         /// Check whether the stream begins with a valid ID3v2.4 header.
         /// </summary>
         /// <param name="stream">The Stream to check.</param>
@@ -43,6 +35,7 @@ namespace Metadata.Audio {
         /// Whether the stream begins with a valid ID3v2.4 header.
         /// </returns>
         /// <see cref="MetadataFormat.Validate(string, Stream)"/>
+        [MetadataFormatValidator]
         public static bool VerifyHeader(Stream stream) {
             return (VerifyBaseHeader(stream)?.Equals(0x04) ?? false);
         }
@@ -87,14 +80,6 @@ namespace Metadata.Audio {
         /// if the tag is compressed, it is swallowed but largely ignored.
         /// </remarks>
         /// <param name="stream">The stream to parse.</param>
-        /// <exception cref="FormatException">
-        /// This class can only parse metadata in ID3v2.2 to ID3v2.4 formats,
-        /// and fails if the stream position is not placed at the beginning of
-        /// that tag.
-        /// <param/>
-        /// If this is thrown, the stream cursor is automatically returned to
-        /// the position it was at before the constructor was called.
-        /// </exception>
         /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
         public ID3v24(Stream stream) {
             HasFooter = false;

@@ -1,0 +1,600 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Metadata.Audio</name>
+    </assembly>
+    <members>
+        <member name="T:Metadata.Audio.AudioTagAttributes">
+            <summary>
+            Common format-agnostic attributes specific to audio encoding, mapping
+            to different fields depending on the particular metadata format.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.AudioTagFormat">
+            <summary>
+            Common properties to retrieve info from multiple audio formats.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.AudioTagFormat.Metadata#MetadataFormat#ITagFormat#Attributes">
+            <summary>
+            Redirect to allow the more specific attribute format to satisfy
+            the interface implementation.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.AudioTagFormat.Attributes">
+            <summary>
+            The proper standardized field redirects for the enclosing
+            audio metadata format.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2">
+            <summary>
+            Shared code for all versions of the ID3v2 standard.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.VersionMinor">
+            <summary>
+            The minor version number of the specification used.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.FlagUnknown">
+            <summary>
+            Whether the header includes a non-standard tag, which may result
+            in unrecognizable data.
+            </summary>
+            <remarks>
+            TODO: Store data about the unknown flags rather than simply
+            indicating their presence.
+            </remarks>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.#ctor">
+            <summary>
+            Initialize instance properties to default values.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.RetrieveHeader(System.IO.Stream)">
+            <summary>
+            Retrieve the proper number of bytes from the stream to contain the
+            header.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+            <returns>The number of bytes used by a ID3 header.</returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.UnreadHeader(System.IO.Stream)">
+            <summary>
+            "Rewind" retrieving the header so that the stream is left in the
+            same state as it started in.
+            </summary>
+            <param name="stream">The stream to rewind.</param>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.VerifyBaseHeader(System.IO.Stream)">
+            <summary>
+            Check whether the stream begins with a valid ID3v2 header.
+            </summary>
+            <param name="stream">The Stream to check.</param>
+            <returns>
+            `null` if the stream does not begin with a ID3v2 header, and the
+            major version if it does.
+            </returns>
+            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.VerifyBaseHeader(System.Byte[])">
+            <summary>
+            Check whether the byte array begins with a valid ID3v2 header.
+            </summary>
+            <param name="header">The byte array to check</param>
+            <returns>
+            `null` if the stream does not begin with a ID3v2 header, and the
+            major version if it does.
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.Unsynchronize(System.Byte[],System.Boolean@)">
+            <summary>
+            Manipulate the byte array to remove the historic synchronization
+            pattern, according to the ID3v2 specifications.
+            </summary>
+            <param name="input">The byte array to unsynchronize.</param>
+            <param name="changed">
+            Whether the synchronization pattern was encountered and
+            subsequently interrupted.
+            </param>
+            <returns>A new, synchronization-safe byte array.</returns>
+            <seealso cref="M:Metadata.Audio.ID3v2.DeUnsynchronize(System.Byte[])"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)">
+            <summary>
+            Manipulate the byte array to remove the historic synchronization
+            pattern, according to the ID3v2 specifications.
+            </summary>
+            <param name="input">The byte array to unsynchronize.</param>
+            <param name="changed">
+            Whether the synchronization pattern was encountered and
+            subsequently interrupted.
+            </param>
+            <param name="endPadding">
+            Whether the last byte in <paramref name="input"/> was 0xFF, which
+            needs an extra byte of padding if the tag is unsynchronized.
+            <para/>
+            If (<paramref name="changed"/> == true), this padding `0x00` byte
+            is automatically added, but if not (and if a separate -- probably
+            later -- tag requires unsynchronization), the byte needs to be
+            appended manually.
+            </param>
+            <returns>A new, synchronization-safe byte array.</returns>
+            <seealso cref="M:Metadata.Audio.ID3v2.DeUnsynchronize(System.Byte[])"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.DeUnsynchronize(System.Byte[])">
+            <summary>
+            Reverse the unsynchronization scheme as described in the ID3v2
+            specifications.
+            </summary>
+            <param name="input">
+            The byte array on which to reverse unsynchronization.
+            </param>
+            <returns>The pre-unsynchronization byte array.</returns>
+            <exception cref="T:System.IO.InvalidDataException">
+            <paramref name="input"/> is expected to be unsynchronized and a
+            basic sanity check is performed to ensure this, but attempting to
+            reconstruct a malformed byte array is beyond the intended scope.
+            </exception>
+            <seealso cref="M:Metadata.Audio.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.ReadBytesAsync(System.IO.Stream,System.UInt32,System.Boolean)">
+            <summary>
+            Asynchronously read a given number of bytes from a stream,
+            optionally reversing ID3v2 unsynchronization.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+            <param name="count">The number of bytes to read.</param>
+            <param name="unsync">
+            Whether the stream is unsynchronized, in which case it's reversed.
+            </param>
+            <returns>
+            The Task tracking the byte retrieval operation (number of bytes
+            may be less than <paramref name="count"/>).
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.GetUnsyncronizedBytes(System.IO.Stream,System.UInt32@)">
+            <summary>
+            Retrieve a given number of bytes from a stream, properly handling
+            ID3v2 unsynchronization.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+            <param name="count">
+            The number of bytes to retrieve, which is updated to reflect the
+            actual number of bytes read.
+            </param>
+            <returns>
+            The specified number of de-unsynchronized bytes.
+            </returns>
+            <exception cref="T:System.IO.EndOfStreamException">
+            The end of the stream is reached before retrieving the desired
+            number of de-unsynchronized bytes.
+            </exception>
+            <exception cref="T:System.IO.InvalidDataException">
+            <paramref name="stream"/> is expected to be unsynchronized and a
+            basic sanity check is performed to ensure this, but attempting to
+            reconstruct a malformed byte array is beyond the intended scope.
+            </exception>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.ParseBaseHeader(System.IO.Stream,System.Func{System.Byte[],System.Boolean})">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 header into
+            usable variables.
+            </summary>
+            <param name="stream">The stream to parse.</param>
+            <param name="validation">A function </param>
+            <returns>
+            A tuple of, in order:
+            <list type="bullet">
+            <item>The flag bits in a more accessible format.</item>
+            <item>The size of the remainder of the tag.</item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.ParseInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
+            <summary>
+            Read a variable number of bytes as a single integer.
+            </summary>
+            <param name="stream">The source to read from.</param>
+            <param name="unsynced">
+            Whether the source has been unsynchronized.
+            </param>
+            <param name="bits">The number of data bits per byte.</param>
+            <param name="count">The number of bytes to read.</param>
+            <returns>The value after combining all bytes.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Numbers must fit within the proper storage data type (typically
+            <paramref name="count"/> must not be more than four bytes for
+            ID3v2.3 and five for ID3v2.4).
+            </exception>
+            <exception cref="T:System.IO.EndOfStreamException">
+            The end of the stream is reached before retrieving the desired
+            number of de-unsynchronized bytes.
+            </exception>
+            <exception cref="T:System.IO.InvalidDataException">
+            <paramref name="stream"/> is expected to be unsynchronized and a
+            basic sanity check is performed to ensure this, but attempting to
+            reconstruct a malformed byte array is beyond the intended scope.
+            </exception>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.ParseInteger(System.Byte[],System.UInt32)">
+            <summary>
+            Read a variable number of bytes as a single integer.
+            </summary>
+            <param name="bytes">The source to read from.</param>
+            <param name="bits">The number of data bits per byte.</param>
+            <returns>The value after combining all bytes.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Numbers must fit within the proper storage data type (typically
+            <paramref name="bytes"/> must not be more than four bytes long for
+            ID3v2.3 and five for ID3v2.4).
+            </exception>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.ParseInteger(System.Collections.Generic.IEnumerable{System.Byte},System.UInt32)">
+            <summary>
+            Read a variable number of bytes as a single integer.
+            </summary>
+            <param name="bytes">The source to read from.</param>
+            <param name="bits">The number of data bits per byte.</param>
+            <returns>The value after combining all bytes.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Numbers must fit within the proper storage data type (typically
+            <paramref name="bytes"/> must not be more than four bytes long for
+            ID3v2.3 and five for ID3v2.4).
+            </exception>
+        </member>
+        <member name="T:Metadata.Audio.ID3v23Plus">
+            <summary>
+            Shared code for ID3v2.3 and later.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v23Plus.ExtendedHeaderProps">
+            <summary>
+            Minor behaviour dependent on the version of the specification.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v23Plus.ExtendedHeaderProps.sizeIncludesItself">
+            <summary>
+            Whether the listed size of the extended header includes the
+            four bytes containing that size.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v23Plus.ExtendedHeaderProps.bitsInSize">
+            <summary>
+            The number of content bits per byte used to store the size.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23Plus.ExtendedHeader">
+            <summary>
+            Minor behaviour dependent on the version of the specification.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23Plus.IsExperimental">
+            <summary>
+            Indicates that the tag is in an experimental stage.
+            </summary>
+            <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23Plus.TagCRC">
+            <summary>
+            The CRC calculated for the data in the tag, or `null` if is was
+            not (yet) read.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23Plus.#ctor">
+            <summary>
+            Initialize instance properties to default values.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)">
+            <summary>
+            Parse an ID3v2 extended header starting at the current position in
+            the stream, while retrieving the remainder of the tag in the
+            background.
+            </summary>
+            <param name="stream">The stream to read from.</param>
+            <param name="tagSize">The total size of the ID3v2 tag.</param>
+            <param name="useUnsync">
+            Whether the entire tag has been unsynchronized.
+            </param>
+            <param name="extendedHeaderPresent">
+            Whether the tag contains an extended header.
+            </param>
+            <returns>
+            The remainder of the ID3v2 tag, already processed to reverse any
+            unsynchronization.
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23Plus.ParseExtendedHeader(System.Byte[])">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 extended
+            header into usable variables.
+            <para/>
+            Given that arrays have an inherent Length property, the first four
+            bytes (storing the size) are ignored.
+            </summary>
+            <remarks>
+            This takes a `byte[]` rather than a `Stream` like
+            <see cref="M:Metadata.Audio.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)"/>
+            because this is intended to be called on pre-processed data of the
+            proper length, rather than the raw bytestream.
+            </remarks>
+            <param name="extHeader">
+            The de-unsynchronized byte array to parse.
+            </param>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23Plus.CheckCRCIfPresent(System.Byte[])">
+            <summary>
+            Compares the CRC saved in the tag with that calculated from the
+            given data to ensure no corruption has occurred.
+            </summary>
+            <param name="tag">
+            The data over which to calculate the CRC.
+            </param>
+            <returns>
+            True if no CRC was saved or if it matches that calculated for the
+            data, false if they differ.
+            </returns>
+        </member>
+        <member name="T:Metadata.Audio.ID3v22">
+            <summary>
+            An implementation of the ID3v2.2 standard as described at
+            <see href="http://id3.org/id3v2-00"/>
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v22.format">
+            <summary>
+            The short name used to represent ID3v2.2 metadata.
+            </summary>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v22.VerifyHeader(System.IO.Stream)">
+            <summary>
+            Check whether the stream begins with a valid ID3v2.2 header.
+            </summary>
+            <param name="stream">The Stream to check.</param>
+            <returns>
+            Whether the stream begins with a valid ID3v2.2 header.
+            </returns>
+            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v22.VerifyHeader(System.Byte[])">
+            <summary>
+            Check whether the byte array begins with a valid ID3v2.2 header.
+            </summary>
+            <param name="header">The byte array to check</param>
+            <returns>
+            `null` if the stream does not begin with a ID3v2.2 header, and the
+            major version if it does.
+            </returns>
+        </member>
+        <member name="T:Metadata.Audio.ID3v22.AttributeStruct">
+            <summary>
+            Implement the audio field attribute mappings for ID3v2.2 tags.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v22.Attributes">
+            <summary>
+            Retrieve the audio field attribute mappings for ID3v2.2 tags.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v22.#ctor(System.IO.Stream)">
+            <summary>
+            Parse a stream according the proper version of the ID3v2
+            specification, from the current location.
+            </summary>
+            <remarks>
+            As according to the recommendation in the ID3v2.2 specification,
+            if the tag is compressed, it is swallowed but largely ignored.
+            </remarks>
+            <param name="stream">The stream to parse.</param>
+            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v22.ParseHeaderAsync(System.IO.Stream)">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 header into
+            usable variables, and use that to retrieve the rest of the tag.
+            </summary>
+            <param name="stream">The stream to parse.</param>
+            <returns>
+            The remainder of the tag, properly de-unsynchronized.
+            </returns>
+        </member>
+        <member name="T:Metadata.Audio.ID3v23">
+            <summary>
+            An implementation of the ID3v2.3 standard as described at
+            <see href="http://id3.org/d3v2.3.0"/>
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v23.format">
+            <summary>
+            The short name used to represent ID3v2.3 metadata.
+            </summary>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23.ExtendedHeader">
+            <summary>
+            Describe the behaviour of the extended header.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23.VerifyHeader(System.IO.Stream)">
+            <summary>
+            Check whether the stream begins with a valid ID3v2.3 header.
+            </summary>
+            <param name="stream">The Stream to check.</param>
+            <returns>
+            Whether the stream begins with a valid ID3v2.3 header.
+            </returns>
+            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23.VerifyHeader(System.Byte[])">
+            <summary>
+            Check whether the byte array begins with a valid ID3v2.3 header.
+            </summary>
+            <param name="header">The byte array to check</param>
+            <returns>
+            `null` if the stream does not begin with a ID3v2.3 header, and the
+            major version if it does.
+            </returns>
+        </member>
+        <member name="T:Metadata.Audio.ID3v23.AttributeStruct">
+            <summary>
+            Implement the audio field attribute mappings for ID3v2.3 tags.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23.Attributes">
+            <summary>
+            Retrieve the audio field attribute mappings for ID3v2.3 tags.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23.PaddingSize">
+            <summary>
+            The size of the empty padding at the end of the tag.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23.#ctor(System.IO.Stream)">
+            <summary>
+            Parse a stream according the proper version of the ID3v2
+            specification, from the current location.
+            </summary>
+            <remarks>
+            As according to the recommendation in the ID3v2.2 specification,
+            if the tag is compressed, it is swallowed but largely ignored.
+            </remarks>
+            <param name="stream">The stream to parse.</param>
+            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23.ParseHeaderAsync(System.IO.Stream)">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 header into
+            usable variables, and use that to retrieve the rest of the tag.
+            </summary>
+            <param name="stream">The stream to parse.</param>
+            <returns>
+            The remainder of the ID3v2.3 tag, already processed to reverse any
+            unsynchronization.
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v23.ParseExtendedHeader(System.Byte[])">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 extended
+            header into usable variables.
+            <para/>
+            Given that arrays have an inherent Length property, the first four
+            bytes (storing the size) are ignored.
+            </summary>
+            <remarks>
+            This takes a `byte[]` rather than a `Stream` like
+            <see cref="M:Metadata.Audio.ID3v23.ParseHeaderAsync(System.IO.Stream)"/> because this is intended to
+            be /// called on pre-processed data of the proper length, rather
+            than the raw bytestream.
+            </remarks>
+            <param name="extHeader">
+            The de-unsynchronized byte array to parse.
+            </param>
+        </member>
+        <member name="T:Metadata.Audio.ID3v24">
+            <summary>
+            An implementation of the ID3v2.4 standard as described at
+            <see href="http://id3.org/id3v2.4.0-structure"/> and
+            <see href="http://id3.org/id3v2.4.0-frames"/>
+            </summary>
+            <remarks>
+            TODO: Handle footer
+            </remarks>
+        </member>
+        <member name="F:Metadata.Audio.ID3v24.format">
+            <summary>
+            The short name used to represent ID3v2.4 metadata.
+            </summary>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.ExtendedHeader">
+            <summary>
+            Describe the behaviour of the extended header.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v24.VerifyHeader(System.IO.Stream)">
+            <summary>
+            Check whether the stream begins with a valid ID3v2.4 header.
+            </summary>
+            <param name="stream">The Stream to check.</param>
+            <returns>
+            Whether the stream begins with a valid ID3v2.4 header.
+            </returns>
+            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v24.VerifyHeader(System.Byte[])">
+            <summary>
+            Check whether the byte array begins with a valid ID3v2.4 header.
+            </summary>
+            <param name="header">The byte array to check</param>
+            <returns>
+            `null` if the stream does not begin with a ID3v2.4 header, and the
+            major version if it does.
+            </returns>
+        </member>
+        <member name="T:Metadata.Audio.ID3v24.AttributeStruct">
+            <summary>
+            Implement the audio field attribute mappings for ID3v2.3 tags.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.Attributes">
+            <summary>
+            Retrieve the audio field attribute mappings for ID3v2.3 tags.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.HasFooter">
+            <summary>
+            Whether the tag is closed with a footer.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.TagIsUpdate">
+            <summary>
+            Whether this tag updates any previous tags
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v24.#ctor(System.IO.Stream)">
+            <summary>
+            Parse a stream according the proper version of the ID3v2
+            specification, from the current location.
+            </summary>
+            <remarks>
+            As according to the recommendation in the ID3v2.2 specification,
+            if the tag is compressed, it is swallowed but largely ignored.
+            </remarks>
+            <param name="stream">The stream to parse.</param>
+            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
+        </member>
+        <member name="M:Metadata.Audio.ID3v24.ParseHeaderAsync(System.IO.Stream)">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 header into
+            usable variables, and use that to retrieve the rest of the tag.
+            </summary>
+            <param name="stream">The stream to parse.</param>
+            <returns>
+            The remainder of the ID3v2.4 tag, already processed to reverse any
+            unsynchronization.
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v24.ParseExtendedHeader(System.Byte[])">
+            <summary>
+            Extract and encapsulate the code used to parse a ID3v2 extended
+            header into usable variables.
+            <para/>
+            Given that arrays have an inherent Length property, the first four
+            bytes (storing the size) are ignored.
+            </summary>
+            <remarks>
+            This takes a `byte[]` rather than a `Stream` like
+            <see cref="M:Metadata.Audio.ID3v24.ParseHeaderAsync(System.IO.Stream)"/> because this is intended to
+            be /// called on pre-processed data of the proper length, rather
+            than the raw bytestream.
+            </remarks>
+            <param name="extHeader">
+            The de-unsynchronized byte array to parse.
+            </param>
+        </member>
+    </members>
+</doc>

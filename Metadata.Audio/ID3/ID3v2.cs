@@ -9,7 +9,7 @@ namespace Metadata.Audio {
     /// <summary>
     /// Shared code for all versions of the ID3v2 standard.
     /// </summary>
-    internal abstract class ID3v2 : AudioTagFormat {
+    public abstract class ID3v2 : AudioTagFormat {
         /// <summary>
         /// The minor version number of the specification used.
         /// </summary>
@@ -64,7 +64,7 @@ namespace Metadata.Audio {
         /// major version if it does.
         /// </returns>
         /// <see cref="MetadataFormat.Validate(string, Stream)"/>
-        public static byte? VerifyBaseHeader(Stream stream) {
+        protected static byte? VerifyBaseHeader(Stream stream) {
             byte? ret = VerifyBaseHeader(RetrieveHeader(stream));
             UnreadHeader(stream);
 
@@ -78,7 +78,7 @@ namespace Metadata.Audio {
         /// `null` if the stream does not begin with a ID3v2 header, and the
         /// major version if it does.
         /// </returns>
-        public static byte? VerifyBaseHeader(byte[] header) {
+        protected static byte? VerifyBaseHeader(byte[] header) {
             // If it's shorter than the length, the header can never be valid
             if (header.Length < 10)
                 return null;
@@ -93,7 +93,7 @@ namespace Metadata.Audio {
                 || (header[7] < 0x80)
                 || (header[8] < 0x80)
                 || (header[9] < 0x80))
-                return header[5];
+                return header[3];
             else
                 return null;
         }
@@ -360,7 +360,7 @@ namespace Metadata.Audio {
         /// <returns>The value after combining all bytes.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Numbers must fit within the proper storage data type (typically
-        /// <paramref name="count"/> must not be more than four bytes for
+        /// <paramref name="bytes"/> must not be more than four bytes long for
         /// ID3v2.3 and five for ID3v2.4).
         /// </exception>
         protected static uint ParseInteger(byte[] bytes, uint bits = 8) {
@@ -381,7 +381,7 @@ namespace Metadata.Audio {
         /// <returns>The value after combining all bytes.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Numbers must fit within the proper storage data type (typically
-        /// <paramref name="count"/> must not be more than four bytes for
+        /// <paramref name="bytes"/> must not be more than four bytes long for
         /// ID3v2.3 and five for ID3v2.4).
         /// </exception>
         protected static uint ParseInteger(IEnumerable<byte> bytes, uint bits = 8) {
@@ -401,7 +401,7 @@ namespace Metadata.Audio {
     /// <summary>
     /// Shared code for ID3v2.3 and later.
     /// </summary>
-    internal abstract class ID3v23Plus : ID3v2 {
+    public abstract class ID3v23Plus : ID3v2 {
         /// <summary>
         /// Minor behaviour dependent on the version of the specification.
         /// </summary>
@@ -490,9 +490,9 @@ namespace Metadata.Audio {
         /// </summary>
         /// <remarks>
         /// This takes a `byte[]` rather than a `Stream` like
-        /// <see cref="ParseHeaderAsync(Stream)"/> because this is intended to
-        /// be /// called on pre-processed data of the proper length, rather
-        /// than the raw bytestream.
+        /// <see cref="ReadExtHeaderWithTagAsync(Stream, uint, bool, bool)"/>
+        /// because this is intended to be called on pre-processed data of the
+        /// proper length, rather than the raw bytestream.
         /// </remarks>
         /// <param name="extHeader">
         /// The de-unsynchronized byte array to parse.

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace Metadata {
     /// <summary>
@@ -12,7 +14,7 @@ namespace Metadata {
         /// Validation functions for each registered metadata format.
         /// </summary>
         /// <seealso cref="Validate(string, Stream)"/>
-        private static Dictionary<string, Func<Stream, bool>> tagHeaders;
+        private static Dictionary<string, Func<Stream, bool>> tagValidationFunctions;
         /// <summary>
         /// Check whether the stream begins with metadata in the desired
         /// format.
@@ -26,7 +28,7 @@ namespace Metadata {
         /// </returns>
         /// <seealso cref="Detect(Stream)"/>
         public static bool Validate(string format, Stream stream) {
-            return tagHeaders[format](stream);
+            return tagValidationFunctions[format](stream);
         }
 
         /// <summary>
@@ -47,34 +49,152 @@ namespace Metadata {
         }
 
         /// <summary>
-        /// Add an implementation of a metadata tag reader to the list of
-        /// automatically-handleable types.
+        /// A registry of previously-scanned assemblies in order to prevent
+        /// unnecessary use of reflection methods.
         /// </summary>
-        /// <typeparam name="TFormat">
-        /// The type encapsulating the metadata format.
+        private static HashSet<string> assemblies = new HashSet<string>();
+
+        /// <summary>
+        /// Initialize static attributes.
+        /// </summary>
+        /// <seealso cref="RefreshFormats"/>
+        static MetadataFormat() {
+            tagValidationFunctions = new Dictionary<string, Func<Stream, bool>>();
+            tagFormats = new Dictionary<string, Type>();
+
+            RefreshFormats();
+        }
+        /// <summary>
+        /// Scan all currently-loaded assemblies for implementations of
+        /// metadata formats.
+        /// </summary>
+        public static void RefreshFormats() {
+            /*TODO: This is being provided through a Nuget package; once .NET
+             * Standard 2.0 comes out, switch to using the builtin if possible
+             * (also will give access to the CurrentDomain.AssemblyLoad event
+             * to check for registration automatically)
+             */
+            /*TODO: Would probably be better to scan all referenced assemblies
+             * (loaded or not) and load those that aren't yet, to avoid issues
+             * with not recognizing a format when it would be expected. See
+             * .NET Core's AssemblyLoadContext.
+             */
+            //BUG: GetAssemblies() returns an empty array
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
+                    .Where((a) => a.IsDefined(typeof(MetadataFormatAssemblyAttribute))))
+                Register(assembly);
+        }
+
+        /// <summary>
+        /// Scan the given assembly for all types marked as implementing a
+        /// metadata format in a suitable manner for automatic lookup.
         /// <para/>
-        /// Note that this must include a constructor taking only a Stream.
-        /// TODO: Validate that the type actually has such a constructor
-        /// </typeparam>
-        /// <param name="format">
+        /// Subsequent calls on a previously-scanned assembly will be ignored
+        /// in order to save unnecessary type reflection.
+        /// </summary>
+        /// <param name="assembly">The assembly to scan.</param>
+        /// <seealso cref="MetadataFormatAttribute"/>
+        public static void Register(Assembly assembly) {
+            // Avoid searching assemblies multiple times to cut down on the
+            // performance hit of reflection
+            if (assemblies.Contains(assembly.FullName))
+                return;
+
+            foreach (Type t in assembly.ExportedTypes) {
+                var attr = t.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
+                if (attr == null)
+                    continue;
+
+                Register(attr.Name, t);
+            }
+
+            assemblies.Add(assembly.FullName);
+        }
+        /// <summary>
+        /// Add the given type to the lookup tables according to the descriptor
+        /// specified in its <see cref="MetadataFormatAttribute.Name"/>.
+        /// </summary>
+        /// <remarks>
+        /// Note that if multiple types are registered under the same name,
+        /// any later registrations will override the previous.
+        /// </remarks>
+        /// <param name="format">The type to add.</param>
+        /// <seealso cref="MetadataFormatValidatorAttribute"/>
+        /// <seealso cref="FormatType(string)"/>
+        /// <seealso cref="Validate(string, Stream)"/>
+        public static void Register(Type format) {
+            var attr = format.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
+            if (attr == null)
+                throw new TypeLoadException("No explicit format name was passed, and the type has no attribute to infer it from");
+            else
+                Register(attr.Name, format);
+        }
+        /// <summary>
+        /// Add the given type to the lookup tables under the specified custom
+        /// descriptor, even if it does not have any associated
+        /// <see cref="MetadataFormatAttribute"/>.
+        /// </summary>
+        /// <remarks>
+        /// The validation function must still be identified with a
+        /// <see cref="MetadataFormatValidatorAttribute"/>.
+        /// <para/>
+        /// Note that if multiple types are registered under the same name,
+        /// any later registrations will override the previous.
+        /// </remarks>
+        /// <param name="name">
         /// A short name for the format to be used as an access key for later
         /// lookups.
         /// <para/>
-        /// It is recommended that this be exposed as a constant.
+        /// It is recommended that this also be exposed as a constant.
         /// </param>
-        /// <param name="header">
-        /// A validation function returning `true` if the stream begins with
-        /// metadata in the proper format.
-        /// <para/>
-        /// Note that this function should leave Stream.Position with the same
-        /// value as it was before being called, but should not assume that
-        /// (Stream.Position == 0).
-        /// </param>
+        /// <param name="format">The type to add.</param>
         /// <seealso cref="FormatType(string)"/>
         /// <seealso cref="Validate(string, Stream)"/>
-        public static void Register<TFormat>(string format, Func<Stream, bool> header) where TFormat : ITagFormat {
-            tagFormats[format] = typeof(TFormat);
-            tagHeaders[format] = header;
+        public static void Register(string name, Type format) {
+            if (typeof(ITagFormat).IsAssignableFrom(format) == false)
+                throw new NotSupportedException("Metadata format types must implement ITagFormat");
+
+            if (format.GetConstructor(new Type[1] { typeof(Stream) }) == null)
+                throw new NotImplementedException("Metadata format types need a constructor taking only a Stream object");
+            tagFormats[name] = format;
+
+            foreach (var method in format.GetRuntimeMethods()
+                    .Where((m) => m.IsDefined(typeof(MetadataFormatValidatorAttribute))))
+                Register(name, method);
+        }
+        /// <summary>
+        /// Add the given method to the lookup tables under the specified
+        /// custom descriptor.
+        /// <para/>
+        /// This should almost purely be called via
+        /// <see cref="Register(string, Type)"/>, and has been separated
+        /// primarily for code clarity.
+        /// </summary>
+        /// <remarks>
+        /// Note that if multiple methods are registered under the same name,
+        /// any later registrations will override the previous.
+        /// </remarks>
+        /// <param name="name">
+        /// A short name for the format to be used as an access key for later
+        /// lookups.
+        /// </param>
+        /// <param name="method">The method to add.</param>
+        private static void Register(string name, MethodInfo method) {
+            if (method.IsPrivate)
+                throw new NotSupportedException("Metadata format validation functions must not be private");
+            if (method.IsAbstract)
+                throw new NotSupportedException("Metadata format validation functions must not be abstract");
+            if (method.IsStatic == false)
+                throw new NotSupportedException("Metadata format validation functions must be static");
+
+            var parameters = method.GetParameters();
+            if ((parameters.Length == 0)
+                || (parameters[0].ParameterType.IsAssignableFrom(typeof(Stream)) == false)
+                || ((parameters.Length > 1) && (parameters[1].IsOptional == false))
+                || (method.ReturnType != typeof(bool)))
+                throw new NotSupportedException("Metadata format validation functions must be able to take only a Stream and return a bool");
+
+            tagValidationFunctions[name] = (Func<Stream, bool>)method.CreateDelegate(typeof(Func<Stream, bool>));
         }
 
         /// <summary>
@@ -93,9 +213,15 @@ namespace Metadata {
         /// <returns>The keys of all matching formats.</returns>
         /// <seealso cref="Validate(string, Stream)"/>
         public static List<string> Detect(Stream stream) {
-            var ret = new List<string>(tagHeaders.Count);
+            var ret = new List<string>(tagValidationFunctions.Count);
 
-            foreach (var header in tagHeaders)
+            //TODO: Wrap in `while` to handle multiple tags in the same file.
+            // At that point, it may be best to return an object combining all
+            // recognized tags (along with unknown data).
+
+            //TODO: Operate on `byte[]` rather than `Stream` to avoid repeated
+            // readings of the same segment and allow non-rewindable streams.
+            foreach (var header in tagValidationFunctions)
                 if (header.Value(stream))
                     ret.Add(header.Key);
 
@@ -117,9 +243,13 @@ namespace Metadata {
         }
 
         /// <summary>
-        /// Common methods to operate on metadata tags.
+        /// Common properties to retrieve info from multiple tag formats.
         /// </summary>
         public interface ITagFormat {
+            /// <summary>
+            /// The proper standardized field redirects for the enclosing
+            /// metadata format.
+            /// </summary>
             TagAttributes Attributes { get; }
         }
     }
