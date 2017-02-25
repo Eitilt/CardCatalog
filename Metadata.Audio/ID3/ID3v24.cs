@@ -138,7 +138,7 @@ namespace Metadata.Audio {
                 throw new InvalidDataException("Extended header too short to be valid for ID3v2.4");
 
             int flagBytes = (int)ParseInteger(new byte[1]{ extHeader[0] });
-            var flags = new BitArray(extHeader.Skip(1).Take(flagBytes).ToArray());
+            var flags = new BitArray(extHeader.ToList().GetRange(1, flagBytes).ToArray());
 
             int pos = flagBytes + 1;
 
@@ -157,7 +157,7 @@ namespace Metadata.Audio {
             if (flags[2]) {
                 if (extHeader[pos] != 0x05)
                     throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'CRC data present' data");
-                TagCRC = ParseInteger(extHeader.Skip(pos + 1).Take(5), 7);
+                TagCRC = ParseInteger(extHeader.ToList().GetRange(pos + 1, 5), 7);
                 pos += 6;
             }
             if (flags[3]) {

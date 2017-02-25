@@ -4,6 +4,16 @@
         <name>Metadata</name>
     </assembly>
     <members>
+        <member name="T:Metadata.ConcatStream">
+            <summary>
+            Join multiple streams into a single continuous object.
+            </summary>
+        </member>
+        <member name="P:Metadata.ConcatStream.CanRead">
+            <summary>
+            Whether all concatenated streams support reading.
+            </summary>
+        </member>
         <member name="T:Metadata.MetadataFormat">
             <summary>
             A data-free class providing a common means to work with multiple
