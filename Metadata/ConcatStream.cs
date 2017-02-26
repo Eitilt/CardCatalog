@@ -90,9 +90,6 @@ namespace Metadata {
         /// At least one concatenated <see cref="Stream"/> does not support
         /// seeking.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after a stream was closed.
-        /// </exception>
         public override long Length =>
             streams.Sum((s) => s.Length);
 
@@ -113,10 +110,7 @@ namespace Metadata {
         /// The Position property does not keep track of the number of bytes
         /// from the stream that have been consumed, skipped, or both.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after a stream was closed.
-        /// </exception>
-        /// 
+       /// 
         /// <seealso cref="Seek"/>
         public override long Position {
             get {
@@ -187,6 +181,8 @@ namespace Metadata {
         /// in the stream and no more is expected (such as a closed socket or
         /// end of file). Fewer bytes than requested may be returned even if
         /// the end of the stream has not been reached.
+        /// 
+        /// TODO: Ensure that the rewind-on-exception occurs properly.
         /// </remarks>
         /// 
         /// <param name="buffer">
@@ -218,15 +214,15 @@ namespace Metadata {
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="offset"/> or <paramref name="count"/> is negative.
         /// </exception>
-        /// <exception cref="IOException">An I/O error occurs.</exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         /// <exception cref="NotSupportedException">
         /// The stream does not support reading.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after a stream was closed.
-        /// </exception>
         /// 
         /// <seealso cref="ReadAsync"/>
+        /// <seealso cref="ReadByte"/>
         public override int Read(byte[] buffer, int offset, int count) {
             // Perform the necessary sanity checks
             if (CanRead == false)
@@ -308,9 +304,11 @@ namespace Metadata {
         /// in the stream and no more is expected (such as a closed socket or
         /// end of file). Fewer bytes than requested may be returned even if
         /// the end of the stream has not been reached.
+        /// 
+        /// TODO: Ensure that the rewind-on-exception occurs properly.
         /// <para/>
         /// TODO: If any method could benefit from a test suite, it's this one
-        /// TODO: should also break into smaller functions
+        /// TODO: Should also break into smaller functions
         /// </remarks>
         /// 
         /// <param name="buffer">
@@ -338,7 +336,6 @@ namespace Metadata {
         /// reached.
         /// </returns>
         /// 
-        /// TODO: Implement all these
         /// <exception cref="ArgumentException">
         /// The sum of offset and count is larger than the buffer length.
         /// </exception>
@@ -350,21 +347,34 @@ namespace Metadata {
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// The stream is currently in use by a previous read operation.
+        /// 
+        /// TODO: Implement this.
         /// </exception>
-        /// <exception cref="IOException">An I/O error occurs.</exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
         /// <exception cref="NotSupportedException">
         /// The stream does not support reading.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after a stream was closed.
-        /// </exception>
         /// 
-        /// <seealso cref="ReadAsync"/>
+        /// <seealso cref="Read"/>
+        /// <seealso cref="ReadByte"/>
         public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) {
+            // Perform the necessary sanity checks
+            if (CanRead == false)
+                throw new NotSupportedException("The stream does not support reading");
+            if (buffer == null)
+                throw new ArgumentNullException("Read buffer is null", "buffer");
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("Read offset is negative", "offset");
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("Read byte count is negative", "count");
+            if ((offset + count) > buffer.Length)
+                throw new ArgumentException("The sum of offset and count to read is larger than the buffer length", "buffer");
+
             int lastIndex = 0;
             long? remainder = count;
             bool firstStream = true, lastStream = false;
-            var positions = new List<long>();
             var forwardStreams = streams.Skip(index)
                 .Select((s) => {
                     if (s.CanRead)
@@ -388,7 +398,6 @@ namespace Metadata {
                             len -= s.Item1.Position;
                             firstStream = false;
                         } else {
-                            positions.Add(s.Item1.Position);
                             s.Item1.Position = 0;
                         }
 
@@ -426,15 +435,20 @@ namespace Metadata {
             var read = await Task.WhenAll(tasks);
 
             bool end = false;
-            uint added = 0;
+            int added = 0;
             var ret = new List<byte>(count);
             for (int i = 0; i < read.Length; ++i) {
-                // Return unused streams to previous state
+                // Ensure no unused bytes are lost
                 if (end) {
-                    if (streams[i].CanSeek) {
-                        streams[i].Position = positions[i];
+                    int active = (index + i + added);
+                    if (streams[active].CanSeek) {
+                        continue;
+                    } else if (streams[active - 1].CanSeek && streams[active - 1].CanWrite) {
+                        streams[active - 1].Seek(0, SeekOrigin.End);
+                        streams[active - 1].SetLength(streams[active - 1].Length + read[i]);
+                        await streams[active - 1].WriteAsync(buffers[i], 0, read[i]);
                     } else {
-                        streams.Insert((int)(index + i + added), new MemoryStream(buffers[i], 0, read[i]));
+                        streams.Insert((int)(active), new MemoryStream(buffers[i], 0, read[i]));
                         ++added;
                     }
                 // Concatenation needs explicit handling for streams that
@@ -444,11 +458,15 @@ namespace Metadata {
                         ret.AddRange(buffers[i]);
                     } else {
                         ret.AddRange(buffers[i].Take(read[i]));
-                        index += i;
                         end = true;
+                        // Set the index to the Stream that returned less than
+                        // requested and return any following bytes as above
+                        index += i;
                     }
                 }
             }
+            // If we got every byte we wanted, set the index to the last
+            // Stream used
             if (end == false)
                 index += (read.Length - 1);
 
@@ -462,21 +480,21 @@ namespace Metadata {
         /// </summary>
         /// 
         /// <remarks>
-        /// Use the CanRead property to determine whether the current instance
-        /// supports reading.
+        /// Use the <see cref="CanRead"/> property to determine whether the
+        /// current instance supports reading.
         /// </remarks>
         /// 
         /// <returns>
-        /// The unsigned byte cast to an Int32, or -1 if at the end of the
-        /// stream.
+        /// The unsigned byte cast to an <see cref="Int32"/>, or -1 if at the
+        /// end of the stream.
         /// </returns>
         /// 
         /// <exception cref="NotSupportedException">
         /// The stream does not support reading.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after the stream was closed.
-        /// </exception>
+        /// 
+        /// <seealso cref="Read"/>
+        /// <seealso cref="ReadAsync"/>
         public override int ReadByte() {
             if (CanRead == false)
                 throw new NotSupportedException("The stream does not support reading");
@@ -528,9 +546,6 @@ namespace Metadata {
         /// <exception cref="NotSupportedException">
         /// The stream does not support reading.
         /// </exception>
-        /// <exception cref="ObjectDisposedException">
-        /// Methods were called after the stream was closed.
-        /// </exception>
         public override long Seek(long offset, SeekOrigin origin) {
             if (CanSeek == false)
                 throw new NotSupportedException("The stream does not support reading");
@@ -569,12 +584,269 @@ namespace Metadata {
             return Position;
         }
 
+        /// <summary>
+        /// Sets the length of the current stream.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// If the specified value is less than the current length of the
+        /// stream, the stream is truncated. If the specified value is larger
+        /// than the current length of the stream, the stream is expanded. If
+        /// the stream is expanded, the contents of the stream between the old
+        /// and the new length are not defined.
+        /// <para/>
+        /// Use the <see cref="CanRead"/> property to determine whether the
+        /// current stream supports writing, and the <see cref="CanSeek"/>
+        /// property to determine whether seeking is supported.
+        /// </remarks>
+        /// 
+        /// <param name="value">
+        /// The desired length of the current stream in bytes.
+        /// </param>
+        /// 
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The stream does not support both writing and seeking.
+        /// </exception>
         public override void SetLength(long value) {
-            throw new NotImplementedException();
+            if ((CanRead == false) || (CanWrite == false))
+                throw new NotSupportedException("The stream does not support both writing and seeking");
+
+            long remainder = 0;
+            streams = streams.TakeWhile((s) => {
+                if (value < 0)
+                    return false;
+
+                remainder = value;
+                value -= s.Length;
+                return true;
+            }).ToList();
+
+            streams[streams.Count - 1].SetLength(remainder);
         }
 
+        /// <summary>
+        /// Writes a sequence of bytes to the current stream and advances the
+        /// current position within this stream by the number of bytes written.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Use the <see cref="CanWrite"/> property to determine whether the
+        /// current instance supports writing. 
+        /// <para/>
+        /// If the write operation is successful, the position within the
+        /// stream advances by the number of bytes written. If an exception
+        /// occurs, the position within the stream remains unchanged.
+        /// 
+        /// TODO: Ensure this is properly respected.
+        /// </remarks>
+        /// 
+        /// <param name="buffer">
+        /// An array of bytes. This method copies <paramref name="count"/>
+        /// bytes from <paramref name="buffer"/> to the current stream. 
+        /// </param>
+        /// <param name="offset">
+        /// The zero-based byte offset in <paramref name="buffer"/> at which
+        /// to begin copying bytes to the current stream.
+        /// </param>
+        /// <param name="count">
+        /// The number of bytes to be written to the current stream.
+        /// </param>
+        /// 
+        /// <exception cref="ArgumentException">
+        /// The sum of offset and count is larger than the buffer length.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="buffer"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> or <paramref name="count"/> is negative.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The stream does not support reading.
+        /// </exception>
+        /// 
+        /// <seealso cref="WriteAsync"/>
+        /// <seealso cref="WriteByte"/>
         public override void Write(byte[] buffer, int offset, int count) {
-            throw new NotImplementedException();
+            // Perform the necessary sanity checks
+            if (CanRead == false)
+                throw new NotSupportedException("The stream does not support writing");
+            if (buffer == null)
+                throw new ArgumentNullException("Read buffer is null", "buffer");
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("Read offset is negative", "offset");
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("Read byte count is negative", "count");
+            if ((offset + count) > buffer.Length)
+                throw new ArgumentException("The sum of offset and count to write is larger than the buffer length", "buffer");
+
+            if (index >= streams.Count) {
+                --index;
+                streams[index].Write(buffer, offset, count);
+                return;
+            }
+
+            var active = streams[index];
+            // Unseekable streams act much more simply if the end is reached
+            // prematurely (e.g. in a network stream) since their total length
+            // can't be checked
+            if (active.CanSeek) {
+                var remaining = (int)(active.Length - active.Position);
+
+                if (remaining >= count) {
+                    active.Write(buffer, offset, count);
+                    return;
+                } else {
+                    active.Write(buffer, offset, remaining);
+
+                    ++index;
+                    if (active.CanSeek)
+                        active.Position = 0;
+                }
+            } else {
+                active.Write(buffer, offset, count);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes a sequence of bytes to the current stream,
+        /// advances the current position within this stream by the number of
+        /// bytes written, and monitors cancellation requests.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Use the <see cref="CanWrite"/> property to determine whether the
+        /// current instance supports writing. Use the <see cref="Write"/>
+        /// method to read synchronously from the current stream.
+        /// <para/>
+        /// If the write operation is successful, the position within the
+        /// stream advances by the number of bytes written. If an exception
+        /// occurs, the position within the stream remains unchanged.
+        /// 
+        /// TODO: Ensure this is properly respected.
+        /// </remarks>
+        /// 
+        /// <param name="buffer">
+        /// An array of bytes. This method copies <paramref name="count"/>
+        /// bytes from <paramref name="buffer"/> to the current stream. 
+        /// </param>
+        /// <param name="offset">
+        /// The zero-based byte offset in <paramref name="buffer"/> at which
+        /// to begin copying bytes to the current stream.
+        /// </param>
+        /// <param name="count">
+        /// The number of bytes to be written to the current stream.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The token to monitor for cancellation requests. The default value
+        /// is <see cref="CancellationToken.None"/>.
+        /// </param>
+        /// 
+        /// <returns>
+        /// A task that represents the asynchronous write operation.
+        /// </returns>
+        /// 
+        /// <exception cref="ArgumentException">
+        /// The sum of offset and count is larger than the buffer length.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="buffer"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="offset"/> or <paramref name="count"/> is negative.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The stream is currently in use by a previous write operation.
+        /// 
+        /// TODO: Implement this.
+        /// 
+        /// </exception>
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The stream does not support reading.
+        /// </exception>
+        /// 
+        /// <seealso cref="Write"/>
+        /// <seealso cref="WriteByte"/>
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) {
+            // Perform the necessary sanity checks
+            if (CanRead == false)
+                throw new NotSupportedException("The stream does not support writing");
+            if (buffer == null)
+                throw new ArgumentNullException("Read buffer is null", "buffer");
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("Read offset is negative", "offset");
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("Read byte count is negative", "count");
+            if ((offset + count) > buffer.Length)
+                throw new ArgumentException("The sum of offset and count to write is larger than the buffer length", "buffer");
+
+            int last = (streams.Count - 1);
+
+            bool firstStream = true;
+            var tasks = new List<Task>();
+            for ( ; (index < last) && (count > 0); ++index) {
+                if (streams[index].CanSeek) {
+                    if (firstStream == false)
+                        streams[index].Position = 0;
+
+                    var len = Math.Min((int)(streams[index].Length - streams[index].Position), count);
+                    tasks.Add(streams[index].WriteAsync(buffer, offset, len, cancellationToken));
+
+                    offset += len;
+                    count -= len;
+                } else {
+                    tasks.Add(streams[index].WriteAsync(buffer, offset, count, cancellationToken));
+                    count = 0;
+                    break;
+                }
+            }
+
+            if (count > 0)
+                tasks.Add(streams[last].WriteAsync(buffer, offset, count, cancellationToken));
+
+            return Task.WhenAll(tasks);
+        }
+
+        /// <summary>
+        /// Writes a byte to the current position in the stream and advances
+        /// the position within the stream by one byte.
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Use the <see cref="CanWrite"/> property to determine whether the
+        /// current instance supports writing.
+        /// </remarks>
+        /// 
+        /// <exception cref="IOException">
+        /// An I/O error occurs.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// The stream does not support writing.
+        /// </exception>
+        /// 
+        /// <seealso cref="Write"/>
+        /// <seealso cref="WriteAsync"/>
+        public override void WriteByte(byte value) {
+            if (CanWrite == false)
+                throw new NotSupportedException("The stream does not support writing");
+
+            if (index >= streams.Count) {
+                index = (streams.Count - 1);
+
+                if (streams[index].CanSeek)
+                    streams[index].Seek(0, SeekOrigin.End);
+            }
+
+            streams[index].WriteByte(value);
         }
     }
 }
