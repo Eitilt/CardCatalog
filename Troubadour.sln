@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Troubadour", "Troubadour\Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{9CD7724C-C61C-4C45-8FD0-EBC5A53A9D20}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metadata", "Metadata\Metadata.csproj", "{42BD045C-51C5-4F77-8583-A83C3636737A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metadata", "Metadata\Metadata\Metadata.csproj", "{42BD045C-51C5-4F77-8583-A83C3636737A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{66EB208C-DF14-45B5-BF2B-6DF13B701CB9}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\music\Andreas Waldetoft\Songs of the New World\Travel the New World.mp3 = ..\..\..\..\music\Andreas Waldetoft\Songs of the New World\Travel the New World.mp3
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Audio", "Metadata.Audio\Metadata.Audio.csproj", "{8ACB9422-DC7E-4A02-B195-139FC7F41DE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Audio", "Metadata\Metadata.Audio\Metadata.Audio.csproj", "{8ACB9422-DC7E-4A02-B195-139FC7F41DE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{3537BCDF-F425-4F07-985C-6E4D944A970B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,5 +102,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{42BD045C-51C5-4F77-8583-A83C3636737A} = {3537BCDF-F425-4F07-985C-6E4D944A970B}
+		{8ACB9422-DC7E-4A02-B195-139FC7F41DE2} = {3537BCDF-F425-4F07-985C-6E4D944A970B}
 	EndGlobalSection
 EndGlobal
