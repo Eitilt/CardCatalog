@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Metadata.Audio", "Metadata\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metadata", "Metadata", "{3537BCDF-F425-4F07-985C-6E4D944A970B}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Metadata.Test", "Metadata\Metadata.Test\Metadata.Test.fsproj", "{365B24B3-7F0D-484C-9645-FB27A497BA9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,22 @@ Global
 		{8ACB9422-DC7E-4A02-B195-139FC7F41DE2}.Release|x64.Build.0 = Release|x64
 		{8ACB9422-DC7E-4A02-B195-139FC7F41DE2}.Release|x86.ActiveCfg = Release|x86
 		{8ACB9422-DC7E-4A02-B195-139FC7F41DE2}.Release|x86.Build.0 = Release|x86
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|ARM.Build.0 = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|x64.Build.0 = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|x86.Build.0 = Debug|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|ARM.ActiveCfg = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|ARM.Build.0 = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|x64.ActiveCfg = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|x64.Build.0 = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|x86.ActiveCfg = Release|Any CPU
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,5 +124,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{42BD045C-51C5-4F77-8583-A83C3636737A} = {3537BCDF-F425-4F07-985C-6E4D944A970B}
 		{8ACB9422-DC7E-4A02-B195-139FC7F41DE2} = {3537BCDF-F425-4F07-985C-6E4D944A970B}
+		{365B24B3-7F0D-484C-9645-FB27A497BA9E} = {3537BCDF-F425-4F07-985C-6E4D944A970B}
 	EndGlobalSection
 EndGlobal
