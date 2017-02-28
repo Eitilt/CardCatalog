@@ -652,22 +652,6 @@
             <returns>The parsed metadata.</returns>
             <seealso cref="M:Metadata.MetadataFormat.FormatType(System.String)"/>
         </member>
-        <member name="T:Metadata.MetadataFormat.ITagFormat">
-            <summary>
-            Common properties to retrieve info from multiple tag formats.
-            </summary>
-        </member>
-        <member name="P:Metadata.MetadataFormat.ITagFormat.Format">
-            <summary>
-            The display name of the tag format.
-            </summary>
-        </member>
-        <member name="P:Metadata.MetadataFormat.ITagFormat.Attributes">
-            <summary>
-            The proper standardized field redirects for the enclosing
-            metadata format.
-            </summary>
-        </member>
         <member name="T:Metadata.MetadataFormatAssemblyAttribute">
             <summary>
             Indicate that the assembly should be scanned for classes marked with
@@ -685,7 +669,7 @@
             This class cannot be inherited.
             </summary>
             <remarks>
-            The class must implement <see cref="T:Metadata.MetadataFormat.ITagFormat"/>.
+            The class must implement <see cref="T:Metadata.ITagFormat"/>.
             </remarks>
             <seealso cref="T:Metadata.MetadataFormatAssemblyAttribute"/>
             <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
@@ -722,22 +706,82 @@
             (potentially non-0) value as it had before the function was called.
             
             This may change according to the TODO within
-            <see cref="!:MetadataFormat.Detect(System.IO.Stream)"/>, likely by
+            <see cref="M:Metadata.MetadataFormat.Parse(System.IO.Stream)"/>, likely by
             adding a `HeaderLength` parameter to this attribute.
             </remarks>
             TODO: Add discussion of required signature according to exceptions in
             method Register(...)
         </member>
-        <member name="T:Metadata.TagAttributes">
+        <member name="T:Metadata.ITagFormat">
+            <summary>
+            Common properties to retrieve info from multiple tag formats.
+            </summary>
+        </member>
+        <member name="P:Metadata.ITagFormat.Format">
+            <summary>
+            The display name of the tag format.
+            </summary>
+        </member>
+        <member name="P:Metadata.ITagFormat.Fields">
+            <summary>
+            The low-level representations of the tag data.
+            </summary>
+        </member>
+        <member name="P:Metadata.ITagFormat.Attributes">
+            <summary>
+            The proper standardized field redirects for the enclosing
+            metadata format.
+            </summary>
+            
+            <seealso cref="P:Metadata.ITagFormat.Fields"/>
+        </member>
+        <member name="T:Metadata.ITagAttributes">
             <summary>
             Common format-agnostic attributes mapping to different fields
             depending on how each is expressed in the particular format.
             </summary>
         </member>
-        <member name="P:Metadata.TagAttributes.Name">
+        <member name="P:Metadata.ITagAttributes.Name">
             <summary>
-            The display name of the file.
+            The display name of the enclosing file.
             </summary>
+        </member>
+        <member name="T:Metadata.ITagField">
+            <summary>
+            A single point of data saved in the tag.
+            </summary>
+        </member>
+        <member name="P:Metadata.ITagField.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.ITagField.Name">
+            <summary>
+            The human-readable name of the field if available, or a
+            representation of <see cref="P:Metadata.ITagField.SystemName"/> if not.
+            </summary>
+        </member>
+        <member name="T:Metadata.TagFieldBase">
+            <summary>
+            A single point of data saved in the tag, with default helper implementations
+            </summary>
+        </member>
+        <member name="P:Metadata.TagFieldBase.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.TagFieldBase.Name">
+            <summary>
+            The human-readable name of the field if available, or a
+            representation of <see cref="P:Metadata.TagFieldBase.SystemName"/> if not.
+            </summary>
+            <remarks>
+            The default implementation is to read the <see cref="P:Metadata.TagFieldBase.SystemName"/>
+            as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
+            not suitable, the method should be overridden.
+            </remarks>
         </member>
     </members>
 </doc>

@@ -9,6 +9,13 @@
             Common format-agnostic attributes specific to audio encoding, mapping
             to different fields depending on the particular metadata format.
             </summary>
+            
+            <seealso cref="T:Metadata.ITagField"/>
+        </member>
+        <member name="P:Metadata.Audio.AudioTagAttributes.Name">
+            <summary>
+            The display name of the enclosing file.
+            </summary>
         </member>
         <member name="T:Metadata.Audio.AudioTagFormat">
             <summary>
@@ -20,7 +27,12 @@
             The display name of the tag format.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.Metadata#MetadataFormat#ITagFormat#Attributes">
+        <member name="P:Metadata.Audio.AudioTagFormat.Fields">
+            <summary>
+            The low-level representations of the tag data.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.AudioTagFormat.Metadata#ITagFormat#Attributes">
             <summary>
             Redirect to allow the more specific attribute format to satisfy
             the interface implementation.
@@ -31,6 +43,8 @@
             The proper standardized field redirects for the enclosing
             audio metadata format.
             </summary>
+            
+            <seealso cref="P:Metadata.Audio.AudioTagFormat.Fields"/>
         </member>
         <member name="T:Metadata.Audio.ID3v2">
             <summary>
@@ -379,6 +393,18 @@
             major version if it does.
             </returns>
         </member>
+        <member name="F:Metadata.Audio.ID3v22.fields">
+            <summary>
+            The underlying low-level tag data.
+            </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v22.Fields"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v22.Fields">
+            <summary>
+            The low-level representations of the tag data.
+            </summary>
+        </member>
         <member name="T:Metadata.Audio.ID3v22.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.2 tags.
@@ -388,6 +414,8 @@
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.2 tags.
             </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v22.Fields"/>
         </member>
         <member name="M:Metadata.Audio.ID3v22.#ctor(System.IO.Stream)">
             <summary>
@@ -453,6 +481,18 @@
             major version if it does.
             </returns>
         </member>
+        <member name="F:Metadata.Audio.ID3v23.fields">
+            <summary>
+            The underlying low-level tag data.
+            </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v23.Fields"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23.Fields">
+            <summary>
+            The low-level representations of the tag data.
+            </summary>
+        </member>
         <member name="T:Metadata.Audio.ID3v23.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.3 tags.
@@ -462,6 +502,8 @@
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.3 tags.
             </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v23.Fields"/>
         </member>
         <member name="P:Metadata.Audio.ID3v23.PaddingSize">
             <summary>
@@ -555,15 +597,29 @@
             major version if it does.
             </returns>
         </member>
+        <member name="F:Metadata.Audio.ID3v24.fields">
+            <summary>
+            The underlying low-level tag data.
+            </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v24.Fields"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.Fields">
+            <summary>
+            The low-level representations of the tag data.
+            </summary>
+        </member>
         <member name="T:Metadata.Audio.ID3v24.AttributeStruct">
             <summary>
-            Implement the audio field attribute mappings for ID3v2.3 tags.
+            Implement the audio field attribute mappings for ID3v2.4 tags.
             </summary>
         </member>
         <member name="P:Metadata.Audio.ID3v24.Attributes">
             <summary>
-            Retrieve the audio field attribute mappings for ID3v2.3 tags.
+            Retrieve the audio field attribute mappings for ID3v2.4 tags.
             </summary>
+            
+            <seealso cref="P:Metadata.Audio.ID3v24.Fields"/>
         </member>
         <member name="P:Metadata.Audio.ID3v24.HasFooter">
             <summary>
@@ -609,7 +665,7 @@
             <remarks>
             This takes a `byte[]` rather than a `Stream` like
             <see cref="M:Metadata.Audio.ID3v24.ParseHeaderAsync(System.IO.Stream)"/> because this is intended to
-            be /// called on pre-processed data of the proper length, rather
+            be called on pre-processed data of the proper length, rather
             than the raw bytestream.
             </remarks>
             <param name="extHeader">

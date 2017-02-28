@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,16 +58,34 @@ namespace Metadata.Audio {
         }
 
         /// <summary>
-        /// Implement the audio field attribute mappings for ID3v2.3 tags.
+        /// The underlying low-level tag data.
         /// </summary>
-        class AttributeStruct : AudioTagAttributes {
-            public override string Name => throw new NotImplementedException();
-        }
+        /// 
+        /// <seealso cref="Fields"/>
+        private Dictionary<byte[], ITagField> fields = new Dictionary<byte[], ITagField>();
+        /// <summary>
+        /// The low-level representations of the tag data.
+        /// </summary>
+        public override IReadOnlyDictionary<byte[], ITagField> Fields => fields;
 
         /// <summary>
-        /// Retrieve the audio field attribute mappings for ID3v2.3 tags.
+        /// Implement the audio field attribute mappings for ID3v2.4 tags.
         /// </summary>
-        public override AudioTagAttributes Attributes => new AttributeStruct();
+        class AttributeStruct : AudioTagAttributes {
+            private ID3v24 parent;
+
+            public AttributeStruct(ID3v24 parent) {
+                this.parent = parent;
+            }
+
+            public override string Name => throw new NotImplementedException();
+        }
+        /// <summary>
+        /// Retrieve the audio field attribute mappings for ID3v2.4 tags.
+        /// </summary>
+        /// 
+        /// <seealso cref="Fields"/>
+        public override AudioTagAttributes Attributes => new AttributeStruct(this);
 
         /// <summary>
         /// Whether the tag is closed with a footer.
@@ -132,7 +151,7 @@ namespace Metadata.Audio {
         /// <remarks>
         /// This takes a `byte[]` rather than a `Stream` like
         /// <see cref="ParseHeaderAsync(Stream)"/> because this is intended to
-        /// be /// called on pre-processed data of the proper length, rather
+        /// be called on pre-processed data of the proper length, rather
         /// than the raw bytestream.
         /// </remarks>
         /// <param name="extHeader">

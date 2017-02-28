@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,16 +54,34 @@ namespace Metadata.Audio {
         }
 
         /// <summary>
+        /// The underlying low-level tag data.
+        /// </summary>
+        /// 
+        /// <seealso cref="Fields"/>
+        private Dictionary<byte[], ITagField> fields = new Dictionary<byte[], ITagField>();
+        /// <summary>
+        /// The low-level representations of the tag data.
+        /// </summary>
+        public override IReadOnlyDictionary<byte[], ITagField> Fields => fields;
+
+        /// <summary>
         /// Implement the audio field attribute mappings for ID3v2.3 tags.
         /// </summary>
         class AttributeStruct : AudioTagAttributes {
+            private ID3v23 parent;
+
+            public AttributeStruct(ID3v23 parent) {
+                this.parent = parent;
+            }
+
             public override string Name => throw new NotImplementedException();
         }
-
         /// <summary>
         /// Retrieve the audio field attribute mappings for ID3v2.3 tags.
         /// </summary>
-        public override AudioTagAttributes Attributes => new AttributeStruct();
+        /// 
+        /// <seealso cref="Fields"/>
+        public override AudioTagAttributes Attributes => new AttributeStruct(this);
 
         /// <summary>
         /// The size of the empty padding at the end of the tag.

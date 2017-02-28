@@ -18,7 +18,7 @@ namespace Metadata {
     /// This class cannot be inherited.
     /// </summary>
     /// <remarks>
-    /// The class must implement <see cref="MetadataFormat.ITagFormat"/>.
+    /// The class must implement <see cref="ITagFormat"/>.
     /// </remarks>
     /// <seealso cref="MetadataFormatAssemblyAttribute"/>
     /// <seealso cref="MetadataFormat.Register(string, Type)"/>
@@ -58,7 +58,7 @@ namespace Metadata {
     /// (potentially non-0) value as it had before the function was called.
     /// 
     /// This may change according to the TODO within
-    /// <see cref="MetadataFormat.Detect(System.IO.Stream)"/>, likely by
+    /// <see cref="MetadataFormat.Parse(System.IO.Stream)"/>, likely by
     /// adding a `HeaderLength` parameter to this attribute.
     /// </remarks>
     /// TODO: Add discussion of required signature according to exceptions in

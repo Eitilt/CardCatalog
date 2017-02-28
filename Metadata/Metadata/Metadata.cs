@@ -241,21 +241,5 @@ namespace Metadata {
         public static ITagFormat Construct(string format, Stream stream) {
             return (ITagFormat)Activator.CreateInstance(tagFormats[format], stream);
         }
-
-        /// <summary>
-        /// Common properties to retrieve info from multiple tag formats.
-        /// </summary>
-        public interface ITagFormat {
-            /// <summary>
-            /// The display name of the tag format.
-            /// </summary>
-            string Format { get; }
-
-            /// <summary>
-            /// The proper standardized field redirects for the enclosing
-            /// metadata format.
-            /// </summary>
-            TagAttributes Attributes { get; }
-        }
     }
 }
