@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,10 @@ namespace Metadata.Audio {
         /// </summary>
         /// <seealso cref="MetadataFormat.Register(string, System.Type)"/>
         public const string format = "ID3v2.4";
+        /// <summary>
+        /// The display name of the tag format.
+        /// </summary>
+        public override string Format => format;
 
         /// <summary>
         /// Describe the behaviour of the extended header.
@@ -54,7 +59,9 @@ namespace Metadata.Audio {
         /// <summary>
         /// Implement the audio field attribute mappings for ID3v2.3 tags.
         /// </summary>
-        class AttributeStruct : AudioTagAttributes { }
+        class AttributeStruct : AudioTagAttributes {
+            public override string Name => throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Retrieve the audio field attribute mappings for ID3v2.3 tags.

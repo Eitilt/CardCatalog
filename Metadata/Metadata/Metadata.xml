@@ -520,7 +520,7 @@
             <returns>
             Whether the Stream begins with metadata in the desired format.
             </returns>
-            <seealso cref="M:Metadata.MetadataFormat.Detect(System.IO.Stream)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Parse(System.IO.Stream)"/>
         </member>
         <member name="F:Metadata.MetadataFormat.tagFormats">
             <summary>
@@ -623,7 +623,7 @@
             </param>
             <param name="method">The method to add.</param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Detect(System.IO.Stream)">
+        <member name="M:Metadata.MetadataFormat.Parse(System.IO.Stream)">
             <summary>
             Check the stream against all registered tag formats, and return
             those that match the header.
@@ -655,6 +655,11 @@
         <member name="T:Metadata.MetadataFormat.ITagFormat">
             <summary>
             Common properties to retrieve info from multiple tag formats.
+            </summary>
+        </member>
+        <member name="P:Metadata.MetadataFormat.ITagFormat.Format">
+            <summary>
+            The display name of the tag format.
             </summary>
         </member>
         <member name="P:Metadata.MetadataFormat.ITagFormat.Attributes">
@@ -717,7 +722,7 @@
             (potentially non-0) value as it had before the function was called.
             
             This may change according to the TODO within
-            <see cref="M:Metadata.MetadataFormat.Detect(System.IO.Stream)"/>, likely by
+            <see cref="!:MetadataFormat.Detect(System.IO.Stream)"/>, likely by
             adding a `HeaderLength` parameter to this attribute.
             </remarks>
             TODO: Add discussion of required signature according to exceptions in
@@ -727,6 +732,11 @@
             <summary>
             Common format-agnostic attributes mapping to different fields
             depending on how each is expressed in the particular format.
+            </summary>
+        </member>
+        <member name="P:Metadata.TagAttributes.Name">
+            <summary>
+            The display name of the file.
             </summary>
         </member>
     </members>

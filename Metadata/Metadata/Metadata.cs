@@ -26,7 +26,7 @@ namespace Metadata {
         /// <returns>
         /// Whether the Stream begins with metadata in the desired format.
         /// </returns>
-        /// <seealso cref="Detect(Stream)"/>
+        /// <seealso cref="Parse(Stream)"/>
         public static bool Validate(string format, Stream stream) {
             return tagValidationFunctions[format](stream);
         }
@@ -212,8 +212,8 @@ namespace Metadata {
         /// <param name="stream">The bytestream to test.</param>
         /// <returns>The keys of all matching formats.</returns>
         /// <seealso cref="Validate(string, Stream)"/>
-        public static List<string> Detect(Stream stream) {
-            var ret = new List<string>(tagValidationFunctions.Count);
+        public static List<ITagFormat> Parse(Stream stream) {
+            var ret = new List<ITagFormat>(tagValidationFunctions.Count);
 
             //TODO: Wrap in `while` to handle multiple tags in the same file.
             // At that point, it may be best to return an object combining all
@@ -223,7 +223,7 @@ namespace Metadata {
             // readings of the same segment and allow non-rewindable streams.
             foreach (var header in tagValidationFunctions)
                 if (header.Value(stream))
-                    ret.Add(header.Key);
+                    ret.Add((ITagFormat)Activator.CreateInstance(tagFormats[header.Key], stream));
 
             return ret;
         }
@@ -246,6 +246,11 @@ namespace Metadata {
         /// Common properties to retrieve info from multiple tag formats.
         /// </summary>
         public interface ITagFormat {
+            /// <summary>
+            /// The display name of the tag format.
+            /// </summary>
+            string Format { get; }
+
             /// <summary>
             /// The proper standardized field redirects for the enclosing
             /// metadata format.

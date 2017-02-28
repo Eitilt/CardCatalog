@@ -6,6 +6,11 @@ namespace Metadata.Audio {
     /// </summary>
     public abstract class AudioTagFormat : MetadataFormat.ITagFormat {
         /// <summary>
+        /// The display name of the tag format.
+        /// </summary>
+        public abstract string Format { get; }
+
+        /// <summary>
         /// Redirect to allow the more specific attribute format to satisfy
         /// the interface implementation.
         /// </summary>

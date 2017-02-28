@@ -15,6 +15,11 @@
             Common properties to retrieve info from multiple audio formats.
             </summary>
         </member>
+        <member name="P:Metadata.Audio.AudioTagFormat.Format">
+            <summary>
+            The display name of the tag format.
+            </summary>
+        </member>
         <member name="P:Metadata.Audio.AudioTagFormat.Metadata#MetadataFormat#ITagFormat#Attributes">
             <summary>
             Redirect to allow the more specific attribute format to satisfy
@@ -349,6 +354,11 @@
             </summary>
             <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
         </member>
+        <member name="P:Metadata.Audio.ID3v22.Format">
+            <summary>
+            The display name of the tag format.
+            </summary>
+        </member>
         <member name="M:Metadata.Audio.ID3v22.VerifyHeader(System.IO.Stream)">
             <summary>
             Check whether the stream begins with a valid ID3v2.2 header.
@@ -412,6 +422,11 @@
             The short name used to represent ID3v2.3 metadata.
             </summary>
             <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v23.Format">
+            <summary>
+            The display name of the tag format.
+            </summary>
         </member>
         <member name="P:Metadata.Audio.ID3v23.ExtendedHeader">
             <summary>
@@ -509,6 +524,11 @@
             The short name used to represent ID3v2.4 metadata.
             </summary>
             <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="P:Metadata.Audio.ID3v24.Format">
+            <summary>
+            The display name of the tag format.
+            </summary>
         </member>
         <member name="P:Metadata.Audio.ID3v24.ExtendedHeader">
             <summary>
