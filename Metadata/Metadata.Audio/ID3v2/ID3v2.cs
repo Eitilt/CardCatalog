@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata.Audio {
+namespace Metadata.Audio.ID3v2 {
     /// <summary>
     /// Shared code for all versions of the ID3v2 standard.
     /// </summary>
-    public abstract class ID3v2 : AudioTagFormat {
+    public abstract partial class ID3v2 : AudioTagFormat {
         /// <summary>
         /// The minor version number of the specification used.
         /// </summary>
@@ -19,6 +19,7 @@ namespace Metadata.Audio {
         /// Whether the header includes a non-standard tag, which may result
         /// in unrecognizable data.
         /// </summary>
+        /// 
         /// <remarks>
         /// TODO: Store data about the unknown flags rather than simply
         /// indicating their presence.
@@ -37,7 +38,9 @@ namespace Metadata.Audio {
         /// Retrieve the proper number of bytes from the stream to contain the
         /// header.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to read from.</param>
+        /// 
         /// <returns>The number of bytes used by a ID3 header.</returns>
         protected static byte[] RetrieveHeader(Stream stream) {
             var bytes = new byte[10];
@@ -50,6 +53,7 @@ namespace Metadata.Audio {
         /// "Rewind" retrieving the header so that the stream is left in the
         /// same state as it started in.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to rewind.</param>
         protected static void UnreadHeader(Stream stream) {
             stream.Position -= 10;
@@ -58,11 +62,14 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the stream begins with a valid ID3v2 header.
         /// </summary>
+        /// 
         /// <param name="stream">The Stream to check.</param>
+        /// 
         /// <returns>
         /// `null` if the stream does not begin with a ID3v2 header, and the
         /// major version if it does.
         /// </returns>
+        /// 
         /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         protected static byte? VerifyBaseHeader(Stream stream) {
             byte? ret = VerifyBaseHeader(RetrieveHeader(stream));
@@ -73,7 +80,9 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the byte array begins with a valid ID3v2 header.
         /// </summary>
+        /// 
         /// <param name="header">The byte array to check</param>
+        /// 
         /// <returns>
         /// `null` if the stream does not begin with a ID3v2 header, and the
         /// major version if it does.
@@ -102,12 +111,15 @@ namespace Metadata.Audio {
         /// Manipulate the byte array to remove the historic synchronization
         /// pattern, according to the ID3v2 specifications.
         /// </summary>
+        /// 
         /// <param name="input">The byte array to unsynchronize.</param>
         /// <param name="changed">
         /// Whether the synchronization pattern was encountered and
         /// subsequently interrupted.
         /// </param>
+        /// 
         /// <returns>A new, synchronization-safe byte array.</returns>
+        /// 
         /// <seealso cref="DeUnsynchronize(byte[])"/>
         protected static byte[] Unsynchronize(byte[] input, out bool changed) {
             return Unsynchronize(input, out changed, out bool ignore);
@@ -116,6 +128,7 @@ namespace Metadata.Audio {
         /// Manipulate the byte array to remove the historic synchronization
         /// pattern, according to the ID3v2 specifications.
         /// </summary>
+        /// 
         /// <param name="input">The byte array to unsynchronize.</param>
         /// <param name="changed">
         /// Whether the synchronization pattern was encountered and
@@ -130,7 +143,9 @@ namespace Metadata.Audio {
         /// later -- tag requires unsynchronization), the byte needs to be
         /// appended manually.
         /// </param>
+        /// 
         /// <returns>A new, synchronization-safe byte array.</returns>
+        /// 
         /// <seealso cref="DeUnsynchronize(byte[])"/>
         protected static byte[] Unsynchronize(byte[] input, out bool changed, out bool endPadding) {
             changed = false;
@@ -165,16 +180,20 @@ namespace Metadata.Audio {
         /// <summary>
         /// Reverse the unsynchronization scheme as described in the ID3v2
         /// specifications.
+        /// 
         /// </summary>
         /// <param name="input">
         /// The byte array on which to reverse unsynchronization.
         /// </param>
+        /// 
         /// <returns>The pre-unsynchronization byte array.</returns>
+        /// 
         /// <exception cref="InvalidDataException">
         /// <paramref name="input"/> is expected to be unsynchronized and a
         /// basic sanity check is performed to ensure this, but attempting to
         /// reconstruct a malformed byte array is beyond the intended scope.
         /// </exception>
+        /// 
         /// <seealso cref="Unsynchronize(byte[], out bool, out bool)"/>
         protected static byte[] DeUnsynchronize(byte[] input) {
             var ret = new List<byte>(input.Length);
@@ -207,11 +226,13 @@ namespace Metadata.Audio {
         /// Asynchronously read a given number of bytes from a stream,
         /// optionally reversing ID3v2 unsynchronization.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to read from.</param>
         /// <param name="count">The number of bytes to read.</param>
         /// <param name="unsync">
         /// Whether the stream is unsynchronized, in which case it's reversed.
         /// </param>
+        /// 
         /// <returns>
         /// The Task tracking the byte retrieval operation (number of bytes
         /// may be less than <paramref name="count"/>).
@@ -236,14 +257,17 @@ namespace Metadata.Audio {
         /// Retrieve a given number of bytes from a stream, properly handling
         /// ID3v2 unsynchronization.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to read from.</param>
         /// <param name="count">
         /// The number of bytes to retrieve, which is updated to reflect the
         /// actual number of bytes read.
         /// </param>
+        /// 
         /// <returns>
         /// The specified number of de-unsynchronized bytes.
         /// </returns>
+        /// 
         /// <exception cref="EndOfStreamException">
         /// The end of the stream is reached before retrieving the desired
         /// number of de-unsynchronized bytes.
@@ -285,8 +309,10 @@ namespace Metadata.Audio {
         /// Extract and encapsulate the code used to parse a ID3v2 header into
         /// usable variables.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to parse.</param>
         /// <param name="validation">A function </param>
+        /// 
         /// <returns>
         /// A tuple of, in order:
         /// <list type="bullet">
@@ -317,13 +343,16 @@ namespace Metadata.Audio {
         /// <summary>
         /// Read a variable number of bytes as a single integer.
         /// </summary>
+        /// 
         /// <param name="stream">The source to read from.</param>
         /// <param name="unsynced">
         /// Whether the source has been unsynchronized.
         /// </param>
         /// <param name="bits">The number of data bits per byte.</param>
         /// <param name="count">The number of bytes to read.</param>
+        /// 
         /// <returns>The value after combining all bytes.</returns>
+        /// 
         /// <exception cref="ArgumentOutOfRangeException">
         /// Numbers must fit within the proper storage data type (typically
         /// <paramref name="count"/> must not be more than four bytes for
@@ -355,9 +384,12 @@ namespace Metadata.Audio {
         /// <summary>
         /// Read a variable number of bytes as a single integer.
         /// </summary>
+        /// 
         /// <param name="bytes">The source to read from.</param>
         /// <param name="bits">The number of data bits per byte.</param>
+        /// 
         /// <returns>The value after combining all bytes.</returns>
+        /// 
         /// <exception cref="ArgumentOutOfRangeException">
         /// Numbers must fit within the proper storage data type (typically
         /// <paramref name="bytes"/> must not be more than four bytes long for
@@ -376,8 +408,10 @@ namespace Metadata.Audio {
         /// <summary>
         /// Read a variable number of bytes as a single integer.
         /// </summary>
+        /// 
         /// <param name="bytes">The source to read from.</param>
         /// <param name="bits">The number of data bits per byte.</param>
+        /// 
         /// <returns>The value after combining all bytes.</returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Numbers must fit within the proper storage data type (typically
@@ -401,7 +435,7 @@ namespace Metadata.Audio {
     /// <summary>
     /// Shared code for ID3v2.3 and later.
     /// </summary>
-    public abstract class ID3v23Plus : ID3v2 {
+    public abstract partial class ID3v23Plus : ID3v2 {
         /// <summary>
         /// Minor behaviour dependent on the version of the specification.
         /// </summary>
@@ -424,6 +458,7 @@ namespace Metadata.Audio {
         /// <summary>
         /// Indicates that the tag is in an experimental stage.
         /// </summary>
+        /// 
         /// <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
         protected bool IsExperimental { get; set; }
         /// <summary>
@@ -445,6 +480,7 @@ namespace Metadata.Audio {
         /// the stream, while retrieving the remainder of the tag in the
         /// background.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to read from.</param>
         /// <param name="tagSize">The total size of the ID3v2 tag.</param>
         /// <param name="useUnsync">
@@ -453,6 +489,7 @@ namespace Metadata.Audio {
         /// <param name="extendedHeaderPresent">
         /// Whether the tag contains an extended header.
         /// </param>
+        /// 
         /// <returns>
         /// The remainder of the ID3v2 tag, already processed to reverse any
         /// unsynchronization.
@@ -488,12 +525,14 @@ namespace Metadata.Audio {
         /// Given that arrays have an inherent Length property, the first four
         /// bytes (storing the size) are ignored.
         /// </summary>
+        /// 
         /// <remarks>
         /// This takes a `byte[]` rather than a `Stream` like
         /// <see cref="ReadExtHeaderWithTagAsync(Stream, uint, bool, bool)"/>
         /// because this is intended to be called on pre-processed data of the
         /// proper length, rather than the raw bytestream.
         /// </remarks>
+        /// 
         /// <param name="extHeader">
         /// The de-unsynchronized byte array to parse.
         /// </param>

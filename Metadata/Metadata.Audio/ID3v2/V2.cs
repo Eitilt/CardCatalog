@@ -3,16 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata.Audio {
+namespace Metadata.Audio.ID3v2 {
     /// <summary>
     /// An implementation of the ID3v2.2 standard as described at
     /// <see href="http://id3.org/id3v2-00"/>
     /// </summary>
     [MetadataFormat(format)]
-    public class ID3v22 : ID3v2 {
+    public partial class V2 : ID3v2 {
         /// <summary>
         /// The short name used to represent ID3v2.2 metadata.
         /// </summary>
+        /// 
         /// <seealso cref="MetadataFormat.Register(string, System.Type)"/>
         public const string format = "ID3v2.2";
         /// <summary>
@@ -23,10 +24,13 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the stream begins with a valid ID3v2.2 header.
         /// </summary>
+        /// 
         /// <param name="stream">The Stream to check.</param>
+        /// 
         /// <returns>
         /// Whether the stream begins with a valid ID3v2.2 header.
         /// </returns>
+        /// 
         /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         [MetadataFormatValidator]
         public static bool VerifyHeader(Stream stream) {
@@ -35,7 +39,9 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the byte array begins with a valid ID3v2.2 header.
         /// </summary>
+        /// 
         /// <param name="header">The byte array to check</param>
+        /// 
         /// <returns>
         /// `null` if the stream does not begin with a ID3v2.2 header, and the
         /// major version if it does.
@@ -59,9 +65,9 @@ namespace Metadata.Audio {
         /// Implement the audio field attribute mappings for ID3v2.2 tags.
         /// </summary>
         class AttributeStruct : AudioTagAttributes {
-            private ID3v22 parent;
+            private V2 parent;
 
-            public AttributeStruct(ID3v22 parent) {
+            public AttributeStruct(V2 parent) {
                 this.parent = parent;
             }
 
@@ -78,13 +84,16 @@ namespace Metadata.Audio {
         /// Parse a stream according the proper version of the ID3v2
         /// specification, from the current location.
         /// </summary>
+        /// 
         /// <remarks>
         /// As according to the recommendation in the ID3v2.2 specification,
         /// if the tag is compressed, it is swallowed but largely ignored.
         /// </remarks>
+        /// 
         /// <param name="stream">The stream to parse.</param>
+        /// 
         /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
-        public ID3v22(Stream stream) {
+        public V2(Stream stream) {
             byte[] tag;
             try {
                 tag = ParseHeaderAsync(stream).Result;
@@ -97,7 +106,9 @@ namespace Metadata.Audio {
         /// Extract and encapsulate the code used to parse a ID3v2 header into
         /// usable variables, and use that to retrieve the rest of the tag.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to parse.</param>
+        /// 
         /// <returns>
         /// The remainder of the tag, properly de-unsynchronized.
         /// </returns>

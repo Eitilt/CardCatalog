@@ -4,19 +4,21 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata.Audio {
+namespace Metadata.Audio.ID3v2 {
     /// <summary>
     /// An implementation of the ID3v2.4 standard as described at
     /// <see href="http://id3.org/id3v2.4.0-structure"/> and
     /// <see href="http://id3.org/id3v2.4.0-frames"/>
     /// </summary>
+    /// 
     /// <remarks>
     /// TODO: Handle footer
     /// </remarks>
-    public class ID3v24 : ID3v23Plus {
+    public partial class V4 : ID3v23Plus {
         /// <summary>
         /// The short name used to represent ID3v2.4 metadata.
         /// </summary>
+        /// 
         /// <seealso cref="MetadataFormat.Register(string, System.Type)"/>
         public const string format = "ID3v2.4";
         /// <summary>
@@ -35,10 +37,13 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the stream begins with a valid ID3v2.4 header.
         /// </summary>
+        /// 
         /// <param name="stream">The Stream to check.</param>
+        /// 
         /// <returns>
         /// Whether the stream begins with a valid ID3v2.4 header.
         /// </returns>
+        /// 
         /// <see cref="MetadataFormat.Validate(string, Stream)"/>
         [MetadataFormatValidator]
         public static bool VerifyHeader(Stream stream) {
@@ -47,7 +52,9 @@ namespace Metadata.Audio {
         /// <summary>
         /// Check whether the byte array begins with a valid ID3v2.4 header.
         /// </summary>
+        /// 
         /// <param name="header">The byte array to check</param>
+        /// 
         /// <returns>
         /// `null` if the stream does not begin with a ID3v2.4 header, and the
         /// major version if it does.
@@ -71,9 +78,9 @@ namespace Metadata.Audio {
         /// Implement the audio field attribute mappings for ID3v2.4 tags.
         /// </summary>
         class AttributeStruct : AudioTagAttributes {
-            private ID3v24 parent;
+            private V4 parent;
 
-            public AttributeStruct(ID3v24 parent) {
+            public AttributeStruct(V4 parent) {
                 this.parent = parent;
             }
 
@@ -100,13 +107,16 @@ namespace Metadata.Audio {
         /// Parse a stream according the proper version of the ID3v2
         /// specification, from the current location.
         /// </summary>
+        /// 
         /// <remarks>
         /// As according to the recommendation in the ID3v2.2 specification,
         /// if the tag is compressed, it is swallowed but largely ignored.
         /// </remarks>
+        /// 
         /// <param name="stream">The stream to parse.</param>
+        /// 
         /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
-        public ID3v24(Stream stream) {
+        public V4(Stream stream) {
             HasFooter = false;
             TagIsUpdate = false;
 
@@ -125,7 +135,9 @@ namespace Metadata.Audio {
         /// Extract and encapsulate the code used to parse a ID3v2 header into
         /// usable variables, and use that to retrieve the rest of the tag.
         /// </summary>
+        /// 
         /// <param name="stream">The stream to parse.</param>
+        /// 
         /// <returns>
         /// The remainder of the ID3v2.4 tag, already processed to reverse any
         /// unsynchronization.
@@ -153,12 +165,14 @@ namespace Metadata.Audio {
         /// Given that arrays have an inherent Length property, the first four
         /// bytes (storing the size) are ignored.
         /// </summary>
+        /// 
         /// <remarks>
         /// This takes a `byte[]` rather than a `Stream` like
         /// <see cref="ParseHeaderAsync(Stream)"/> because this is intended to
         /// be called on pre-processed data of the proper length, rather
         /// than the raw bytestream.
         /// </remarks>
+        /// 
         /// <param name="extHeader">
         /// The de-unsynchronized byte array to parse.
         /// </param>
