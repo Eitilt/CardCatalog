@@ -1,4 +1,6 @@
-﻿namespace Metadata {
+﻿using System.Collections.Generic;
+
+namespace Metadata {
     /// <summary>
     /// Common properties to retrieve info from multiple tag formats.
     /// </summary>
@@ -11,7 +13,7 @@
         /// <summary>
         /// The low-level representations of the tag data.
         /// </summary>
-        System.Collections.Generic.IReadOnlyDictionary<byte[], ITagField> Fields { get; }
+        IReadOnlyFieldDictionary Fields { get; }
 
         /// <summary>
         /// The proper standardized field redirects for the enclosing

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,11 +57,11 @@ namespace Metadata.Audio {
         /// </summary>
         /// 
         /// <seealso cref="Fields"/>
-        private Dictionary<byte[], ITagField> fields = new Dictionary<byte[], ITagField>();
+        private FieldDictionary fields = new FieldDictionary();
         /// <summary>
         /// The low-level representations of the tag data.
         /// </summary>
-        public override IReadOnlyDictionary<byte[], ITagField> Fields => fields;
+        public override IReadOnlyFieldDictionary Fields => fields;
 
         /// <summary>
         /// Implement the audio field attribute mappings for ID3v2.3 tags.

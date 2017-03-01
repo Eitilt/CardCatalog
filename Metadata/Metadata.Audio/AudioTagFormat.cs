@@ -13,7 +13,7 @@ namespace Metadata.Audio {
         /// <summary>
         /// The low-level representations of the tag data.
         /// </summary>
-        public abstract System.Collections.Generic.IReadOnlyDictionary<byte[], ITagField> Fields { get; }
+        public abstract IReadOnlyFieldDictionary Fields { get; }
 
         /// <summary>
         /// Redirect to allow the more specific attribute format to satisfy
