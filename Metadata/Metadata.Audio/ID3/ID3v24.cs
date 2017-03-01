@@ -110,7 +110,13 @@ namespace Metadata.Audio {
             HasFooter = false;
             TagIsUpdate = false;
 
-            byte[] tag = ParseHeaderAsync(stream).Result;
+            byte[] tag;
+            try {
+                tag = ParseHeaderAsync(stream).Result;
+            } catch (AggregateException e) {
+                throw new InvalidDataException(e.InnerException.Message, e.InnerException);
+            }
+
             if (CheckCRCIfPresent(tag) == false)
                 throw new InvalidDataException("ID3 tag does not match saved checksum");
         }

@@ -100,7 +100,13 @@ namespace Metadata.Audio {
         public ID3v23(Stream stream) {
             PaddingSize = 0;
 
-            byte[] tag = ParseHeaderAsync(stream).Result;
+            byte[] tag;
+            try {
+                tag = ParseHeaderAsync(stream).Result;
+            } catch (AggregateException e) {
+                throw new InvalidDataException(e.InnerException.Message, e.InnerException);
+            }
+
             if (CheckCRCIfPresent(tag.Take((int)(tag.Length - PaddingSize)).ToArray()) == false)
                 throw new InvalidDataException("ID3 tag does not match saved checksum");
         }

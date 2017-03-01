@@ -85,7 +85,12 @@ namespace Metadata.Audio {
         /// <param name="stream">The stream to parse.</param>
         /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
         public ID3v22(Stream stream) {
-            byte[] tag = ParseHeaderAsync(stream).Result;
+            byte[] tag;
+            try {
+                tag = ParseHeaderAsync(stream).Result;
+            } catch (AggregateException e) {
+                throw new InvalidDataException(e.InnerException.Message, e.InnerException);
+            }
         }
 
         /// <summary>

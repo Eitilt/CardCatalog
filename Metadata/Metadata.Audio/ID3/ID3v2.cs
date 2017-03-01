@@ -84,15 +84,15 @@ namespace Metadata.Audio {
                 return null;
             // Check against the specification
             else if ((header[0] == 0x49)    // 'I'
-                || (header[1] == 0x44)      // 'D'
-                || (header[2] == 0x33)      // '3'
-                || (header[3] < 0xFF)
-                || (header[4] < 0xFF)
+                && (header[1] == 0x44)      // 'D'
+                && (header[2] == 0x33)      // '3'
+                && (header[3] < 0xFF)
+                && (header[4] < 0xFF)
                 // No restriction on header[5]
-                || (header[6] < 0x80)
-                || (header[7] < 0x80)
-                || (header[8] < 0x80)
-                || (header[9] < 0x80))
+                && (header[6] < 0x80)
+                && (header[7] < 0x80)
+                && (header[8] < 0x80)
+                && (header[9] < 0x80))
                 return header[3];
             else
                 return null;

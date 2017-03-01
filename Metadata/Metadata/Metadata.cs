@@ -219,11 +219,23 @@ namespace Metadata {
             // At that point, it may be best to return an object combining all
             // recognized tags (along with unknown data).
 
-            //TODO: Operate on `byte[]` rather than `Stream` to avoid repeated
-            // readings of the same segment and allow non-rewindable streams.
-            foreach (var header in tagValidationFunctions)
-                if (header.Value(stream))
-                    ret.Add((ITagFormat)Activator.CreateInstance(tagFormats[header.Key], stream));
+            bool foundTag = true;
+            while (foundTag) {
+                foundTag = false;
+
+                foreach (var header in tagValidationFunctions) {
+                    //TODO: Operate on `byte[]` rather than `Stream` to avoid repeated
+                    // readings of the same segment and allow non-rewindable streams.
+                    if (header.Value(stream)) {
+                        try {
+                            ret.Add((ITagFormat)Activator.CreateInstance(tagFormats[header.Key], stream));
+                        } catch (TargetInvocationException e) {
+                            throw new InvalidDataException("File has corrupted " + header.Key + " tag", e);
+                        }
+                        foundTag = true;
+                    }
+                }
+            }
 
             return ret;
         }
