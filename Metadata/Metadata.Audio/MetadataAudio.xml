@@ -10,7 +10,7 @@
             to different fields depending on the particular metadata format.
             </summary>
             
-            <seealso cref="T:Metadata.ITagField"/>
+            <seealso cref="T:Metadata.TagField"/>
         </member>
         <member name="P:Metadata.Audio.AudioTagAttributes.Name">
             <summary>

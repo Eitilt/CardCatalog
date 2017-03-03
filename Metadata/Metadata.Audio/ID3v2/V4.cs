@@ -84,7 +84,7 @@ namespace Metadata.Audio.ID3v2 {
                 this.parent = parent;
             }
 
-            public override string Name => throw new NotImplementedException();
+            public override AttributeValues Name => throw new NotImplementedException();
         }
         /// <summary>
         /// Retrieve the audio field attribute mappings for ID3v2.4 tags.

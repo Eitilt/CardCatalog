@@ -5,9 +5,9 @@ using System.Linq;
 namespace Metadata {
     /// <summary>
     /// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
-    /// proper equality of keys to <see cref="ITagField"/> objects.
+    /// proper equality of keys to <see cref="TagField"/> objects.
     /// </summary>
-    public class FieldDictionary : Dictionary<byte[], ITagField>, IReadOnlyFieldDictionary {
+    public class FieldDictionary : Dictionary<byte[], IEnumerable<TagField>>, IReadOnlyFieldDictionary {
         /// <summary>
         /// Test sequences for equality based on their values, not their
         /// object references.
@@ -143,7 +143,7 @@ namespace Metadata {
 
     /// <summary>
     /// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
-    /// proper format for keys to <see cref="ITagField"/> objects.
+    /// proper format for keys to <see cref="TagField"/> objects.
     /// </summary>
-    public interface IReadOnlyFieldDictionary : IReadOnlyDictionary<byte[], ITagField> { }
+    public interface IReadOnlyFieldDictionary : IReadOnlyDictionary<byte[], IEnumerable<TagField>> { }
 }

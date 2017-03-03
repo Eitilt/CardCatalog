@@ -7,7 +7,7 @@
         <member name="T:Metadata.FieldDictionary">
             <summary>
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
-            proper equality of keys to <see cref="T:Metadata.ITagField"/> objects.
+            proper equality of keys to <see cref="T:Metadata.TagField"/> objects.
             </summary>
         </member>
         <member name="T:Metadata.FieldDictionary.SequenceEqualityComparer`1">
@@ -127,7 +127,7 @@
         <member name="T:Metadata.IReadOnlyFieldDictionary">
             <summary>
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
-            proper format for keys to <see cref="T:Metadata.ITagField"/> objects.
+            proper format for keys to <see cref="T:Metadata.TagField"/> objects.
             </summary>
         </member>
         <member name="T:Metadata.MetadataFormat">
@@ -369,6 +369,17 @@
             
             <seealso cref="P:Metadata.ITagFormat.Fields"/>
         </member>
+        <member name="T:Metadata.AttributeValues">
+            <summary>
+            Provide more obvious semantics for the values of standard fields.
+            </summary>
+            
+            <remarks>
+            Many metadata formats support multiple instances of the same field,
+            and making this a list rather than a single string also unifies
+            behaviour between individual tags and files containing multiple tags.
+            </remarks>
+        </member>
         <member name="T:Metadata.ITagAttributes">
             <summary>
             Common format-agnostic attributes mapping to different fields
@@ -377,42 +388,27 @@
         </member>
         <member name="P:Metadata.ITagAttributes.Name">
             <summary>
-            The display name of the enclosing file.
+            The display names of the enclosing file.
             </summary>
         </member>
-        <member name="T:Metadata.ITagField">
+        <member name="T:Metadata.TagField">
             <summary>
-            A single point of data saved in the tag.
+            A single point of data saved in the tag, with default helper
+            implementations.
             </summary>
         </member>
-        <member name="P:Metadata.ITagField.SystemName">
-            <summary>
-            The byte header used to internally identify the field.
-            </summary>
-        </member>
-        <member name="P:Metadata.ITagField.Name">
-            <summary>
-            The human-readable name of the field if available, or a
-            representation of <see cref="P:Metadata.ITagField.SystemName"/> if not.
-            </summary>
-        </member>
-        <member name="T:Metadata.TagFieldBase">
-            <summary>
-            A single point of data saved in the tag, with default helper implementations
-            </summary>
-        </member>
-        <member name="P:Metadata.TagFieldBase.SystemName">
+        <member name="P:Metadata.TagField.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="P:Metadata.TagFieldBase.Name">
+        <member name="P:Metadata.TagField.Name">
             <summary>
             The human-readable name of the field if available, or a
-            representation of <see cref="P:Metadata.TagFieldBase.SystemName"/> if not.
+            representation of <see cref="P:Metadata.TagField.SystemName"/> if not.
             </summary>
             <remarks>
-            The default implementation is to read the <see cref="P:Metadata.TagFieldBase.SystemName"/>
+            The default implementation is to read the <see cref="P:Metadata.TagField.SystemName"/>
             as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
             not suitable, the method should be overridden.
             </remarks>

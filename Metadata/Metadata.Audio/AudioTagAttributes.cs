@@ -8,11 +8,11 @@ namespace Metadata.Audio {
     /// to different fields depending on the particular metadata format.
     /// </summary>
     /// 
-    /// <seealso cref="ITagField"/>
+    /// <seealso cref="TagField"/>
     public abstract class AudioTagAttributes : ITagAttributes {
         /// <summary>
         /// The display name of the enclosing file.
         /// </summary>
-        public abstract string Name { get; }
+        public abstract AttributeValues Name { get; }
     }
 }

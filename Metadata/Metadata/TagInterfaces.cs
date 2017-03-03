@@ -25,35 +25,32 @@ namespace Metadata {
     }
 
     /// <summary>
+    /// Provide more obvious semantics for the values of standard fields.
+    /// </summary>
+    /// 
+    /// <remarks>
+    /// Many metadata formats support multiple instances of the same field,
+    /// and making this a list rather than a single string also unifies
+    /// behaviour between individual tags and files containing multiple tags.
+    /// </remarks>
+    public class AttributeValues : List<string> { }
+
+    /// <summary>
     /// Common format-agnostic attributes mapping to different fields
     /// depending on how each is expressed in the particular format.
     /// </summary>
     public interface ITagAttributes {
         /// <summary>
-        /// The display name of the enclosing file.
+        /// The display names of the enclosing file.
         /// </summary>
-        string Name { get; }
+        AttributeValues Name { get; }
     }
 
     /// <summary>
-    /// A single point of data saved in the tag.
+    /// A single point of data saved in the tag, with default helper
+    /// implementations.
     /// </summary>
-    public interface ITagField {
-        /// <summary>
-        /// The byte header used to internally identify the field.
-        /// </summary>
-        byte[] SystemName { get; }
-
-        /// <summary>
-        /// The human-readable name of the field if available, or a
-        /// representation of <see cref="SystemName"/> if not.
-        /// </summary>
-        string Name { get; }
-    }
-    /// <summary>
-    /// A single point of data saved in the tag, with default helper implementations
-    /// </summary>
-    public abstract class TagFieldBase : ITagField {
+    public abstract class TagField {
         /// <summary>
         /// The byte header used to internally identify the field.
         /// </summary>
