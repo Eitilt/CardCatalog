@@ -29,32 +29,33 @@ namespace Metadata {
 		private static HashSet<string> assemblies = new HashSet<string>();
 
 		/// <summary>
-		/// Initialize static attributes.
+		/// Automatically add any 
 		/// </summary>
 		/// 
 		/// <seealso cref="RefreshFormats"/>
 		static MetadataFormat() {
-			RefreshFormats();
+			RefreshFormats<TagFormat>();
 		}
+
 		/// <summary>
-		/// Scan all currently-loaded assemblies for implementations of
+		/// Scan the aseembly enclosing the specified for implementations of
 		/// metadata formats.
 		/// </summary>
-		public static void RefreshFormats() {
-			/*TODO: This is being provided through a Nuget package; once .NET
-             * Standard 2.0 comes out, switch to using the builtin if possible
-             * (also will give access to the CurrentDomain.AssemblyLoad event
-             * to check for registration automatically)
-             */
-			/*TODO: Would probably be better to scan all referenced assemblies
-             * (loaded or not) and load those that aren't yet, to avoid issues
-             * with not recognizing a format when it would be expected. See
-             * .NET Core's AssemblyLoadContext.
-             */
-			//BUG: GetAssemblies() returns an empty array
-			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
-					.Where((a) => a.IsDefined(typeof(ScanAssemblyAttribute))))
-				Register(assembly);
+		/// 
+		/// <remarks>
+		/// The explicit type parameter is preferred over scanning loaded assemblies
+		/// as oftentimes this will be the first time the 
+		/// </remarks>
+		/// 
+		/// <typeparam name="T">
+		/// A type from the assembly to scan, extending <see cref="TagFormat"/>.
+		/// </typeparam>
+		/*TODO: Could be nice to scan all referenced assemblies (loaded or
+		 * not) and load any with the attribute that aren't yet, to avoid
+		 * needing to refresh manually. See .NET Core's AssemblyLoadContext.
+		 */
+		public static void RefreshFormats<T>() where T : TagFormat {
+			Register(typeof(T).GetTypeInfo().Assembly);
 		}
 
 		/// <summary>
