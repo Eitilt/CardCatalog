@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Metadata.Audio {
+﻿namespace Metadata.Audio {
     /// <summary>
     /// Common format-agnostic attributes specific to audio encoding, mapping
     /// to different fields depending on the particular metadata format.
@@ -13,6 +9,6 @@ namespace Metadata.Audio {
         /// <summary>
         /// The display name of the enclosing file.
         /// </summary>
-        public abstract AttributeValues Name { get; }
+        public abstract TagFormat.AttributeValues Name { get; }
     }
 }

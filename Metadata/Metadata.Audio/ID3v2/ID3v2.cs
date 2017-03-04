@@ -60,28 +60,10 @@ namespace Metadata.Audio.ID3v2 {
         }
 
         /// <summary>
-        /// Check whether the stream begins with a valid ID3v2 header.
-        /// </summary>
-        /// 
-        /// <param name="stream">The Stream to check.</param>
-        /// 
-        /// <returns>
-        /// `null` if the stream does not begin with a ID3v2 header, and the
-        /// major version if it does.
-        /// </returns>
-        /// 
-        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
-        protected static byte? VerifyBaseHeader(Stream stream) {
-            byte? ret = VerifyBaseHeader(RetrieveHeader(stream));
-            UnreadHeader(stream);
-
-            return ret;
-        }
-        /// <summary>
         /// Check whether the byte array begins with a valid ID3v2 header.
         /// </summary>
         /// 
-        /// <param name="header">The byte array to check</param>
+        /// <param name="header">The sequence of bytes to check</param>
         /// 
         /// <returns>
         /// `null` if the stream does not begin with a ID3v2 header, and the
@@ -310,34 +292,24 @@ namespace Metadata.Audio.ID3v2 {
         /// usable variables.
         /// </summary>
         /// 
-        /// <param name="stream">The stream to parse.</param>
-        /// <param name="validation">A function </param>
+        /// <param name="header">The sequence of bytes to check.</param>
         /// 
-        /// <returns>
-        /// A tuple of, in order:
-        /// <list type="bullet">
-        /// <item>The flag bits in a more accessible format.</item>
-        /// <item>The size of the remainder of the tag.</item>
-        /// </list>
-        /// </returns>
-        protected Tuple<BitArray, uint> ParseBaseHeader(Stream stream, Func<byte[], bool> validation) {
-            var header = RetrieveHeader(stream);
-
-            // Fail loudly if the tag's not in the correct format.
-            if (validation(header) == false) {
-                UnreadHeader(stream);
-                throw new FormatException("Stream does not begin with a valid ID3 header");
-            }
+        /// <returns>The flag bits in a more accessible format.</returns>
+        protected BitArray ParseBaseHeader(byte[] header) {
+            /* Should fail loudly if the tag's not in the correct format, but
+             * since this should only be called from the validation function,
+             * can simplify avoiding infinite loops by not checking
+             */
 
             VersionMinor = header[4];
 
             // Decompose the flags byte
             var flags = new BitArray(new byte[1] { header[5] });
 
-            // Calculate the size from 7-bit "bytes" (high bit is ignored)
-            uint size = ParseInteger(header.Skip(6).ToArray(), 7u);
+            // Calculate the size from 7-bit "bytes" (the high bit is ignored)
+            Length = ParseInteger(header.Skip(6).ToArray(), 7u);
 
-            return new Tuple<BitArray, uint>(flags, size);
+            return flags;
         }
 
         /// <summary>
@@ -454,6 +426,12 @@ namespace Metadata.Audio.ID3v2 {
         /// Minor behaviour dependent on the version of the specification.
         /// </summary>
         public abstract ExtendedHeaderProps ExtendedHeader { get; }
+
+        /// <summary>
+        /// Indicates that the tag contains an extended header that needs to
+        /// be parsed before any fields.
+        /// </summary>
+        protected bool HasExtendedHeader { get; set; }
 
         /// <summary>
         /// Indicates that the tag is in an experimental stage.

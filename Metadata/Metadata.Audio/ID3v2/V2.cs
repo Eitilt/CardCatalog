@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Metadata.Audio.ID3v2 {
     /// <summary>
@@ -25,29 +23,18 @@ namespace Metadata.Audio.ID3v2 {
         /// Check whether the stream begins with a valid ID3v2.2 header.
         /// </summary>
         /// 
-        /// <param name="stream">The Stream to check.</param>
+        /// <param name="header">The sequence of bytes to check.</param>
         /// 
         /// <returns>
-        /// Whether the stream begins with a valid ID3v2.2 header.
+        /// An empty <see cref="V2"/> object if the header is in the proper
+        /// format, `null` otherwise.
         /// </returns>
-        /// 
-        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
-        [MetadataFormatValidator]
-        public static bool VerifyHeader(Stream stream) {
-            return (VerifyBaseHeader(stream)?.Equals(0x02) ?? false);
-        }
-        /// <summary>
-        /// Check whether the byte array begins with a valid ID3v2.2 header.
-        /// </summary>
-        /// 
-        /// <param name="header">The byte array to check</param>
-        /// 
-        /// <returns>
-        /// `null` if the stream does not begin with a ID3v2.2 header, and the
-        /// major version if it does.
-        /// </returns>
-        public static bool VerifyHeader(byte[] header) {
-            return (VerifyBaseHeader(header)?.Equals(0x02) ?? false);
+        [MetadataFormatValidator(10)]
+        public static V2 VerifyHeader(byte[] header) {
+            if ((VerifyBaseHeader(header)?.Equals(0x02) ?? false) == false)
+                return null;
+            else
+                return new V2(header);
         }
 
         /// <summary>
@@ -78,7 +65,13 @@ namespace Metadata.Audio.ID3v2 {
         /// </summary>
         /// 
         /// <seealso cref="Fields"/>
-        public override AudioTagAttributes Attributes => new AttributeStruct(this);
+        public override AudioTagAttributes AudioAttributes => new AttributeStruct(this);
+
+        /// <summary>
+        /// Indicates whether the data in the tag has been compressed; the
+        /// ID3v2.2 spec recommends ignoring the tag if so.
+        /// </summary>
+        public bool Compressed { get; private set; }
 
         /// <summary>
         /// Parse a stream according the proper version of the ID3v2
@@ -90,46 +83,17 @@ namespace Metadata.Audio.ID3v2 {
         /// if the tag is compressed, it is swallowed but largely ignored.
         /// </remarks>
         /// 
-        /// <param name="stream">The stream to parse.</param>
-        /// 
-        /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
-        public V2(Stream stream) {
-            byte[] tag;
-            try {
-                tag = ParseHeaderAsync(stream).Result;
-            } catch (AggregateException e) {
-                throw new InvalidDataException(e.InnerException.Message, e.InnerException);
-            }
-        }
+        /// <param name="header">The stream to parse.</param>
+        V2(byte[] header) {
+            var flags = ParseBaseHeader(header);
 
-        /// <summary>
-        /// Extract and encapsulate the code used to parse a ID3v2 header into
-        /// usable variables, and use that to retrieve the rest of the tag.
-        /// </summary>
-        /// 
-        /// <param name="stream">The stream to parse.</param>
-        /// 
-        /// <returns>
-        /// The remainder of the tag, properly de-unsynchronized.
-        /// </returns>
-        async Task<byte[]> ParseHeaderAsync(Stream stream) {
-            var header = ParseBaseHeader(stream, VerifyHeader);
-
-            bool useUnsync = header.Item1[0];
-            // flags[1] is handled below
+            bool useUnsync = flags[0];
+            Compressed = flags[1];
             /*TODO: May be better to skip reading the tag rather than setting
              * FlagUnknown, as these flags tend to be critical to the proper
              * parsing of the tag.
              */
-            FlagUnknown = (header.Item1.Cast<bool>().Skip(2).Contains(true));
-
-            // ID3v2.2 uses this flag to indicate compression, but recommends
-            // ignoring the tag if it's set
-            if (header.Item1[1]) {
-                stream.Position += header.Item2;
-                return new byte[0];
-            } else
-                return await ReadBytesAsync(stream, header.Item2, useUnsync).ConfigureAwait(false);
+            FlagUnknown = (flags.Cast<bool>().Skip(2).Contains(true));
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Metadata {
     /// <summary>
@@ -13,40 +14,13 @@ namespace Metadata {
         /// <summary>
         /// Validation functions for each registered metadata format.
         /// </summary>
-        /// <seealso cref="Validate(string, Stream)"/>
-        private static Dictionary<string, Func<Stream, bool>> tagValidationFunctions;
-        /// <summary>
-        /// Check whether the stream begins with metadata in the desired
-        /// format.
-        /// </summary>
-        /// <param name="format">
-        /// The short name of the metadata format.
-        /// </param>
-        /// <param name="stream">The Stream to test.</param>
-        /// <returns>
-        /// Whether the Stream begins with metadata in the desired format.
-        /// </returns>
-        /// <seealso cref="Parse(Stream)"/>
-        public static bool Validate(string format, Stream stream) {
-            return tagValidationFunctions[format](stream);
-        }
+        private static Dictionary<string, Tuple<int, Func<byte[], TagFormat>>> tagHeaderFunctions =
+            new Dictionary<string, Tuple<int, Func<byte[], TagFormat>>>();
 
         /// <summary>
         /// The class encapsulating each registered metadata format.
         /// </summary>
-        /// <seealso cref="FormatType(string)"/>
-        private static Dictionary<string, Type> tagFormats;
-        /// <summary>
-        /// Retrieve the class implementing the desired metadata format.
-        /// </summary>
-        /// <param name="format">
-        /// The short name of the metadata format.
-        /// </param>
-        /// <returns>The class encapsulating the metadata format.</returns>
-        /// <seealso cref="Construct(string, Stream)"/>
-        public static Type FormatType(string format) {
-            return tagFormats[format];
-        }
+        private static Dictionary<string, Type> tagFormats = new Dictionary<string, Type>();
 
         /// <summary>
         /// A registry of previously-scanned assemblies in order to prevent
@@ -57,11 +31,9 @@ namespace Metadata {
         /// <summary>
         /// Initialize static attributes.
         /// </summary>
+        /// 
         /// <seealso cref="RefreshFormats"/>
         static MetadataFormat() {
-            tagValidationFunctions = new Dictionary<string, Func<Stream, bool>>();
-            tagFormats = new Dictionary<string, Type>();
-
             RefreshFormats();
         }
         /// <summary>
@@ -92,7 +64,9 @@ namespace Metadata {
         /// Subsequent calls on a previously-scanned assembly will be ignored
         /// in order to save unnecessary type reflection.
         /// </summary>
+        /// 
         /// <param name="assembly">The assembly to scan.</param>
+        /// 
         /// <seealso cref="MetadataFormatAttribute"/>
         public static void Register(Assembly assembly) {
             // Avoid searching assemblies multiple times to cut down on the
@@ -114,14 +88,15 @@ namespace Metadata {
         /// Add the given type to the lookup tables according to the descriptor
         /// specified in its <see cref="MetadataFormatAttribute.Name"/>.
         /// </summary>
+        /// 
         /// <remarks>
         /// Note that if multiple types are registered under the same name,
         /// any later registrations will override the previous.
         /// </remarks>
+        /// 
         /// <param name="format">The type to add.</param>
+        /// 
         /// <seealso cref="MetadataFormatValidatorAttribute"/>
-        /// <seealso cref="FormatType(string)"/>
-        /// <seealso cref="Validate(string, Stream)"/>
         public static void Register(Type format) {
             var attr = format.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
             if (attr == null)
@@ -134,6 +109,7 @@ namespace Metadata {
         /// descriptor, even if it does not have any associated
         /// <see cref="MetadataFormatAttribute"/>.
         /// </summary>
+        /// 
         /// <remarks>
         /// The validation function must still be identified with a
         /// <see cref="MetadataFormatValidatorAttribute"/>.
@@ -141,6 +117,7 @@ namespace Metadata {
         /// Note that if multiple types are registered under the same name,
         /// any later registrations will override the previous.
         /// </remarks>
+        /// 
         /// <param name="name">
         /// A short name for the format to be used as an access key for later
         /// lookups.
@@ -148,19 +125,15 @@ namespace Metadata {
         /// It is recommended that this also be exposed as a constant.
         /// </param>
         /// <param name="format">The type to add.</param>
-        /// <seealso cref="FormatType(string)"/>
-        /// <seealso cref="Validate(string, Stream)"/>
         public static void Register(string name, Type format) {
-            if (typeof(ITagFormat).IsAssignableFrom(format) == false)
+            if (typeof(TagFormat).IsAssignableFrom(format) == false)
                 throw new NotSupportedException("Metadata format types must implement ITagFormat");
 
-            if (format.GetConstructor(new Type[1] { typeof(Stream) }) == null)
-                throw new NotImplementedException("Metadata format types need a constructor taking only a Stream object");
             tagFormats[name] = format;
 
             foreach (var method in format.GetRuntimeMethods()
                     .Where((m) => m.IsDefined(typeof(MetadataFormatValidatorAttribute))))
-                Register(name, method);
+                Register(name, method.GetCustomAttribute<MetadataFormatValidatorAttribute>().HeaderLength, method);
         }
         /// <summary>
         /// Add the given method to the lookup tables under the specified
@@ -170,16 +143,22 @@ namespace Metadata {
         /// <see cref="Register(string, Type)"/>, and has been separated
         /// primarily for code clarity.
         /// </summary>
+        /// 
         /// <remarks>
         /// Note that if multiple methods are registered under the same name,
         /// any later registrations will override the previous.
         /// </remarks>
+        /// 
         /// <param name="name">
         /// A short name for the format to be used as an access key for later
         /// lookups.
         /// </param>
+        /// <param name="headerLength">
+        /// The number of bytes <paramref name="method"/> uses to read the tag
+        /// header.
+        /// </param>
         /// <param name="method">The method to add.</param>
-        private static void Register(string name, MethodInfo method) {
+        private static void Register(string name, int headerLength, MethodInfo method) {
             if (method.IsPrivate)
                 throw new NotSupportedException("Metadata format validation functions must not be private");
             if (method.IsAbstract)
@@ -189,18 +168,21 @@ namespace Metadata {
 
             var parameters = method.GetParameters();
             if ((parameters.Length == 0)
-                || (parameters[0].ParameterType.IsAssignableFrom(typeof(Stream)) == false)
-                || ((parameters.Length > 1) && (parameters[1].IsOptional == false))
-                || (method.ReturnType != typeof(bool)))
-                throw new NotSupportedException("Metadata format validation functions must be able to take only a Stream and return a bool");
+                || (typeof(byte[]).IsAssignableFrom(parameters[0].ParameterType) == false)
+                || ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
+                throw new NotSupportedException("Metadata format validation functions must be able to take only a byte[]");
 
-            tagValidationFunctions[name] = (Func<Stream, bool>)method.CreateDelegate(typeof(Func<Stream, bool>));
+            if (typeof(TagFormat).IsAssignableFrom(method.ReturnType) == false)
+                throw new NotSupportedException("Metadata format validation functions must return an empty instance of TagFormat");
+
+            tagHeaderFunctions[name] = Tuple.Create(headerLength, (Func<byte[], TagFormat>)method.CreateDelegate(typeof(Func<byte[], TagFormat>)));
         }
 
         /// <summary>
         /// Check the stream against all registered tag formats, and return
         /// those that match the header.
         /// </summary>
+        /// 
         /// <remarks>
         /// While, in theory, only a single header should match, the class
         /// structure is such that this is not a restriction; supporting this
@@ -209,49 +191,95 @@ namespace Metadata {
         /// The callee is left to determine the best means of handling the
         /// case of Detect(...).Count > 1.
         /// </remarks>
+        /// 
         /// <param name="stream">The bytestream to test.</param>
+        /// 
         /// <returns>The keys of all matching formats.</returns>
-        /// <seealso cref="Validate(string, Stream)"/>
-        public static List<ITagFormat> Parse(Stream stream) {
-            var ret = new List<ITagFormat>(tagValidationFunctions.Count);
+        public async static Task<List<TagFormat>> Parse(Stream stream) {
+            var tasks = new List<Task>();
+            var ret = new List<TagFormat>();
 
-            //TODO: Wrap in `while` to handle multiple tags in the same file.
-            // At that point, it may be best to return an object combining all
-            // recognized tags (along with unknown data).
+            //TODO: It may be best to return an object explicitly combining
+            // all recognized tags along with unknown data.
 
             bool foundTag = true;
             while (foundTag) {
                 foundTag = false;
 
-                foreach (var header in tagValidationFunctions) {
-                    //TODO: Operate on `byte[]` rather than `Stream` to avoid repeated
-                    // readings of the same segment and allow non-rewindable streams.
-                    if (header.Value(stream)) {
-                        try {
-                            ret.Add((ITagFormat)Activator.CreateInstance(tagFormats[header.Key], stream));
-                        } catch (TargetInvocationException e) {
-                            throw new InvalidDataException("File has corrupted " + header.Key + " tag", e);
-                        }
-                        foundTag = true;
+                // Keep track of all bytes read for headers, to avoid
+                // unnecessarily repeating stream accesses
+                var readBytes = new List<byte>();
+                foreach (var header in tagHeaderFunctions) {
+                    // Make sure we have enough bytes to check the header
+                    int headerLength = header.Value.Item1;
+                    // Automatically leaves the stream untouched if `header`
+                    // is already longer than `headerLength`
+                    for (int i = readBytes.Count; i < headerLength; ++i) {
+                        int b = stream.ReadByte();
+                        if (b < 0)
+                            // If the stream has ended before the entire
+                            // header can fit, then the header's not present
+                            continue;
+                        else
+                            readBytes.Add((byte)b);
                     }
+
+                    // Try to construct an empty tag of the current format
+                    var tag = header.Value.Item2(readBytes.Take(headerLength).ToArray());
+                    if (tag == null)
+                        // The header was invalid, and so this tag isn't the
+                        // correct type to parse next
+                        continue;
+
+                    ret.Add(tag);
+
+                    if (tag.Length == 0) {
+                        /* The header doesn't contain length data, so we need
+                         * to read the stream directly until whatever end-of-
+                         * tag the format uses is reached
+                         */
+                        //BUG: This won't include any bytes already read for
+                        // the header
+                        //TODO: This should probably also be async
+                        tag.Parse(new BinaryReader(stream));
+                    } else {
+                        // Read the entire tag from the stream before parsing
+                        // the next tag along
+                        var bytes = new byte[tag.Length];
+                        // Restore any bytes previously read for the header
+                        readBytes.Skip(headerLength).ToArray().CopyTo(bytes, 0);
+                        int offset = (readBytes.Count - headerLength);
+
+                        /* In order to properly continue to the next tag in
+                         * the file while the processing is performed as async
+                         * we need to advance the stream beyond the current
+                         * tag; given that Stream.Read*(...) isn't guaranteed
+                         * to read the full count of bytes, we need to do this
+                         * in a loop.
+                         */
+                        while (offset < tag.Length) {
+                            var read = await stream.ReadAsync(bytes, offset, (int)(tag.Length - offset));
+
+                            if (read == 0)
+                                throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
+                            else
+                                offset += read;
+                        }
+
+                        // Split off the processing to return to IO-bound code
+                        tasks.Add(tag.ParseAsync(bytes));
+                    }
+
+                    // All failure conditions were checked before this, so end
+                    // the "for the first matched `header`" loop
+                    foundTag = true;
+                    break;
                 }
             }
 
-            return ret;
-        }
+            await Task.WhenAll(tasks);
 
-        /// <summary>
-        /// Parse metadata in the desired format from the current position in
-        /// a stream.
-        /// </summary>
-        /// <param name="format">
-        /// The short name of the metadata format.
-        /// </param>
-        /// <param name="stream">The bytestream to parse.</param>
-        /// <returns>The parsed metadata.</returns>
-        /// <seealso cref="FormatType(string)"/>
-        public static ITagFormat Construct(string format, Stream stream) {
-            return (ITagFormat)Activator.CreateInstance(tagFormats[format], stream);
+            return ret;
         }
     }
 }

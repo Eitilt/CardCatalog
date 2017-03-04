@@ -2,7 +2,6 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Metadata.Audio.ID3v2 {
     /// <summary>
@@ -38,29 +37,18 @@ namespace Metadata.Audio.ID3v2 {
         /// Check whether the stream begins with a valid ID3v2.4 header.
         /// </summary>
         /// 
-        /// <param name="stream">The Stream to check.</param>
+        /// <param name="header">The sequence of bytes to check.</param>
         /// 
         /// <returns>
-        /// Whether the stream begins with a valid ID3v2.4 header.
+        /// An empty <see cref="V2"/> object if the header is in the proper
+        /// format, `null` otherwise.
         /// </returns>
-        /// 
-        /// <see cref="MetadataFormat.Validate(string, Stream)"/>
-        [MetadataFormatValidator]
-        public static bool VerifyHeader(Stream stream) {
-            return (VerifyBaseHeader(stream)?.Equals(0x04) ?? false);
-        }
-        /// <summary>
-        /// Check whether the byte array begins with a valid ID3v2.4 header.
-        /// </summary>
-        /// 
-        /// <param name="header">The byte array to check</param>
-        /// 
-        /// <returns>
-        /// `null` if the stream does not begin with a ID3v2.4 header, and the
-        /// major version if it does.
-        /// </returns>
-        public static bool VerifyHeader(byte[] header) {
-            return (VerifyBaseHeader(header)?.Equals(0x04) ?? false);
+        [MetadataFormatValidator(10)]
+        public static V4 VerifyHeader(byte[] header) {
+            if ((VerifyBaseHeader(header)?.Equals(0x04) ?? false) == false)
+                return null;
+            else
+                return new V4(header);
         }
 
         /// <summary>
@@ -91,7 +79,7 @@ namespace Metadata.Audio.ID3v2 {
         /// </summary>
         /// 
         /// <seealso cref="Fields"/>
-        public override AudioTagAttributes Attributes => new AttributeStruct(this);
+        public override AudioTagAttributes AudioAttributes => new AttributeStruct(this);
 
         /// <summary>
         /// Whether the tag is closed with a footer.
@@ -113,49 +101,20 @@ namespace Metadata.Audio.ID3v2 {
         /// if the tag is compressed, it is swallowed but largely ignored.
         /// </remarks>
         /// 
-        /// <param name="stream">The stream to parse.</param>
-        /// 
-        /// <seealso cref="MetadataFormat.Construct(string, Stream)"/>
-        public V4(Stream stream) {
-            HasFooter = false;
-            TagIsUpdate = false;
+        /// <param name="header">The stream to parse.</param>
+        V4(byte[] header) {
+            var flags = ParseBaseHeader(header);
 
-            byte[] tag;
-            try {
-                tag = ParseHeaderAsync(stream).Result;
-            } catch (AggregateException e) {
-                throw new InvalidDataException(e.InnerException.Message, e.InnerException);
-            }
-
-            if (CheckCRCIfPresent(tag) == false)
-                throw new InvalidDataException("ID3 tag does not match saved checksum");
-        }
-
-        /// <summary>
-        /// Extract and encapsulate the code used to parse a ID3v2 header into
-        /// usable variables, and use that to retrieve the rest of the tag.
-        /// </summary>
-        /// 
-        /// <param name="stream">The stream to parse.</param>
-        /// 
-        /// <returns>
-        /// The remainder of the ID3v2.4 tag, already processed to reverse any
-        /// unsynchronization.
-        /// </returns>
-        async Task<byte[]> ParseHeaderAsync(Stream stream) {
-            var header = ParseBaseHeader(stream, VerifyHeader);
-
-            bool useUnsync = header.Item1[0];
-            // flags[1] is handled below
-            IsExperimental = header.Item1[2];
-            HasFooter = header.Item1[3];
+            bool useUnsync = flags[0];
+            HasExtendedHeader = flags[1];
+            IsExperimental = flags[2];
+            HasFooter = flags[3];
             /*TODO: May be better to skip reading the tag rather than setting
              * FlagUnknown, as these flags tend to be critical to the proper
              * parsing of the tag.
              */
-            FlagUnknown = (header.Item1.Cast<bool>().Skip(4).Contains(true));
+            FlagUnknown = (flags.Cast<bool>().Skip(4).Contains(true));
 
-            return await ReadExtHeaderWithTagAsync(stream, header.Item2, useUnsync, header.Item1[1]).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -165,13 +124,6 @@ namespace Metadata.Audio.ID3v2 {
         /// Given that arrays have an inherent Length property, the first four
         /// bytes (storing the size) are ignored.
         /// </summary>
-        /// 
-        /// <remarks>
-        /// This takes a `byte[]` rather than a `Stream` like
-        /// <see cref="ParseHeaderAsync(Stream)"/> because this is intended to
-        /// be called on pre-processed data of the proper length, rather
-        /// than the raw bytestream.
-        /// </remarks>
         /// 
         /// <param name="extHeader">
         /// The de-unsynchronized byte array to parse.
@@ -213,6 +165,9 @@ namespace Metadata.Audio.ID3v2 {
                 ++pos;
             }
             FlagUnknown = (flags.Cast<bool>().Skip(4).Contains(true));
+
+//            if (CheckCRCIfPresent(tag) == false)
+//                throw new InvalidDataException("ID3 tag does not match saved checksum");
         }
     }
 }

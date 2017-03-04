@@ -22,29 +22,30 @@
             Common properties to retrieve info from multiple audio formats.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.Format">
-            <summary>
-            The display name of the tag format.
-            </summary>
-        </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.Fields">
-            <summary>
-            The low-level representations of the tag data.
-            </summary>
-        </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.Metadata#ITagFormat#Attributes">
-            <summary>
-            Redirect to allow the more specific attribute format to satisfy
-            the interface implementation.
-            </summary>
-        </member>
         <member name="P:Metadata.Audio.AudioTagFormat.Attributes">
             <summary>
             The proper standardized field redirects for the enclosing
-            audio metadata format.
+            metadata format.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.AudioTagFormat.Fields"/>
+            <seealso cref="P:Metadata.TagFormat.Fields"/>
+            <seealso cref="P:Metadata.Audio.AudioTagFormat.AudioAttributes"/>
+        </member>
+        <member name="P:Metadata.Audio.AudioTagFormat.AudioAttributes">
+            <summary>
+            The standard field redirects extended with attributes specific to
+            audio metadata.
+            </summary>
+            
+            <seealso cref="P:Metadata.TagFormat.Fields"/>
+            <seealso cref="P:Metadata.Audio.AudioTagFormat.Attributes"/>
+        </member>
+        <member name="M:Metadata.Audio.AudioTagFormat.Parse(System.IO.BinaryReader)">
+            <summary>
+            Temporary implementation to allow building.
+            </summary>
+            
+            <param name="stream">The stream to parse.</param>
         </member>
         <member name="T:Metadata.Audio.ID3v2.ID3v2">
             <summary>
@@ -90,26 +91,12 @@
             
             <param name="stream">The stream to rewind.</param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.IO.Stream)">
-            <summary>
-            Check whether the stream begins with a valid ID3v2 header.
-            </summary>
-            
-            <param name="stream">The Stream to check.</param>
-            
-            <returns>
-            `null` if the stream does not begin with a ID3v2 header, and the
-            major version if it does.
-            </returns>
-            
-            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
-        </member>
         <member name="M:Metadata.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.Byte[])">
             <summary>
             Check whether the byte array begins with a valid ID3v2 header.
             </summary>
             
-            <param name="header">The byte array to check</param>
+            <param name="header">The sequence of bytes to check</param>
             
             <returns>
             `null` if the stream does not begin with a ID3v2 header, and the
@@ -220,22 +207,15 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseBaseHeader(System.IO.Stream,System.Func{System.Byte[],System.Boolean})">
+        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseBaseHeader(System.Byte[])">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 header into
             usable variables.
             </summary>
             
-            <param name="stream">The stream to parse.</param>
-            <param name="validation">A function </param>
+            <param name="header">The sequence of bytes to check.</param>
             
-            <returns>
-            A tuple of, in order:
-            <list type="bullet">
-            <item>The flag bits in a more accessible format.</item>
-            <item>The size of the remainder of the tag.</item>
-            </list>
-            </returns>
+            <returns>The flag bits in a more accessible format.</returns>
         </member>
         <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
             <summary>
@@ -321,6 +301,12 @@
         <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.ExtendedHeader">
             <summary>
             Minor behaviour dependent on the version of the specification.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.HasExtendedHeader">
+            <summary>
+            Indicates that the tag contains an extended header that needs to
+            be parsed before any fields.
             </summary>
         </member>
         <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.IsExperimental">
@@ -418,29 +404,16 @@
             The display name of the tag format.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.IO.Stream)">
+        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.Byte[])">
             <summary>
             Check whether the stream begins with a valid ID3v2.2 header.
             </summary>
             
-            <param name="stream">The Stream to check.</param>
+            <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            Whether the stream begins with a valid ID3v2.2 header.
-            </returns>
-            
-            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.Byte[])">
-            <summary>
-            Check whether the byte array begins with a valid ID3v2.2 header.
-            </summary>
-            
-            <param name="header">The byte array to check</param>
-            
-            <returns>
-            `null` if the stream does not begin with a ID3v2.2 header, and the
-            major version if it does.
+            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            format, `null` otherwise.
             </returns>
         </member>
         <member name="F:Metadata.Audio.ID3v2.V2.fields">
@@ -460,14 +433,20 @@
             Implement the audio field attribute mappings for ID3v2.2 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.Attributes">
+        <member name="P:Metadata.Audio.ID3v2.V2.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.2 tags.
             </summary>
             
             <seealso cref="P:Metadata.Audio.ID3v2.V2.Fields"/>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.#ctor(System.IO.Stream)">
+        <member name="P:Metadata.Audio.ID3v2.V2.Compressed">
+            <summary>
+            Indicates whether the data in the tag has been compressed; the
+            ID3v2.2 spec recommends ignoring the tag if so.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V2.#ctor(System.Byte[])">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -478,21 +457,7 @@
             if the tag is compressed, it is swallowed but largely ignored.
             </remarks>
             
-            <param name="stream">The stream to parse.</param>
-            
-            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.ParseHeaderAsync(System.IO.Stream)">
-            <summary>
-            Extract and encapsulate the code used to parse a ID3v2 header into
-            usable variables, and use that to retrieve the rest of the tag.
-            </summary>
-            
-            <param name="stream">The stream to parse.</param>
-            
-            <returns>
-            The remainder of the tag, properly de-unsynchronized.
-            </returns>
+            <param name="header">The stream to parse.</param>
         </member>
         <member name="T:Metadata.Audio.ID3v2.V2.FieldTypes">
             <summary>
@@ -522,29 +487,16 @@
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.IO.Stream)">
+        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.Byte[])">
             <summary>
             Check whether the stream begins with a valid ID3v2.3 header.
             </summary>
             
-            <param name="stream">The Stream to check.</param>
+            <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            Whether the stream begins with a valid ID3v2.3 header.
-            </returns>
-            
-            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.Byte[])">
-            <summary>
-            Check whether the byte array begins with a valid ID3v2.3 header.
-            </summary>
-            
-            <param name="header">The byte array to check</param>
-            
-            <returns>
-            `null` if the stream does not begin with a ID3v2.3 header, and the
-            major version if it does.
+            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            format, `null` otherwise.
             </returns>
         </member>
         <member name="F:Metadata.Audio.ID3v2.V3.fields">
@@ -564,7 +516,7 @@
             Implement the audio field attribute mappings for ID3v2.3 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.Attributes">
+        <member name="P:Metadata.Audio.ID3v2.V3.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.3 tags.
             </summary>
@@ -576,7 +528,7 @@
             The size of the empty padding at the end of the tag.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.#ctor(System.IO.Stream)">
+        <member name="M:Metadata.Audio.ID3v2.V3.#ctor(System.Byte[])">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -587,22 +539,7 @@
             if the tag is compressed, it is swallowed but largely ignored.
             </remarks>
             
-            <param name="stream">The stream to parse.</param>
-            
-            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.ParseHeaderAsync(System.IO.Stream)">
-            <summary>
-            Extract and encapsulate the code used to parse a ID3v2 header into
-            usable variables, and use that to retrieve the rest of the tag.
-            </summary>
-            
-            <param name="stream">The stream to parse.</param>
-            
-            <returns>
-            The remainder of the ID3v2.3 tag, already processed to reverse any
-            unsynchronization.
-            </returns>
+            <param name="header">The stream to parse.</param>
         </member>
         <member name="M:Metadata.Audio.ID3v2.V3.ParseExtendedHeader(System.Byte[])">
             <summary>
@@ -612,13 +549,6 @@
             Given that arrays have an inherent Length property, the first four
             bytes (storing the size) are ignored.
             </summary>
-            
-            <remarks>
-            This takes a `byte[]` rather than a `Stream` like
-            <see cref="M:Metadata.Audio.ID3v2.V3.ParseHeaderAsync(System.IO.Stream)"/> because this is intended to
-            be /// called on pre-processed data of the proper length, rather
-            than the raw bytestream.
-            </remarks>
             
             <param name="extHeader">
             The de-unsynchronized byte array to parse.
@@ -657,29 +587,16 @@
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.IO.Stream)">
+        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.Byte[])">
             <summary>
             Check whether the stream begins with a valid ID3v2.4 header.
             </summary>
             
-            <param name="stream">The Stream to check.</param>
+            <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            Whether the stream begins with a valid ID3v2.4 header.
-            </returns>
-            
-            <see cref="M:Metadata.MetadataFormat.Validate(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.Byte[])">
-            <summary>
-            Check whether the byte array begins with a valid ID3v2.4 header.
-            </summary>
-            
-            <param name="header">The byte array to check</param>
-            
-            <returns>
-            `null` if the stream does not begin with a ID3v2.4 header, and the
-            major version if it does.
+            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            format, `null` otherwise.
             </returns>
         </member>
         <member name="F:Metadata.Audio.ID3v2.V4.fields">
@@ -699,7 +616,7 @@
             Implement the audio field attribute mappings for ID3v2.4 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.Attributes">
+        <member name="P:Metadata.Audio.ID3v2.V4.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.4 tags.
             </summary>
@@ -716,7 +633,7 @@
             Whether this tag updates any previous tags
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.#ctor(System.IO.Stream)">
+        <member name="M:Metadata.Audio.ID3v2.V4.#ctor(System.Byte[])">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -727,22 +644,7 @@
             if the tag is compressed, it is swallowed but largely ignored.
             </remarks>
             
-            <param name="stream">The stream to parse.</param>
-            
-            <seealso cref="M:Metadata.MetadataFormat.Construct(System.String,System.IO.Stream)"/>
-        </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.ParseHeaderAsync(System.IO.Stream)">
-            <summary>
-            Extract and encapsulate the code used to parse a ID3v2 header into
-            usable variables, and use that to retrieve the rest of the tag.
-            </summary>
-            
-            <param name="stream">The stream to parse.</param>
-            
-            <returns>
-            The remainder of the ID3v2.4 tag, already processed to reverse any
-            unsynchronization.
-            </returns>
+            <param name="header">The stream to parse.</param>
         </member>
         <member name="M:Metadata.Audio.ID3v2.V4.ParseExtendedHeader(System.Byte[])">
             <summary>
@@ -752,13 +654,6 @@
             Given that arrays have an inherent Length property, the first four
             bytes (storing the size) are ignored.
             </summary>
-            
-            <remarks>
-            This takes a `byte[]` rather than a `Stream` like
-            <see cref="M:Metadata.Audio.ID3v2.V4.ParseHeaderAsync(System.IO.Stream)"/> because this is intended to
-            be called on pre-processed data of the proper length, rather
-            than the raw bytestream.
-            </remarks>
             
             <param name="extHeader">
             The de-unsynchronized byte array to parse.
