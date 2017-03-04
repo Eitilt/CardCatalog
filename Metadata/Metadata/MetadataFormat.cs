@@ -53,7 +53,7 @@ namespace Metadata {
              */
 			//BUG: GetAssemblies() returns an empty array
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
-					.Where((a) => a.IsDefined(typeof(MetadataFormatAssemblyAttribute))))
+					.Where((a) => a.IsDefined(typeof(ScanAssemblyAttribute))))
 				Register(assembly);
 		}
 
@@ -96,7 +96,7 @@ namespace Metadata {
 		/// 
 		/// <param name="format">The type to add.</param>
 		/// 
-		/// <seealso cref="MetadataFormatValidatorAttribute"/>
+		/// <seealso cref="HeaderParserAttribute"/>
 		public static void Register(Type format) {
 			var attr = format.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
 			if (attr == null)
@@ -112,7 +112,7 @@ namespace Metadata {
 		/// 
 		/// <remarks>
 		/// The validation function must still be identified with a
-		/// <see cref="MetadataFormatValidatorAttribute"/>.
+		/// <see cref="HeaderParserAttribute"/>.
 		/// <para/>
 		/// Note that if multiple types are registered under the same name,
 		/// any later registrations will override the previous.
@@ -132,8 +132,8 @@ namespace Metadata {
 			tagFormats[name] = format;
 
 			foreach (var method in format.GetRuntimeMethods()
-					.Where((m) => m.IsDefined(typeof(MetadataFormatValidatorAttribute))))
-				Register(name, method.GetCustomAttribute<MetadataFormatValidatorAttribute>().HeaderLength, method);
+					.Where((m) => m.IsDefined(typeof(HeaderParserAttribute))))
+				Register(name, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
 		}
 		/// <summary>
 		/// Add the given method to the lookup tables under the specified
@@ -160,20 +160,20 @@ namespace Metadata {
 		/// <param name="method">The method to add.</param>
 		private static void Register(string name, int headerLength, MethodInfo method) {
 			if (method.IsPrivate)
-				throw new NotSupportedException("Metadata format validation functions must not be private");
+				throw new NotSupportedException("Metadata format header-parsing functions must not be private");
 			if (method.IsAbstract)
-				throw new NotSupportedException("Metadata format validation functions must not be abstract");
+				throw new NotSupportedException("Metadata format header-parsing functions must not be abstract");
 			if (method.IsStatic == false)
-				throw new NotSupportedException("Metadata format validation functions must be static");
+				throw new NotSupportedException("Metadata format header-parsing functions must be static");
 
 			var parameters = method.GetParameters();
 			if ((parameters.Length == 0)
 				|| (typeof(byte[]).IsAssignableFrom(parameters[0].ParameterType) == false)
 				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
-				throw new NotSupportedException("Metadata format validation functions must be able to take only a byte[]");
+				throw new NotSupportedException("Metadata format header-parsing functions must be able to take only a byte[]");
 
 			if (typeof(TagFormat).IsAssignableFrom(method.ReturnType) == false)
-				throw new NotSupportedException("Metadata format validation functions must return an empty instance of TagFormat");
+				throw new NotSupportedException("Metadata format header-parsing functions must return an empty instance of TagFormat");
 
 			tagHeaderFunctions[name] = Tuple.Create(headerLength, (Func<byte[], TagFormat>)method.CreateDelegate(typeof(Func<byte[], TagFormat>)));
 		}

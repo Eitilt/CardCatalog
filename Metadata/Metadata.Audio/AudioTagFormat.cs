@@ -1,7 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-[assembly: Metadata.MetadataFormatAssembly]
+[assembly: Metadata.ScanAssembly]
 
 namespace Metadata.Audio {
 	/// <summary>

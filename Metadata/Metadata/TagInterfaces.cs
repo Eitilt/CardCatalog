@@ -19,7 +19,7 @@ namespace Metadata {
 		/// 
 		/// <remarks>
 		/// The underlying value should be set in any function marked with
-		/// <see cref="MetadataFormatValidatorAttribute"/>; if that function
+		/// <see cref="HeaderParserAttribute"/>; if that function
 		/// sets it to 0, the incoming stream will be read according to
 		/// </remarks>
 		public uint Length { get; protected set; }

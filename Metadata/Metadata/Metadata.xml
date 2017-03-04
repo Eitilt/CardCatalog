@@ -130,6 +130,112 @@
             proper format for keys to <see cref="T:Metadata.TagField"/> objects.
             </summary>
         </member>
+        <member name="T:Metadata.ScanAssemblyAttribute">
+            <summary>
+            Indicate that the assembly should be scanned for classes marked with
+            <see cref="T:Metadata.MetadataFormatAttribute"/> to automatically register.
+            
+            This class cannot be inherited.
+            </summary>
+            
+            <seealso cref="T:Metadata.MetadataFormatAttribute"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)"/>
+        </member>
+        <member name="T:Metadata.MetadataFormatAttribute">
+            <summary>
+            Indicate that the class implements a metadata format specification.
+            
+            This class cannot be inherited.
+            </summary>
+            
+            <remarks>
+            The class must implement <see cref="T:Metadata.TagFormat"/>.
+            </remarks>
+            
+            <seealso cref="T:Metadata.ScanAssemblyAttribute"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+        </member>
+        <member name="P:Metadata.MetadataFormatAttribute.Name">
+            <summary>
+            The unique short name representing this format.
+            </summary>
+        </member>
+        <member name="M:Metadata.MetadataFormatAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Metadata.MetadataFormatAttribute"/> class with the specified
+            <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
+            </summary>
+            
+            <param name="name">
+            The unique short name representing this format.
+            <para/>
+            It is recommended that this also be exposed as a constant on the
+            type itself.
+            </param>
+        </member>
+        <member name="T:Metadata.HeaderParserAttribute">
+            <summary>
+            Marks a method as being a validation function checking a binary header
+            against that defined by the enclosing metadata specification.
+            
+            This class cannot be inherited.
+            </summary>
+            
+            <remarks>
+            If the passed byte[] is not a header of the proper format, the
+            function should return `null`.
+            </remarks>
+            
+            TODO: Add discussion of required signature according to exceptions in
+            method Register(...)
+            
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Int32,System.Reflection.MethodInfo)"/>
+        </member>
+        <member name="P:Metadata.HeaderParserAttribute.HeaderLength">
+            <summary>
+            The number of bytes this function processes to verify that the
+            proper format header is present.
+            </summary>
+            
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            New value for `set` is less than one.
+            </exception>
+        </member>
+        <member name="M:Metadata.HeaderParserAttribute.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Metadata.HeaderParserAttribute"/> class with the
+            specified <see cref="P:Metadata.HeaderParserAttribute.HeaderLength"/>.
+            </summary>
+            
+            <param name="length">
+            The number of bytes this function processes to verify that the
+            proper format header is present.
+            </param>
+            
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Value of <paramref name="length"/> is less than one.
+            </exception>
+        </member>
+        <member name="T:Metadata.TagFieldAttribute">
+            <summary>
+            Marks a class as describing a field within a tag in a particular metadata
+            format.
+            </summary>
+            
+            <remarks>
+            An exception will be thrown on registration if the class does not
+            implement <see cref="T:Metadata.TagField"/>.
+            </remarks>
+        </member>
+        <member name="P:Metadata.TagFieldAttribute.Format">
+            <summary>
+            The short name associated with the metadata format.
+            </summary>
+            
+            <seealso cref="P:Metadata.MetadataFormatAttribute.Name"/>
+        </member>
         <member name="T:Metadata.MetadataFormat">
             <summary>
             A data-free class providing a common means to work with multiple
@@ -165,6 +271,14 @@
             metadata formats.
             </summary>
         </member>
+        <member name="M:Metadata.MetadataFormat.RefreshFormats``1">
+            <summary>
+            Scan the specified assembly for implementations of metadata
+            formats.
+            </summary>
+            
+            <typeparam name="T">A type from the assembly to scan.</typeparam>
+        </member>
         <member name="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)">
             <summary>
             Scan the given assembly for all types marked as implementing a
@@ -191,7 +305,7 @@
             
             <param name="format">The type to add.</param>
             
-            <seealso cref="T:Metadata.MetadataFormatValidatorAttribute"/>
+            <seealso cref="T:Metadata.HeaderParserAttribute"/>
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.String,System.Type)">
             <summary>
@@ -202,7 +316,7 @@
             
             <remarks>
             The validation function must still be identified with a
-            <see cref="T:Metadata.MetadataFormatValidatorAttribute"/>.
+            <see cref="T:Metadata.HeaderParserAttribute"/>.
             <para/>
             Note that if multiple types are registered under the same name,
             any later registrations will override the previous.
@@ -260,94 +374,6 @@
             
             <returns>The keys of all matching formats.</returns>
         </member>
-        <member name="T:Metadata.MetadataFormatAssemblyAttribute">
-            <summary>
-            Indicate that the assembly should be scanned for classes marked with
-            <see cref="T:Metadata.MetadataFormatAttribute"/> to automatically register.
-            
-            This class cannot be inherited.
-            </summary>
-            
-            <seealso cref="T:Metadata.MetadataFormatAttribute"/>
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)"/>
-        </member>
-        <member name="T:Metadata.MetadataFormatAttribute">
-            <summary>
-            Indicate that the class implements a metadata format specification.
-            
-            This class cannot be inherited.
-            </summary>
-            
-            <remarks>
-            The class must implement <see cref="T:Metadata.TagFormat"/>.
-            </remarks>
-            
-            <seealso cref="T:Metadata.MetadataFormatAssemblyAttribute"/>
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
-        </member>
-        <member name="P:Metadata.MetadataFormatAttribute.Name">
-            <summary>
-            The unique short name representing this format.
-            </summary>
-        </member>
-        <member name="M:Metadata.MetadataFormatAttribute.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the
-            <see cref="T:Metadata.MetadataFormatAttribute"/> class with the specified
-            <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
-            </summary>
-            
-            <param name="name">
-            The unique short name representing this format.
-            <para/>
-            It is recommended that this also be exposed as a constant on the
-            type itself.
-            </param>
-        </member>
-        <member name="T:Metadata.MetadataFormatValidatorAttribute">
-            <summary>
-            Marks a method as being a validation function checking a binary header
-            against that defined by the enclosing metadata specification.
-            
-            This class cannot be inherited.
-            </summary>
-            
-            <remarks>
-            If the passed byte[] is not a header of the proper format, the
-            function should return `null`.
-            </remarks>
-            
-            TODO: Add discussion of required signature according to exceptions in
-            method Register(...)
-            
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Int32,System.Reflection.MethodInfo)"/>
-        </member>
-        <member name="P:Metadata.MetadataFormatValidatorAttribute.HeaderLength">
-            <summary>
-            The number of bytes this function processes to verify that the
-            proper format header is present.
-            </summary>
-            
-            <exception cref="T:System.ArgumentOutOfRangeException">
-            New value for `set` is less than one.
-            </exception>
-        </member>
-        <member name="M:Metadata.MetadataFormatValidatorAttribute.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of the
-            <see cref="T:Metadata.MetadataFormatValidatorAttribute"/> class with the
-            specified <see cref="P:Metadata.MetadataFormatValidatorAttribute.HeaderLength"/>.
-            </summary>
-            
-            <param name="length">
-            The number of bytes this function processes to verify that the
-            proper format header is present.
-            </param>
-            
-            <exception cref="T:System.ArgumentOutOfRangeException">
-            Value of <paramref name="length"/> is less than one.
-            </exception>
-        </member>
         <member name="T:Metadata.TagFormat">
             <summary>
             Common properties to retrieve info from multiple tag formats.
@@ -365,7 +391,7 @@
             
             <remarks>
             The underlying value should be set in any function marked with
-            <see cref="T:Metadata.MetadataFormatValidatorAttribute"/>; if that function
+            <see cref="T:Metadata.HeaderParserAttribute"/>; if that function
             sets it to 0, the incoming stream will be read according to
             </remarks>
         </member>

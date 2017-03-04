@@ -11,7 +11,7 @@ namespace Metadata {
 	/// <seealso cref="MetadataFormatAttribute"/>
 	/// <seealso cref="MetadataFormat.Register(System.Reflection.Assembly)"/>
 	[AttributeUsage(AttributeTargets.Assembly, Inherited = false, AllowMultiple = true)]
-	public sealed class MetadataFormatAssemblyAttribute : Attribute { }
+	public sealed class ScanAssemblyAttribute : Attribute { }
 
 	/// <summary>
 	/// Indicate that the class implements a metadata format specification.
@@ -23,7 +23,7 @@ namespace Metadata {
 	/// The class must implement <see cref="TagFormat"/>.
 	/// </remarks>
 	/// 
-	/// <seealso cref="MetadataFormatAssemblyAttribute"/>
+	/// <seealso cref="ScanAssemblyAttribute"/>
 	/// <seealso cref="MetadataFormat.Register(string, Type)"/>
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	public sealed class MetadataFormatAttribute : Attribute {
@@ -66,7 +66,7 @@ namespace Metadata {
 	/// 
 	/// <seealso cref="MetadataFormat.Register(string, int, System.Reflection.MethodInfo)"/>
 	[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-	public sealed class MetadataFormatValidatorAttribute : Attribute {
+	public sealed class HeaderParserAttribute : Attribute {
 		int length;
 		/// <summary>
 		/// The number of bytes this function processes to verify that the
@@ -88,7 +88,7 @@ namespace Metadata {
 
 		/// <summary>
 		/// Initializes a new instance of the
-		/// <see cref="MetadataFormatValidatorAttribute"/> class with the
+		/// <see cref="HeaderParserAttribute"/> class with the
 		/// specified <see cref="HeaderLength"/>.
 		/// </summary>
 		/// 
@@ -100,8 +100,27 @@ namespace Metadata {
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Value of <paramref name="length"/> is less than one.
 		/// </exception>
-		public MetadataFormatValidatorAttribute(int length) {
+		public HeaderParserAttribute(int length) {
 			HeaderLength = length;
 		}
+	}
+
+	/// <summary>
+	/// Marks a class as describing a field within a tag in a particular metadata
+	/// format.
+	/// </summary>
+	/// 
+	/// <remarks>
+	/// An exception will be thrown on registration if the class does not
+	/// implement <see cref="TagField"/>.
+	/// </remarks>
+	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
+	public sealed class TagFieldAttribute : Attribute {
+		/// <summary>
+		/// The short name associated with the metadata format.
+		/// </summary>
+		/// 
+		/// <seealso cref="MetadataFormatAttribute.Name"/>
+		public string Format { get; set; }
 	}
 }

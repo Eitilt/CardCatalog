@@ -29,7 +29,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// An empty <see cref="V2"/> object if the header is in the proper
 		/// format, `null` otherwise.
 		/// </returns>
-		[MetadataFormatValidator(10)]
+		[HeaderParser(10)]
 		public static V2 VerifyHeader(byte[] header) {
 			if ((VerifyBaseHeader(header)?.Equals(0x02) ?? false) == false)
 				return null;
