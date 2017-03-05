@@ -9,7 +9,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// <summary>
 		/// Fields specific to the ID3v2.3 standard.
 		/// </summary>
-		internal class FieldTypes : FieldTypesShared {
+		internal class FieldTypes {
 			Tuple<byte[], BitArray> ReadHeader(byte[] header, out uint length) {
 				if (header.Length < 10)
 					throw new ArgumentException("Need ten bytes to read a ID3v2.3 header", "header");

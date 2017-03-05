@@ -231,10 +231,40 @@
         </member>
         <member name="P:Metadata.TagFieldAttribute.Format">
             <summary>
-            The short name associated with the metadata format.
+            The short name associated with the metadata format, or `null` if
+            it should be obtained from the enclosing type.
             </summary>
             
+            <remarks>
+            If this is `null` (the default), the immediately-enclosing type
+            <em>must</em>  have a <see cref="T:Metadata.MetadataFormatAttribute"/> attribute,
+            or an  exception will be thrown on the call to
+            <see cref="M:Metadata.MetadataFormat.Register(System.String,System.Byte[],System.Type)"/>.
+            </remarks>
+            
             <seealso cref="P:Metadata.MetadataFormatAttribute.Name"/>
+        </member>
+        <member name="P:Metadata.TagFieldAttribute.Header">
+            <summary>
+            A sequence of bytes used to uniquely identify this type of field.
+            </summary>
+            
+            <remarks>
+            If multiple fields have the same structure and differ only in this
+            identifier, the <see cref="T:Metadata.TagFieldAttribute"/> may be added to a
+            common class once for each such tag.
+            </remarks>
+        </member>
+        <member name="M:Metadata.TagFieldAttribute.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:Metadata.TagFieldAttribute"/> class with the
+            specified <see cref="P:Metadata.TagFieldAttribute.Header"/>.
+            </summary>
+            
+            <param name="header">
+            The unique byte header indicating this type of field.
+            </param>
         </member>
         <member name="T:Metadata.MetadataFormat">
             <summary>
@@ -252,6 +282,20 @@
             The class encapsulating each registered metadata format.
             </summary>
         </member>
+        <member name="F:Metadata.MetadataFormat.fieldKeyComparer">
+            <summary>
+            Maintain a single instance of the comparer rather than creating a new
+            one for each dictionary.
+            </summary>
+            
+            <seealso cref="F:Metadata.MetadataFormat.fieldTypes"/>
+        </member>
+        <member name="F:Metadata.MetadataFormat.fieldTypes">
+            <summary>
+            Store lookup tables for the fields of each of the registered
+            metadata formats.
+            </summary>
+        </member>
         <member name="F:Metadata.MetadataFormat.assemblies">
             <summary>
             A registry of previously-scanned assemblies in order to prevent
@@ -260,24 +304,25 @@
         </member>
         <member name="M:Metadata.MetadataFormat.#cctor">
             <summary>
-            Initialize static attributes.
+            Automatically add any 
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.RefreshFormats"/>
-        </member>
-        <member name="M:Metadata.MetadataFormat.RefreshFormats">
-            <summary>
-            Scan all currently-loaded assemblies for implementations of
-            metadata formats.
-            </summary>
+            <seealso cref="M:Metadata.MetadataFormat.RefreshFormats``1"/>
         </member>
         <member name="M:Metadata.MetadataFormat.RefreshFormats``1">
             <summary>
-            Scan the specified assembly for implementations of metadata
-            formats.
+            Scan the aseembly enclosing the specified for implementations of
+            metadata formats.
             </summary>
             
-            <typeparam name="T">A type from the assembly to scan.</typeparam>
+            <remarks>
+            The explicit type parameter is preferred over scanning loaded assemblies
+            as oftentimes this will be the first time the 
+            </remarks>
+            
+            <typeparam name="T">
+            A type from the assembly to scan, extending <see cref="T:Metadata.TagFormat"/>.
+            </typeparam>
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)">
             <summary>
@@ -294,8 +339,9 @@
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.Type)">
             <summary>
-            Add the given type to the lookup tables according to the descriptor
-            specified in its <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
+            Add the given metadata format type to the lookup tables according
+            to the  descriptor specified in its
+            <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
             </summary>
             
             <remarks>
@@ -309,9 +355,9 @@
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.String,System.Type)">
             <summary>
-            Add the given type to the lookup tables under the specified custom
-            descriptor, even if it does not have any associated
-            <see cref="T:Metadata.MetadataFormatAttribute"/>.
+            Add the given metadata format type to the lookup tables under the
+            specified custom descriptor, even if it does not have any
+            associated <see cref="T:Metadata.MetadataFormatAttribute"/>.
             </summary>
             
             <remarks>
@@ -329,6 +375,23 @@
             It is recommended that this also be exposed as a constant.
             </param>
             <param name="format">The type to add.</param>
+        </member>
+        <member name="M:Metadata.MetadataFormat.Register(System.String,System.Byte[],System.Type)">
+            <summary>
+            Add the given tag field type to the lookup tables under the proper
+            format specifier.
+            </summary>
+            
+            <param name="format">
+            The short name of the format defining this field, or `null` to
+            autodetect from the enclosing class.
+            </param>
+            <param name="header">
+            The unique specifier of this field.
+            </param>
+            <param name="fieldType">
+            The <see cref="T:System.Type"/> implementing the field.
+            </param>
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.String,System.Int32,System.Reflection.MethodInfo)">
             <summary>

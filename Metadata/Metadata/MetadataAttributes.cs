@@ -117,10 +117,42 @@ namespace Metadata {
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 	public sealed class TagFieldAttribute : Attribute {
 		/// <summary>
-		/// The short name associated with the metadata format.
+		/// The short name associated with the metadata format, or `null` if
+		/// it should be obtained from the enclosing type.
 		/// </summary>
 		/// 
+		/// <remarks>
+		/// If this is `null` (the default), the immediately-enclosing type
+		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/> attribute,
+		/// or an  exception will be thrown on the call to
+		/// <see cref="MetadataFormat.Register(string, byte[], Type)"/>.
+		/// </remarks>
+		/// 
 		/// <seealso cref="MetadataFormatAttribute.Name"/>
-		public string Format { get; set; }
+		public string Format { get; set; } = null;
+
+		/// <summary>
+		/// A sequence of bytes used to uniquely identify this type of field.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// If multiple fields have the same structure and differ only in this
+		/// identifier, the <see cref="TagFieldAttribute"/> may be added to a
+		/// common class once for each such tag.
+		/// </remarks>
+		public byte[] Header { get; private set; }
+
+		/// <summary>
+		/// Initializes a new instance of the
+		/// <see cref="TagFieldAttribute"/> class with the
+		/// specified <see cref="Header"/>.
+		/// </summary>
+		/// 
+		/// <param name="header">
+		/// The unique byte header indicating this type of field.
+		/// </param>
+		public TagFieldAttribute(byte[] header) {
+			Header = header;
+		}
 	}
 }

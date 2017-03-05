@@ -381,11 +381,6 @@
             data, false if they differ.
             </returns>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.ID3v23Plus.FieldTypesShared">
-            <summary>
-            Fields shared between the ID3v2.3 and ID3v2.4 standards.
-            </summary>
-        </member>
         <member name="T:Metadata.Audio.ID3v2.V2">
             <summary>
             An implementation of the ID3v2.2 standard as described at

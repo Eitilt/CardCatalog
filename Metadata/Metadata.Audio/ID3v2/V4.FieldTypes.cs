@@ -7,6 +7,6 @@ namespace Metadata.Audio.ID3v2 {
 		/// <summary>
 		/// Fields specific to the ID3v2.4 standard.
 		/// </summary>
-		internal class FieldTypes : FieldTypesShared { }
+		internal class FieldTypes { }
 	}
 }

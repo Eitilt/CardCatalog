@@ -23,6 +23,19 @@ namespace Metadata {
 		private static Dictionary<string, Type> tagFormats = new Dictionary<string, Type>();
 
 		/// <summary>
+		/// Maintain a single instance of the comparer rather than creating a new
+		/// one for each dictionary.
+		/// </summary>
+		/// 
+		/// <seealso cref="fieldTypes"/>
+		private static FieldDictionary.SequenceEqualityComparer<byte> fieldKeyComparer = new FieldDictionary.SequenceEqualityComparer<byte>();
+		/// <summary>
+		/// Store lookup tables for the fields of each of the registered
+		/// metadata formats.
+		/// </summary>
+		private static Dictionary<string, Dictionary<byte[], Type>> fieldTypes = new Dictionary<string, Dictionary<byte[], Type>>();
+
+		/// <summary>
 		/// A registry of previously-scanned assemblies in order to prevent
 		/// unnecessary use of reflection methods.
 		/// </summary>
@@ -76,18 +89,26 @@ namespace Metadata {
 				return;
 
 			foreach (Type t in assembly.ExportedTypes) {
-				var attr = t.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
-				if (attr == null)
+				var tagAttr = t.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
+				if (tagAttr == null)
 					continue;
+				else
+					Register(tagAttr.Name, t);
 
-				Register(attr.Name, t);
+				var fieldAttr = t.GetTypeInfo().GetCustomAttribute<TagFieldAttribute>(false);
+				if (fieldAttr == null)
+					continue;
+				else
+					Register(fieldAttr.Format, fieldAttr.Header, t);
 			}
 
 			assemblies.Add(assembly.FullName);
 		}
+
 		/// <summary>
-		/// Add the given type to the lookup tables according to the descriptor
-		/// specified in its <see cref="MetadataFormatAttribute.Name"/>.
+		/// Add the given metadata format type to the lookup tables according
+		/// to the  descriptor specified in its
+		/// <see cref="MetadataFormatAttribute.Name"/>.
 		/// </summary>
 		/// 
 		/// <remarks>
@@ -105,10 +126,11 @@ namespace Metadata {
 			else
 				Register(attr.Name, format);
 		}
+
 		/// <summary>
-		/// Add the given type to the lookup tables under the specified custom
-		/// descriptor, even if it does not have any associated
-		/// <see cref="MetadataFormatAttribute"/>.
+		/// Add the given metadata format type to the lookup tables under the
+		/// specified custom descriptor, even if it does not have any
+		/// associated <see cref="MetadataFormatAttribute"/>.
 		/// </summary>
 		/// 
 		/// <remarks>
@@ -136,6 +158,50 @@ namespace Metadata {
 					.Where((m) => m.IsDefined(typeof(HeaderParserAttribute))))
 				Register(name, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
 		}
+
+		/// <summary>
+		/// Add the given tag field type to the lookup tables under the proper
+		/// format specifier.
+		/// </summary>
+		/// 
+		/// <param name="format">
+		/// The short name of the format defining this field, or `null` to
+		/// autodetect from the enclosing class.
+		/// </param>
+		/// <param name="header">
+		/// The unique specifier of this field.
+		/// </param>
+		/// <param name="fieldType">
+		/// The <see cref="Type"/> implementing the field.
+		/// </param>
+		private static void Register(string format, byte[] header, Type fieldType) {
+			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
+				throw new NotSupportedException("Metadata tag field types must extend TagField");
+
+			if (format == null) {
+				var enclosingType = fieldType.DeclaringType;
+				if (enclosingType == null)
+					throw new NotSupportedException("If a TagFieldAttribute does not declare a Format, it must be located within an enclosing type");
+
+				var formatAttr = enclosingType.GetTypeInfo().GetCustomAttribute(typeof(MetadataFormatAttribute)) as MetadataFormatAttribute;
+				if (formatAttr == null)
+					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"
+						+ " the enclosing type must have an attached MetadataFormatAttribute");
+
+				format = formatAttr.Name;
+			}
+
+			Dictionary<byte[], Type> dictionary;
+			if (fieldTypes.ContainsKey(format)) {
+				dictionary = fieldTypes[format];
+			} else {
+				dictionary = new Dictionary<byte[], Type>(fieldKeyComparer);
+				fieldTypes[format] = dictionary;
+			}
+
+			dictionary[header] = fieldType;
+		}
+		
 		/// <summary>
 		/// Add the given method to the lookup tables under the specified
 		/// custom descriptor.

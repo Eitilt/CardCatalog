@@ -20,7 +20,7 @@ namespace Metadata {
 		/// <typeparam name="ElementType">
 		/// The underlying type of the sequence.
 		/// </typeparam>
-		class SequenceEqualityComparer<ElementType> : IEqualityComparer<IEnumerable<ElementType>> {
+		public class SequenceEqualityComparer<ElementType> : IEqualityComparer<IEnumerable<ElementType>> {
 			/// <summary>
 			/// Provide a more robust meant of testing the equality of
 			/// elements.
