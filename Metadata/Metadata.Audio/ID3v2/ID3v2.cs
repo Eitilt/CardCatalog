@@ -137,7 +137,7 @@ namespace Metadata.Audio.ID3v2 {
              * output, and the synchronization will never add more than the
              * number of 0xFF bytes in the array
              */
-			var ret = new List<byte>(input.Length + input.Count((byte test) => test == 0xFF));
+			var ret = new List<byte>(input.Length + input.Count(test => test == 0xFF));
 
 			for (uint i = 0; i < input.Length; ++i) {
 				ret.Add(input[i]);
@@ -225,11 +225,11 @@ namespace Metadata.Audio.ID3v2 {
 
 			Task<byte[]> ret;
 			if (unsync)
-				ret = read.ContinueWith((antecedent) => DeUnsynchronize(bytes),
+				ret = read.ContinueWith(_ => DeUnsynchronize(bytes),
 					TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.RunContinuationsAsynchronously
 				);
 			else
-				ret = read.ContinueWith((antecedent) => bytes, TaskContinuationOptions.OnlyOnRanToCompletion);
+				ret = read.ContinueWith(_ => bytes, TaskContinuationOptions.OnlyOnRanToCompletion);
 
 			return ret;
 		}

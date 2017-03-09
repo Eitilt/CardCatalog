@@ -8,6 +8,7 @@ namespace Metadata.Audio.ID3v2 {
 	/// An implementation of the ID3v2.3 standard as described at
 	/// <see href="http://id3.org/d3v2.3.0"/>
 	/// </summary>
+	[MetadataFormat(format)]
 	public partial class V3 : ID3v23Plus {
 		/// <summary>
 		/// The short name used to represent ID3v2.3 metadata.

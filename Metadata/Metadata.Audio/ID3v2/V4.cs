@@ -13,6 +13,7 @@ namespace Metadata.Audio.ID3v2 {
 	/// <remarks>
 	/// TODO: Handle footer
 	/// </remarks>
+	[MetadataFormat(format)]
 	public partial class V4 : ID3v23Plus {
 		/// <summary>
 		/// The short name used to represent ID3v2.4 metadata.
