@@ -11,6 +11,14 @@ namespace Metadata.Audio.ID3v2 {
 	/// </summary>
 	public abstract partial class ID3v2 : AudioTagFormat {
 		/// <summary>
+		/// ID3v2 string fields use ISO-8859-1 by default but it does not have
+		/// a static reference like <see cref="System.Text.Encoding.UTF8"/>,
+		/// so provide one rather than needing to call
+		/// <see cref="System.Text.Encoding.GetEncoding(string)"/> each time.
+		/// </summary>
+		protected static System.Text.Encoding ISO88591 = System.Text.Encoding.GetEncoding(28591);
+
+		/// <summary>
 		/// The minor version number of the specification used.
 		/// </summary>
 		protected byte VersionMinor { get; private set; }

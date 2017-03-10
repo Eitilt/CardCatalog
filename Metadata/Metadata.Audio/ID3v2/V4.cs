@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -73,7 +74,7 @@ namespace Metadata.Audio.ID3v2 {
 				this.parent = parent;
 			}
 
-			public override AttributeValues Name => throw new NotImplementedException();
+			public override IEnumerable<string> Name => parent.Fields[ISO88591.GetBytes("TIT2")].SelectMany(f => f.Values);
 		}
 		/// <summary>
 		/// Retrieve the audio field attribute mappings for ID3v2.4 tags.

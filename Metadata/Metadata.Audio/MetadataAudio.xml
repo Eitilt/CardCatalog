@@ -28,7 +28,7 @@
             metadata format.
             </summary>
             
-            <seealso cref="P:Metadata.TagFormat.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
             <seealso cref="P:Metadata.Audio.AudioTagFormat.AudioAttributes"/>
         </member>
         <member name="P:Metadata.Audio.AudioTagFormat.AudioAttributes">
@@ -37,7 +37,7 @@
             audio metadata.
             </summary>
             
-            <seealso cref="P:Metadata.TagFormat.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
             <seealso cref="P:Metadata.Audio.AudioTagFormat.Attributes"/>
         </member>
         <member name="M:Metadata.Audio.AudioTagFormat.Parse(System.IO.BinaryReader)">
@@ -50,6 +50,14 @@
         <member name="T:Metadata.Audio.ID3v2.ID3v2">
             <summary>
             Shared code for all versions of the ID3v2 standard.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.ID3v2.ISO88591">
+            <summary>
+            ID3v2 string fields use ISO-8859-1 by default but it does not have
+            a static reference like <see cref="P:System.Text.Encoding.UTF8"/>,
+            so provide one rather than needing to call
+            <see cref="M:System.Text.Encoding.GetEncoding(System.String)"/> each time.
             </summary>
         </member>
         <member name="P:Metadata.Audio.ID3v2.ID3v2.VersionMinor">
@@ -658,6 +666,123 @@
             <summary>
             Fields specific to the ID3v2.4 standard.
             </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID">
+            <summary>
+            An identifier unique to a particular database.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.header">
+            <summary>
+            The easy representation of the field header.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.owner">
+            <summary>
+            The database with which this ID is associated.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.id">
+            <summary>
+            The raw identifier.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.Parse(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the specific
+            type of field.
+            </summary>
+            
+            <param name="data">The data to read.</param>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame">
+            <summary>
+            Any of the many tags containing purely textual data.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.header">
+            <summary>
+            The raw field header.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.values">
+            <summary>
+            All strings contained within this field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.ReadFromByteOrderMark(System.Byte[])">
+             <summary>
+             Read a sequence of bytes according to the encoding implied
+             by a byte-order-mark at the head.
+             </summary>
+             
+             <remarks>
+             TODO: Split this into its own class, as it includes
+             support for more encodings than ID3v2 does.
+             </remarks>
+            
+             <param name="data">The bytes to decode.</param>
+             
+             <returns>
+             The decoded string, or `null` if <paramref name="data"/>
+             isn't headed by a recognized byte-order-mark.
+             </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.SplitStrings(System.Collections.Generic.IEnumerable{System.Byte},System.Text.Encoding,System.UInt32)">
+            <summary>
+            Parse a sequence of bytes as a list of null-separated
+            strings.
+            </summary>
+            
+            <param name="data">The raw bytestream.</param>
+            <param name="encoding">
+            The text encoding to use in decoding <paramref name="data"/>,
+            or `null` if each string begins with a byte order marker
+            which may be used to detect the encoding dynamically.
+            </param>
+            <param name="termLength">
+            The number of null bytes in the separator.
+            </param>
+            
+            <returns>The separated and parsed strings.</returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.Parse(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the specific
+            type of field.
+            </summary>
+            
+            <param name="data">The data to read.</param>
         </member>
     </members>
 </doc>

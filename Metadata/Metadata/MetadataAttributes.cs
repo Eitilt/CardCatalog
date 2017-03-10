@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Metadata {
 	/// <summary>
@@ -20,7 +21,7 @@ namespace Metadata {
 	/// </summary>
 	/// 
 	/// <remarks>
-	/// The class must implement <see cref="TagFormat"/>.
+	/// The class must implement <see cref="MetadataTag"/>.
 	/// </remarks>
 	/// 
 	/// <seealso cref="ScanAssemblyAttribute"/>
@@ -64,10 +65,9 @@ namespace Metadata {
 	/// TODO: Add discussion of required signature according to exceptions in
 	/// method Register(...)
 	/// 
-	/// <seealso cref="MetadataFormat.Register(string, int, System.Reflection.MethodInfo)"/>
+	/// <seealso cref="MetadataFormat.Register(string, uint, System.Reflection.MethodInfo)"/>
 	[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 	public sealed class HeaderParserAttribute : Attribute {
-		int length;
 		/// <summary>
 		/// The number of bytes this function processes to verify that the
 		/// proper format header is present.
@@ -76,15 +76,7 @@ namespace Metadata {
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// New value for `set` is less than one.
 		/// </exception>
-		public int HeaderLength {
-			get => length;
-			set {
-				if (value <= 0)
-					throw new ArgumentOutOfRangeException("Metadata format headers must be at least one byte long");
-
-				length = value;
-			}
-		}
+		public uint HeaderLength { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the
@@ -100,7 +92,7 @@ namespace Metadata {
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// Value of <paramref name="length"/> is less than one.
 		/// </exception>
-		public HeaderParserAttribute(int length) {
+		public HeaderParserAttribute(uint length) {
 			HeaderLength = length;
 		}
 	}
@@ -116,6 +108,12 @@ namespace Metadata {
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 	public sealed class TagFieldAttribute : Attribute {
+		/// <summary>
+		/// Reference to the ISO-8859-1 character encoding to allow passing
+		/// byte headers as compile-time constant `string`s.
+		/// </summary>
+		static Encoding ISO88591 = Encoding.GetEncoding(28591);
+
 		/// <summary>
 		/// The short name associated with the metadata format, or `null` if
 		/// it should be obtained from the enclosing type.
@@ -148,11 +146,17 @@ namespace Metadata {
 		/// specified <see cref="Header"/>.
 		/// </summary>
 		/// 
+		/// <remarks>
+		/// <paramref name="header"/> is passed as a `string` rather than a
+		/// `byte[]` as it needs to be assigned via a compile-time constant.
+		/// </remarks>
+		/// 
 		/// <param name="header">
-		/// The unique byte header indicating this type of field.
+		/// The unique byte header indicating this type of field,
+		/// represented as an ISO-8859-1 string.
 		/// </param>
-		public TagFieldAttribute(byte[] header) {
-			Header = header;
+		public TagFieldAttribute(string header) {
+			Header = ISO88591.GetBytes(header);
 		}
 	}
 }

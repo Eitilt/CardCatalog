@@ -149,7 +149,7 @@
             </summary>
             
             <remarks>
-            The class must implement <see cref="T:Metadata.TagFormat"/>.
+            The class must implement <see cref="T:Metadata.MetadataTag"/>.
             </remarks>
             
             <seealso cref="T:Metadata.ScanAssemblyAttribute"/>
@@ -190,7 +190,7 @@
             TODO: Add discussion of required signature according to exceptions in
             method Register(...)
             
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Int32,System.Reflection.MethodInfo)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
         </member>
         <member name="P:Metadata.HeaderParserAttribute.HeaderLength">
             <summary>
@@ -202,7 +202,7 @@
             New value for `set` is less than one.
             </exception>
         </member>
-        <member name="M:Metadata.HeaderParserAttribute.#ctor(System.Int32)">
+        <member name="M:Metadata.HeaderParserAttribute.#ctor(System.UInt32)">
             <summary>
             Initializes a new instance of the
             <see cref="T:Metadata.HeaderParserAttribute"/> class with the
@@ -228,6 +228,12 @@
             An exception will be thrown on registration if the class does not
             implement <see cref="T:Metadata.TagField"/>.
             </remarks>
+        </member>
+        <member name="F:Metadata.TagFieldAttribute.ISO88591">
+            <summary>
+            Reference to the ISO-8859-1 character encoding to allow passing
+            byte headers as compile-time constant `string`s.
+            </summary>
         </member>
         <member name="P:Metadata.TagFieldAttribute.Format">
             <summary>
@@ -255,15 +261,21 @@
             common class once for each such tag.
             </remarks>
         </member>
-        <member name="M:Metadata.TagFieldAttribute.#ctor(System.Byte[])">
+        <member name="M:Metadata.TagFieldAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of the
             <see cref="T:Metadata.TagFieldAttribute"/> class with the
             specified <see cref="P:Metadata.TagFieldAttribute.Header"/>.
             </summary>
             
+            <remarks>
+            <paramref name="header"/> is passed as a `string` rather than a
+            `byte[]` as it needs to be assigned via a compile-time constant.
+            </remarks>
+            
             <param name="header">
-            The unique byte header indicating this type of field.
+            The unique byte header indicating this type of field,
+            represented as an ISO-8859-1 string.
             </param>
         </member>
         <member name="T:Metadata.MetadataFormat">
@@ -321,7 +333,7 @@
             </remarks>
             
             <typeparam name="T">
-            A type from the assembly to scan, extending <see cref="T:Metadata.TagFormat"/>.
+            A type from the assembly to scan, extending <see cref="T:Metadata.MetadataTag"/>.
             </typeparam>
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)">
@@ -393,7 +405,7 @@
             The <see cref="T:System.Type"/> implementing the field.
             </param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.String,System.Int32,System.Reflection.MethodInfo)">
+        <member name="M:Metadata.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
             <summary>
             Add the given method to the lookup tables under the specified
             custom descriptor.
@@ -437,17 +449,17 @@
             
             <returns>The keys of all matching formats.</returns>
         </member>
-        <member name="T:Metadata.TagFormat">
+        <member name="T:Metadata.MetadataTag">
             <summary>
             Common properties to retrieve info from multiple tag formats.
             </summary>
         </member>
-        <member name="P:Metadata.TagFormat.Format">
+        <member name="P:Metadata.MetadataTag.Format">
             <summary>
             The display name of the tag format.
             </summary>
         </member>
-        <member name="P:Metadata.TagFormat.Length">
+        <member name="P:Metadata.MetadataTag.Length">
             <summary>
             The length in bytes of the tag, not including the header.
             </summary>
@@ -458,20 +470,20 @@
             sets it to 0, the incoming stream will be read according to
             </remarks>
         </member>
-        <member name="P:Metadata.TagFormat.Fields">
+        <member name="P:Metadata.MetadataTag.Fields">
             <summary>
             The low-level representations of the tag data.
             </summary>
         </member>
-        <member name="P:Metadata.TagFormat.Attributes">
+        <member name="P:Metadata.MetadataTag.Attributes">
             <summary>
             The proper standardized field redirects for the enclosing
             metadata format.
             </summary>
             
-            <seealso cref="P:Metadata.TagFormat.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
-        <member name="M:Metadata.TagFormat.Parse(System.IO.BinaryReader)">
+        <member name="M:Metadata.MetadataTag.Parse(System.IO.BinaryReader)">
             <summary>
             Parse a tag of unknown length until some end-of-tag marker is
             reached.
@@ -479,28 +491,17 @@
             
             <param name="stream">The stream to read.</param>
         </member>
-        <member name="M:Metadata.TagFormat.ParseAsync(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:Metadata.MetadataTag.ParseAsync(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a tag of known length asynchronously.
             </summary>
             
             <remarks>
             The default implementation simply redirects the data to
-            <see cref="M:Metadata.TagFormat.Parse(System.IO.BinaryReader)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            <see cref="M:Metadata.MetadataTag.Parse(System.IO.BinaryReader)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
             </remarks>
             
             <param name="data">The sequence of bytes to parse.</param>
-        </member>
-        <member name="T:Metadata.TagFormat.AttributeValues">
-            <summary>
-            Provide more obvious semantics for the values of standard fields.
-            </summary>
-            
-            <remarks>
-            Many metadata formats support multiple instances of the same field,
-            and making this a list rather than a single string also unifies
-            behaviour between individual tags and files containing multiple tags.
-            </remarks>
         </member>
         <member name="T:Metadata.ITagAttributes">
             <summary>
@@ -524,16 +525,36 @@
             The byte header used to internally identify the field.
             </summary>
         </member>
+        <member name="P:Metadata.TagField.Length">
+            <summary>
+            The length in bytes of the data contained in the field (excluding
+            the header).
+            </summary>
+        </member>
         <member name="P:Metadata.TagField.Name">
             <summary>
             The human-readable name of the field if available, or a
             representation of <see cref="P:Metadata.TagField.SystemName"/> if not.
             </summary>
+            
             <remarks>
             The default implementation is to read the <see cref="P:Metadata.TagField.SystemName"/>
             as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
             not suitable, the method should be overridden.
             </remarks>
+        </member>
+        <member name="P:Metadata.TagField.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="M:Metadata.TagField.Parse(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the specific
+            type of field.
+            </summary>
+            
+            <param name="data">The data to read.</param>
         </member>
     </members>
 </doc>

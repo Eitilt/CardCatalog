@@ -6,13 +6,13 @@ namespace Metadata.Audio {
 	/// <summary>
 	/// Common properties to retrieve info from multiple audio formats.
 	/// </summary>
-	public abstract class AudioTagFormat : TagFormat {
+	public abstract class AudioTagFormat : MetadataTag {
 		/// <summary>
 		/// The proper standardized field redirects for the enclosing
 		/// metadata format.
 		/// </summary>
 		/// 
-		/// <seealso cref="TagFormat.Fields"/>
+		/// <seealso cref="MetadataTag.Fields"/>
 		/// <seealso cref="AudioAttributes"/>
 		public sealed override ITagAttributes Attributes => (ITagAttributes)AudioAttributes;
 
@@ -21,7 +21,7 @@ namespace Metadata.Audio {
 		/// audio metadata.
 		/// </summary>
 		/// 
-		/// <seealso cref="TagFormat.Fields"/>
+		/// <seealso cref="MetadataTag.Fields"/>
 		/// <seealso cref="Attributes"/>
 		public abstract AudioTagAttributes AudioAttributes { get; }
 

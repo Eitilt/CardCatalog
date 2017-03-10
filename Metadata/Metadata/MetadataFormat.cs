@@ -14,8 +14,8 @@ namespace Metadata {
 		/// <summary>
 		/// Validation functions for each registered metadata format.
 		/// </summary>
-		private static Dictionary<string, Tuple<int, Func<byte[], TagFormat>>> tagHeaderFunctions =
-			new Dictionary<string, Tuple<int, Func<byte[], TagFormat>>>();
+		private static Dictionary<string, Tuple<int, Func<byte[], MetadataTag>>> tagHeaderFunctions =
+			new Dictionary<string, Tuple<int, Func<byte[], MetadataTag>>>();
 
 		/// <summary>
 		/// The class encapsulating each registered metadata format.
@@ -47,7 +47,7 @@ namespace Metadata {
 		/// 
 		/// <seealso cref="RefreshFormats"/>
 		static MetadataFormat() {
-			RefreshFormats<TagFormat>();
+			RefreshFormats<MetadataTag>();
 		}
 
 		/// <summary>
@@ -61,13 +61,13 @@ namespace Metadata {
 		/// </remarks>
 		/// 
 		/// <typeparam name="T">
-		/// A type from the assembly to scan, extending <see cref="TagFormat"/>.
+		/// A type from the assembly to scan, extending <see cref="MetadataTag"/>.
 		/// </typeparam>
 		/*TODO: Could be nice to scan all referenced assemblies (loaded or
 		 * not) and load any with the attribute that aren't yet, to avoid
 		 * needing to refresh manually. See .NET Core's AssemblyLoadContext.
 		 */
-		public static void RefreshFormats<T>() where T : TagFormat {
+		public static void RefreshFormats<T>() where T : MetadataTag {
 			Register(typeof(T).GetTypeInfo().Assembly);
 		}
 
@@ -149,7 +149,7 @@ namespace Metadata {
 		/// </param>
 		/// <param name="format">The type to add.</param>
 		public static void Register(string name, Type format) {
-			if (typeof(TagFormat).IsAssignableFrom(format) == false)
+			if (typeof(MetadataTag).IsAssignableFrom(format) == false)
 				throw new NotSupportedException("Metadata format types must implement ITagFormat");
 
 			tagFormats[name] = format;
@@ -225,7 +225,7 @@ namespace Metadata {
 		/// header.
 		/// </param>
 		/// <param name="method">The method to add.</param>
-		private static void Register(string name, int headerLength, MethodInfo method) {
+		private static void Register(string name, uint headerLength, MethodInfo method) {
 			if (method.IsPrivate)
 				throw new NotSupportedException("Metadata format header-parsing functions must not be private");
 			if (method.IsAbstract)
@@ -239,10 +239,10 @@ namespace Metadata {
 				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
 				throw new NotSupportedException("Metadata format header-parsing functions must be able to take only a byte[]");
 
-			if (typeof(TagFormat).IsAssignableFrom(method.ReturnType) == false)
+			if (typeof(MetadataTag).IsAssignableFrom(method.ReturnType) == false)
 				throw new NotSupportedException("Metadata format header-parsing functions must return an empty instance of TagFormat");
 
-			tagHeaderFunctions[name] = Tuple.Create(headerLength, (Func<byte[], TagFormat>)method.CreateDelegate(typeof(Func<byte[], TagFormat>)));
+			tagHeaderFunctions[name] = Tuple.Create((int)headerLength, (Func<byte[], MetadataTag>)method.CreateDelegate(typeof(Func<byte[], MetadataTag>)));
 		}
 
 		/// <summary>
@@ -262,9 +262,9 @@ namespace Metadata {
 		/// <param name="stream">The bytestream to test.</param>
 		/// 
 		/// <returns>The keys of all matching formats.</returns>
-		public async static Task<List<TagFormat>> Parse(Stream stream) {
+		public async static Task<List<MetadataTag>> Parse(Stream stream) {
 			var tasks = new List<Task>();
-			var ret = new List<TagFormat>();
+			var ret = new List<MetadataTag>();
 
 			//TODO: It may be best to return an object explicitly combining
 			// all recognized tags along with unknown data.
