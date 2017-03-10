@@ -25,7 +25,7 @@ namespace Metadata {
 	/// </remarks>
 	/// 
 	/// <seealso cref="ScanAssemblyAttribute"/>
-	/// <seealso cref="MetadataFormat.Register(string, Type)"/>
+	/// <seealso cref="MetadataFormat.Register{T}(string)"/>
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	public sealed class MetadataFormatAttribute : Attribute {
 		/// <summary>

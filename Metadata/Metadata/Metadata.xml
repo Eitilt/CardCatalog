@@ -130,6 +130,30 @@
             proper format for keys to <see cref="T:Metadata.TagField"/> objects.
             </summary>
         </member>
+        <member name="T:Metadata.Helpers">
+            <summary>
+            Miscellaneous helper functions and classes.
+            </summary>
+        </member>
+        <member name="M:Metadata.Helpers.GetOrCreate``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
+            <summary>
+            Retrieve the requested value from the dictionary, creating a new
+            entry if necessary.
+            </summary>
+            
+            <typeparam name="TKey">
+            The type used for the dictionary's keys.
+            </typeparam>
+            <typeparam name="TValue">
+            The type used for the dictionary's values.
+            </typeparam>
+            
+            <param name="dictionary">The dictionary on which to operate.</param>
+            <param name="key">The dictionary key to access.</param>
+            
+            <returns>The object located at <paramref name="key"/> in
+            <paramref name="dictionary"/>.</returns>
+        </member>
         <member name="T:Metadata.ScanAssemblyAttribute">
             <summary>
             Indicate that the assembly should be scanned for classes marked with
@@ -153,7 +177,7 @@
             </remarks>
             
             <seealso cref="T:Metadata.ScanAssemblyAttribute"/>
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
         </member>
         <member name="P:Metadata.MetadataFormatAttribute.Name">
             <summary>
@@ -284,28 +308,19 @@
             metadata formats.
             </summary>
         </member>
-        <member name="F:Metadata.MetadataFormat.tagHeaderFunctions">
+        <member name="F:Metadata.MetadataFormat.FormatData.fieldKeyComparer">
             <summary>
-            Validation functions for each registered metadata format.
+            Maintain a single instance of the comparer rather than
+            creating a new one for each dictionary.
             </summary>
+            
+            <remarks>
+            TODO: Extract from <see cref="T:Metadata.FieldDictionary"/>.
+            </remarks>
         </member>
         <member name="F:Metadata.MetadataFormat.tagFormats">
             <summary>
             The class encapsulating each registered metadata format.
-            </summary>
-        </member>
-        <member name="F:Metadata.MetadataFormat.fieldKeyComparer">
-            <summary>
-            Maintain a single instance of the comparer rather than creating a new
-            one for each dictionary.
-            </summary>
-            
-            <seealso cref="F:Metadata.MetadataFormat.fieldTypes"/>
-        </member>
-        <member name="F:Metadata.MetadataFormat.fieldTypes">
-            <summary>
-            Store lookup tables for the fields of each of the registered
-            metadata formats.
             </summary>
         </member>
         <member name="F:Metadata.MetadataFormat.assemblies">
@@ -316,14 +331,15 @@
         </member>
         <member name="M:Metadata.MetadataFormat.#cctor">
             <summary>
-            Automatically add any 
+            Automatically add any metadata classes in opened assemblies on
+            first call to the class.
             </summary>
             
             <seealso cref="M:Metadata.MetadataFormat.RefreshFormats``1"/>
         </member>
         <member name="M:Metadata.MetadataFormat.RefreshFormats``1">
             <summary>
-            Scan the aseembly enclosing the specified for implementations of
+            Scan the assembly enclosing the specified for implementations of
             metadata formats.
             </summary>
             
@@ -349,7 +365,7 @@
             
             <seealso cref="T:Metadata.MetadataFormatAttribute"/>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.Type)">
+        <member name="M:Metadata.MetadataFormat.Register``1">
             <summary>
             Add the given metadata format type to the lookup tables according
             to the  descriptor specified in its
@@ -361,11 +377,11 @@
             any later registrations will override the previous.
             </remarks>
             
-            <param name="format">The type to add.</param>
+            <typeparam name="T">The type to add.</typeparam>
             
             <seealso cref="T:Metadata.HeaderParserAttribute"/>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.String,System.Type)">
+        <member name="M:Metadata.MetadataFormat.Register``1(System.String)">
             <summary>
             Add the given metadata format type to the lookup tables under the
             specified custom descriptor, even if it does not have any
@@ -380,13 +396,14 @@
             any later registrations will override the previous.
             </remarks>
             
-            <param name="name">
+            <param name="format">
             A short name for the format to be used as an access key for later
             lookups.
             <para/>
             It is recommended that this also be exposed as a constant.
             </param>
-            <param name="format">The type to add.</param>
+            
+            <typeparam name="T">The type to register.</typeparam>
         </member>
         <member name="M:Metadata.MetadataFormat.Register(System.String,System.Byte[],System.Type)">
             <summary>
@@ -409,18 +426,18 @@
             <summary>
             Add the given method to the lookup tables under the specified
             custom descriptor.
-            <para/>
-            This should almost purely be called via
-            <see cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>, and has been separated
-            primarily for code clarity.
             </summary>
             
             <remarks>
             Note that if multiple methods are registered under the same name,
             any later registrations will override the previous.
+            <para/>
+            This should almost purely be called via
+            <see cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>, and has been separated
+            primarily for code clarity.
             </remarks>
             
-            <param name="name">
+            <param name="format">
             A short name for the format to be used as an access key for later
             lookups.
             </param>
@@ -483,25 +500,19 @@
             
             <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
-        <member name="M:Metadata.MetadataTag.Parse(System.IO.BinaryReader)">
+        <member name="M:Metadata.MetadataTag.Parse(System.IO.BinaryReader,System.Collections.Generic.IEnumerable{Metadata.MetadataFormat.FormatData.FieldData})">
             <summary>
-            Parse a tag of unknown length until some end-of-tag marker is
-            reached.
-            </summary>
-            
-            <param name="stream">The stream to read.</param>
-        </member>
-        <member name="M:Metadata.MetadataTag.ParseAsync(System.Collections.Generic.IEnumerable{System.Byte})">
-            <summary>
-            Parse a tag of known length asynchronously.
+            Parse the fields contained within a tag.
             </summary>
             
             <remarks>
-            The default implementation simply redirects the data to
-            <see cref="M:Metadata.MetadataTag.Parse(System.IO.BinaryReader)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            TODO: Handle tags with unknown length.
             </remarks>
             
-            <param name="data">The sequence of bytes to parse.</param>
+            <param name="stream">The stream to read.</param>
+            <param name="fields">
+            The set of validation functions for potential field headers.
+            </param>
         </member>
         <member name="T:Metadata.ITagAttributes">
             <summary>

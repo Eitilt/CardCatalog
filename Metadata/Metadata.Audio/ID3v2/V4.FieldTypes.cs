@@ -47,7 +47,7 @@ namespace Metadata.Audio.ID3v2 {
 							return new[] { BitConverter.ToString(id).Replace('-', ' ') };
 					}
 				}
-
+					
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the specific
 				/// type of field.
@@ -85,7 +85,7 @@ namespace Metadata.Audio.ID3v2 {
 						}
 					}
 				}
-
+					
 				/// <summary>
 				/// All strings contained within this field.
 				/// </summary>
@@ -150,7 +150,7 @@ namespace Metadata.Audio.ID3v2 {
 							return null;
 					}
 				}
-
+					
 				/// <summary>
 				/// Parse a sequence of bytes as a list of null-separated
 				/// strings.
@@ -194,7 +194,7 @@ namespace Metadata.Audio.ID3v2 {
 
 					return strings;
 				}
-
+					
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the specific
 				/// type of field.

@@ -38,26 +38,38 @@ namespace Metadata {
 		public abstract ITagAttributes Attributes { get; }
 
 		/// <summary>
-		/// Parse a tag of unknown length until some end-of-tag marker is
-		/// reached.
-		/// </summary>
-		/// 
-		/// <param name="stream">The stream to read.</param>
-		public abstract void Parse(BinaryReader stream);
-		/// <summary>
-		/// Parse a tag of known length asynchronously.
+		/// Parse the fields contained within a tag.
 		/// </summary>
 		/// 
 		/// <remarks>
-		/// The default implementation simply redirects the data to
-		/// <see cref="Parse(BinaryReader)"/> within a <see cref="Task"/>.
+		/// TODO: Handle tags with unknown length.
 		/// </remarks>
 		/// 
-		/// <param name="data">The sequence of bytes to parse.</param>
-		public virtual Task ParseAsync(IEnumerable<byte> data) {
-			using (var stream = new MemoryStream(data.ToArray()))
-			using (var reader = new BinaryReader(stream))
-				return Task.Run(() => Parse(reader));
+		/// <param name="stream">The stream to read.</param>
+		/// <param name="fields">
+		/// The set of validation functions for potential field headers.
+		/// </param>
+		internal void Parse(BinaryReader stream, IEnumerable<MetadataFormat.FormatData.FieldData> fields) {
+			foreach (var fieldBase in fields) {
+				foreach (var validation in fieldBase.fieldValidations) {
+					/*
+					var header = stream.ReadBytes((int)FieldHeaderLength);
+					if (header.Length < FieldHeaderLength)
+						return;
+
+					var fieldBase = InitFieldFromHeader(header);
+
+					var fieldData = stream.ReadBytes((int)fieldBase.Length);
+					if (fieldData.Length < fieldBase.Length)
+						return;
+
+					dynamic field = System.Convert.ChangeType(fieldBase, f.fieldType);
+					field.Parse(fieldData);
+					*/
+				}
+			}
 		}
+
+		//protected abstract TagField InitFieldFromHeader(IEnumerable<byte> data);
 	}
 }

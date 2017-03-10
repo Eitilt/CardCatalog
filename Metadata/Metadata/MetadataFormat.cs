@@ -11,38 +11,46 @@ namespace Metadata {
 	/// metadata formats.
 	/// </summary>
 	public static class MetadataFormat {
-		/// <summary>
-		/// Validation functions for each registered metadata format.
-		/// </summary>
-		private static Dictionary<string, Tuple<int, Func<byte[], MetadataTag>>> tagHeaderFunctions =
-			new Dictionary<string, Tuple<int, Func<byte[], MetadataTag>>>();
+		internal class FormatData {
+			public class FieldData {
+				public Type fieldType;
+				public List<HeaderValidation<TagField>> fieldValidations = new List<HeaderValidation<TagField>>(1);
+			}
+			public struct HeaderValidation<T> {
+				public uint length;
+				public delegate T Validator(byte[] header);
+				public Validator function;
+			}
+
+			/// <summary>
+			/// Maintain a single instance of the comparer rather than
+			/// creating a new one for each dictionary.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Extract from <see cref="FieldDictionary"/>.
+			/// </remarks>
+			static FieldDictionary.SequenceEqualityComparer<byte> fieldKeyComparer = new FieldDictionary.SequenceEqualityComparer<byte>();
+
+			public Type formatType;
+			public List<HeaderValidation<MetadataTag>> formatValidations = new List<HeaderValidation<MetadataTag>>(1);
+			public Dictionary<byte[], FieldData> fields = new Dictionary<byte[], FieldData>(fieldKeyComparer);
+		}
 
 		/// <summary>
 		/// The class encapsulating each registered metadata format.
 		/// </summary>
-		private static Dictionary<string, Type> tagFormats = new Dictionary<string, Type>();
-
-		/// <summary>
-		/// Maintain a single instance of the comparer rather than creating a new
-		/// one for each dictionary.
-		/// </summary>
-		/// 
-		/// <seealso cref="fieldTypes"/>
-		private static FieldDictionary.SequenceEqualityComparer<byte> fieldKeyComparer = new FieldDictionary.SequenceEqualityComparer<byte>();
-		/// <summary>
-		/// Store lookup tables for the fields of each of the registered
-		/// metadata formats.
-		/// </summary>
-		private static Dictionary<string, Dictionary<byte[], Type>> fieldTypes = new Dictionary<string, Dictionary<byte[], Type>>();
+		private static Dictionary<string, FormatData> tagFormats = new Dictionary<string, FormatData>();
 
 		/// <summary>
 		/// A registry of previously-scanned assemblies in order to prevent
 		/// unnecessary use of reflection methods.
 		/// </summary>
-		private static HashSet<string> assemblies = new HashSet<string>();
+		static HashSet<string> assemblies = new HashSet<string>();
 
 		/// <summary>
-		/// Automatically add any 
+		/// Automatically add any metadata classes in opened assemblies on
+		/// first call to the class.
 		/// </summary>
 		/// 
 		/// <seealso cref="RefreshFormats"/>
@@ -51,7 +59,7 @@ namespace Metadata {
 		}
 
 		/// <summary>
-		/// Scan the aseembly enclosing the specified for implementations of
+		/// Scan the assembly enclosing the specified for implementations of
 		/// metadata formats.
 		/// </summary>
 		/// 
@@ -90,21 +98,19 @@ namespace Metadata {
 
 			foreach (Type t in assembly.ExportedTypes) {
 				var tagAttr = t.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
-				if (tagAttr == null)
-					continue;
-				else
-					Register(tagAttr.Name, t);
+				if (tagAttr != null)
+					typeof(MetadataFormat).GetMethod("Register", Array.Empty<Type>())
+						.MakeGenericMethod(new Type[1] { t })
+						.Invoke(null, null);
 
 				var fieldAttr = t.GetTypeInfo().GetCustomAttribute<TagFieldAttribute>(false);
-				if (fieldAttr == null)
-					continue;
-				else
+				if (fieldAttr != null)
 					Register(fieldAttr.Format, fieldAttr.Header, t);
 			}
 
 			assemblies.Add(assembly.FullName);
 		}
-
+		
 		/// <summary>
 		/// Add the given metadata format type to the lookup tables according
 		/// to the  descriptor specified in its
@@ -116,15 +122,14 @@ namespace Metadata {
 		/// any later registrations will override the previous.
 		/// </remarks>
 		/// 
-		/// <param name="format">The type to add.</param>
+		/// <typeparam name="T">The type to add.</typeparam>
 		/// 
 		/// <seealso cref="HeaderParserAttribute"/>
-		public static void Register(Type format) {
-			var attr = format.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
-			if (attr == null)
-				throw new TypeLoadException("No explicit format name was passed, and the type has no attribute to infer it from");
-			else
-				Register(attr.Name, format);
+		public static void Register<T>() where T : MetadataTag {
+			var attr = typeof(T).GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false)
+				?? throw new TypeLoadException("No explicit format name was passed, and the type has no attribute to infer it from");
+
+			Register<T>(attr.Name);
 		}
 
 		/// <summary>
@@ -141,22 +146,22 @@ namespace Metadata {
 		/// any later registrations will override the previous.
 		/// </remarks>
 		/// 
-		/// <param name="name">
+		/// <param name="format">
 		/// A short name for the format to be used as an access key for later
 		/// lookups.
 		/// <para/>
 		/// It is recommended that this also be exposed as a constant.
 		/// </param>
-		/// <param name="format">The type to add.</param>
-		public static void Register(string name, Type format) {
-			if (typeof(MetadataTag).IsAssignableFrom(format) == false)
-				throw new NotSupportedException("Metadata format types must implement ITagFormat");
+		/// 
+		/// <typeparam name="T">The type to register.</typeparam>
+		public static void Register<T>(string format) where T : MetadataTag {
+			var formatType = typeof(T);
 
-			tagFormats[name] = format;
+			tagFormats.GetOrCreate(format).formatType = formatType;
 
-			foreach (var method in format.GetRuntimeMethods()
-					.Where((m) => m.IsDefined(typeof(HeaderParserAttribute))))
-				Register(name, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
+			foreach (var method in formatType.GetRuntimeMethods()
+					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
+				Register(format, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
 		}
 
 		/// <summary>
@@ -180,43 +185,39 @@ namespace Metadata {
 
 			if (format == null) {
 				var enclosingType = fieldType.DeclaringType;
-				if (enclosingType == null)
-					throw new NotSupportedException("If a TagFieldAttribute does not declare a Format, it must be located within an enclosing type");
+				MetadataFormatAttribute formatAttr = null;
 
-				var formatAttr = enclosingType.GetTypeInfo().GetCustomAttribute(typeof(MetadataFormatAttribute)) as MetadataFormatAttribute;
+				while ((enclosingType != null) && (formatAttr == null)) {
+					formatAttr = enclosingType.GetTypeInfo().GetCustomAttribute(typeof(MetadataFormatAttribute)) as MetadataFormatAttribute;
+					enclosingType = enclosingType.DeclaringType;
+				}
+
 				if (formatAttr == null)
 					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"
-						+ " the enclosing type must have an attached MetadataFormatAttribute");
+						+ " at least one enclosing type must have an attached MetadataFormatAttribute");
 
 				format = formatAttr.Name;
 			}
 
-			Dictionary<byte[], Type> dictionary;
-			if (fieldTypes.ContainsKey(format)) {
-				dictionary = fieldTypes[format];
-			} else {
-				dictionary = new Dictionary<byte[], Type>(fieldKeyComparer);
-				fieldTypes[format] = dictionary;
-			}
-
-			dictionary[header] = fieldType;
+			var field = tagFormats.GetOrCreate(format).fields.GetOrCreate(header);
+			field.fieldType = fieldType;
 		}
 		
 		/// <summary>
 		/// Add the given method to the lookup tables under the specified
 		/// custom descriptor.
-		/// <para/>
-		/// This should almost purely be called via
-		/// <see cref="Register(string, Type)"/>, and has been separated
-		/// primarily for code clarity.
 		/// </summary>
 		/// 
 		/// <remarks>
 		/// Note that if multiple methods are registered under the same name,
 		/// any later registrations will override the previous.
+		/// <para/>
+		/// This should almost purely be called via
+		/// <see cref="Register{T}(string)"/>, and has been separated
+		/// primarily for code clarity.
 		/// </remarks>
 		/// 
-		/// <param name="name">
+		/// <param name="format">
 		/// A short name for the format to be used as an access key for later
 		/// lookups.
 		/// </param>
@@ -225,7 +226,7 @@ namespace Metadata {
 		/// header.
 		/// </param>
 		/// <param name="method">The method to add.</param>
-		private static void Register(string name, uint headerLength, MethodInfo method) {
+		private static void Register(string format, uint headerLength, MethodInfo method) {
 			if (method.IsPrivate)
 				throw new NotSupportedException("Metadata format header-parsing functions must not be private");
 			if (method.IsAbstract)
@@ -241,8 +242,12 @@ namespace Metadata {
 
 			if (typeof(MetadataTag).IsAssignableFrom(method.ReturnType) == false)
 				throw new NotSupportedException("Metadata format header-parsing functions must return an empty instance of TagFormat");
-
-			tagHeaderFunctions[name] = Tuple.Create((int)headerLength, (Func<byte[], MetadataTag>)method.CreateDelegate(typeof(Func<byte[], MetadataTag>)));
+			
+			tagFormats.GetOrCreate(format).formatValidations.Add(new FormatData.HeaderValidation<MetadataTag>() {
+				length = headerLength,
+				function = method.CreateDelegate(typeof(FormatData.HeaderValidation<MetadataTag>.Validator))
+					as FormatData.HeaderValidation<MetadataTag>.Validator
+			});
 		}
 
 		/// <summary>
@@ -276,74 +281,80 @@ namespace Metadata {
 				// Keep track of all bytes read for headers, to avoid
 				// unnecessarily repeating stream accesses
 				var readBytes = new List<byte>();
-				foreach (var header in tagHeaderFunctions) {
-					// Make sure we have enough bytes to check the header
-					int headerLength = header.Value.Item1;
-					// Automatically leaves the stream untouched if `header`
-					// is already longer than `headerLength`
-					for (int i = readBytes.Count; i < headerLength; ++i) {
-						int b = stream.ReadByte();
-						if (b < 0)
-							// If the stream has ended before the entire
-							// header can fit, then the header's not present
-							continue;
-						else
-							readBytes.Add((byte)b);
-					}
-
-					// Try to construct an empty tag of the current format
-					var tag = header.Value.Item2(readBytes.Take(headerLength).ToArray());
-					if (tag == null)
-						// The header was invalid, and so this tag isn't the
-						// correct type to parse next
-						continue;
-
-					ret.Add(tag);
-
-					if (tag.Length == 0) {
-						/* The header doesn't contain length data, so we need
-                         * to read the stream directly until whatever end-of-
-                         * tag the format uses is reached
-                         */
-						//BUG: This won't include any bytes already read for
-						// the header
-						//TODO: This should probably also be async
-						tag.Parse(new BinaryReader(stream));
-					} else {
-						// Read the entire tag from the stream before parsing
-						// the next tag along
-						var bytes = new byte[tag.Length];
-						// Restore any bytes previously read for the header
-						readBytes.Skip(headerLength).ToArray().CopyTo(bytes, 0);
-						int offset = (readBytes.Count - headerLength);
-
-						/* In order to properly continue to the next tag in
-                         * the file while the processing is performed as async
-                         * we need to advance the stream beyond the current
-                         * tag; given that Stream.Read*(...) isn't guaranteed
-                         * to read the full count of bytes, we need to do this
-                         * in a loop.
-                         */
-						while (offset < tag.Length) {
-							var read = await stream.ReadAsync(bytes, offset, (int)(tag.Length - offset));
-
-							if (read == 0)
-								throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
+				foreach (var format in tagFormats.Values) {
+					foreach (var validation in format.formatValidations) {
+						// Make sure we have enough bytes to check the header
+						/* Automatically leaves the stream untouched if `header`
+						 * is already longer than `headerLength`
+						 */
+						for (uint i = (uint)readBytes.Count; i < validation.length; ++i) {
+							int b = stream.ReadByte();
+							if (b < 0)
+								// If the stream has ended before the entire
+								// header can fit, then the header's not present
+								continue;
 							else
-								offset += read;
+								readBytes.Add((byte)b);
 						}
 
-						// Split off the processing to return to IO-bound code
-						tasks.Add(tag.ParseAsync(bytes));
+						// Try to construct an empty tag of the current format
+						var tag = validation.function(readBytes.Take((int)validation.length).ToArray());
+						if (tag == null)
+							// The header was invalid, and so this tag isn't the
+							// correct type to parse next
+							continue;
+
+						ret.Add(tag);
+
+						if (tag.Length == 0) {
+							/* The header doesn't contain length data, so we need
+							 * to read the stream directly until whatever end-of-
+							 * tag the format uses is reached
+							 */
+							//BUG: This won't include any bytes already read for
+							// the header
+							tag.Parse(new BinaryReader(stream), format.fields.Values);
+						} else {
+							// Read the entire tag from the stream before parsing
+							// the next tag along
+							var bytes = new byte[tag.Length];
+							// Restore any bytes previously read for the header
+							readBytes.Skip((int)validation.length).ToArray().CopyTo(bytes, 0);
+							int offset = (readBytes.Count - (int)validation.length);
+
+							/* In order to properly continue to the next tag in
+							 * the file while the processing is performed as async
+							 * we need to advance the stream beyond the current
+							 * tag; given that Stream.Read*(...) isn't guaranteed
+							 * to read the full count of bytes, we need to do this
+							 * in a loop.
+							 */
+							while (offset < tag.Length) {
+								var read = await stream.ReadAsync(bytes, offset, (int)(tag.Length - offset));
+
+								if (read == 0)
+									throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
+								else
+									offset += read;
+							}
+
+							// Split off the processing to return to IO-bound code
+							using (var ms = new MemoryStream(bytes))
+							using (var br = new BinaryReader(ms))
+								tasks.Add(Task.Run(() => tag.Parse(br, format.fields.Values)));
+						}
+
+						// All failure conditions were checked before this, so end
+						// the "for the first matched header" loop
+						foundTag = true;
+						break;
 					}
 
-					// All failure conditions were checked before this, so end
-					// the "for the first matched `header`" loop
-					foundTag = true;
-					break;
+					if (foundTag)
+						break;
 				}
 			}
-
+			
 			await Task.WhenAll(tasks);
 
 			return ret;

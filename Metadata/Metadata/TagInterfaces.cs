@@ -21,13 +21,12 @@ namespace Metadata {
 		/// The byte header used to internally identify the field.
 		/// </summary>
 		public abstract byte[] SystemName { get; }
-
+		
 		/// <summary>
 		/// The length in bytes of the data contained in the field (excluding
 		/// the header).
 		/// </summary>
 		public uint Length { get; protected set; }
-
 		/// <summary>
 		/// The human-readable name of the field if available, or a
 		/// representation of <see cref="SystemName"/> if not.
@@ -40,7 +39,7 @@ namespace Metadata {
 		/// </remarks>
 		public virtual string Name =>
 			System.String.Format("{{ {0} }}", System.Text.Encoding.UTF8.GetString(SystemName));
-
+		
 		/// <summary>
 		/// All values contained within this field.
 		/// </summary>

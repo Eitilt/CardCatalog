@@ -40,13 +40,6 @@
             <seealso cref="P:Metadata.MetadataTag.Fields"/>
             <seealso cref="P:Metadata.Audio.AudioTagFormat.Attributes"/>
         </member>
-        <member name="M:Metadata.Audio.AudioTagFormat.Parse(System.IO.BinaryReader)">
-            <summary>
-            Temporary implementation to allow building.
-            </summary>
-            
-            <param name="stream">The stream to parse.</param>
-        </member>
         <member name="T:Metadata.Audio.ID3v2.ID3v2">
             <summary>
             Shared code for all versions of the ID3v2 standard.
@@ -400,7 +393,7 @@
             The short name used to represent ID3v2.2 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V2.Format">
             <summary>
@@ -478,7 +471,7 @@
             The short name used to represent ID3v2.3 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V3.Format">
             <summary>
@@ -578,7 +571,7 @@
             The short name used to represent ID3v2.4 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.Type)"/>
+            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V4.Format">
             <summary>

@@ -24,12 +24,5 @@ namespace Metadata.Audio {
 		/// <seealso cref="MetadataTag.Fields"/>
 		/// <seealso cref="Attributes"/>
 		public abstract AudioTagAttributes AudioAttributes { get; }
-
-		/// <summary>
-		/// Temporary implementation to allow building.
-		/// </summary>
-		/// 
-		/// <param name="stream">The stream to parse.</param>
-		public override void Parse(BinaryReader stream) { }
 	}
 }

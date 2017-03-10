@@ -15,7 +15,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// The short name used to represent ID3v2.3 metadata.
 		/// </summary>
 		/// 
-		/// <seealso cref="MetadataFormat.Register(string, System.Type)"/>
+		/// <seealso cref="MetadataFormat.Register{T}(string)"/>
 		public const string format = "ID3v2.3";
 		/// <summary>
 		/// The display name of the tag format.
