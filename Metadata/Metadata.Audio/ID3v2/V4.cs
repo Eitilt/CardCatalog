@@ -46,7 +46,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// format, `null` otherwise.
 		/// </returns>
 		[HeaderParser(10)]
-		public static V4 VerifyHeader(byte[] header) {
+		public static V4 VerifyHeader(IEnumerable<byte> header) {
 			if ((VerifyBaseHeader(header)?.Equals(0x04) ?? false) == false)
 				return null;
 			else
@@ -104,7 +104,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// </remarks>
 		/// 
 		/// <param name="header">The stream to parse.</param>
-		V4(byte[] header) {
+		V4(IEnumerable<byte> header) {
 			var flags = ParseBaseHeader(header);
 
 			bool useUnsync = flags[0];
@@ -136,7 +136,7 @@ namespace Metadata.Audio.ID3v2 {
 			if (extHeader.Length < 2)
 				throw new InvalidDataException("Extended header too short to be valid for ID3v2.4");
 
-			int flagBytes = (int)ParseInteger(new byte[1]{ extHeader[0] });
+			int flagBytes = (int)ParseUnsignedInteger(new byte[1]{ extHeader[0] });
 			var flags = new BitArray(extHeader.ToList().GetRange(1, flagBytes).ToArray());
 
 			int pos = flagBytes + 1;

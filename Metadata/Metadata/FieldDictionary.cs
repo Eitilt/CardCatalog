@@ -9,66 +9,10 @@ namespace Metadata {
 	/// </summary>
 	public class FieldDictionary : Dictionary<byte[], IEnumerable<TagField>>, IReadOnlyFieldDictionary {
 		/// <summary>
-		/// Test sequences for equality based on their values, not their
-		/// object references.
-		/// </summary>
-		/// 
-		/// <remarks>
-		/// Implementation from <see href="http://stackoverflow.com/a/7244729"/>.
-		/// </remarks>
-		/// 
-		/// <typeparam name="ElementType">
-		/// The underlying type of the sequence.
-		/// </typeparam>
-		public class SequenceEqualityComparer<ElementType> : IEqualityComparer<IEnumerable<ElementType>> {
-			/// <summary>
-			/// Provide a more robust meant of testing the equality of
-			/// elements.
-			/// </summary>
-			static readonly EqualityComparer<ElementType> elementComparer = EqualityComparer<ElementType>.Default;
-
-			/// <summary>
-			/// Check two sequences for value equality.
-			/// </summary>
-			/// 
-			/// <returns>Whether the sequences are equal.</returns>
-			public bool Equals(IEnumerable<ElementType> x, IEnumerable<ElementType> y) {
-				if (x == y)
-					return true;
-				else if ((x == null) || (y == null))
-					return false;
-
-				if (x.Count() != y.Count())
-					return false;
-
-				return x.SequenceEqual(y, elementComparer);
-			}
-
-			/// <summary>
-			/// Calculate a hash code based on the values of the sequence.
-			/// </summary>
-			/// 
-			/// <param name="obj">The sequence to hash.</param>
-			/// 
-			/// <returns>The calculated hash.</returns>
-			public int GetHashCode(IEnumerable<ElementType> obj) {
-				if (obj == null)
-					return 0;
-
-				int hash = 17;
-				foreach (ElementType t in obj) {
-					hash *= 31;
-					hash += elementComparer.GetHashCode(t);
-				}
-
-				return hash;
-			}
-		}
-		/// <summary>
-		/// An instance of <see cref="SequenceEqualityComparer{ElementType}"/>
+		/// An instance of <see cref="Helpers.SequenceEqualityComparer{ElementType}"/>
 		/// specialized to byte arrays.
 		/// </summary>
-		static SequenceEqualityComparer<byte> keyComparer = new SequenceEqualityComparer<byte>();
+		static Helpers.SequenceEqualityComparer<byte> keyComparer = new Helpers.SequenceEqualityComparer<byte>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FieldDictionary"/>

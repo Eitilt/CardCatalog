@@ -7,7 +7,7 @@ namespace Metadata {
 	/// <summary>
 	/// Common properties to retrieve info from multiple tag formats.
 	/// </summary>
-	public abstract class MetadataTag {
+	public abstract class MetadataTag : IParsable {
 		/// <summary>
 		/// The display name of the tag format.
 		/// </summary>
@@ -22,7 +22,7 @@ namespace Metadata {
 		/// <see cref="HeaderParserAttribute"/>; if that function
 		/// sets it to 0, the incoming stream will be read according to
 		/// </remarks>
-		public uint Length { get; protected set; }
+		public int Length { get; protected set; }
 
 		/// <summary>
 		/// The low-level representations of the tag data.
@@ -46,28 +46,33 @@ namespace Metadata {
 		/// </remarks>
 		/// 
 		/// <param name="stream">The stream to read.</param>
-		/// <param name="fields">
-		/// The set of validation functions for potential field headers.
-		/// </param>
-		internal void Parse(BinaryReader stream, IEnumerable<MetadataFormat.FormatData.FieldData> fields) {
-			foreach (var fieldBase in fields) {
-				foreach (var validation in fieldBase.fieldValidations) {
-					/*
-					var header = stream.ReadBytes((int)FieldHeaderLength);
-					if (header.Length < FieldHeaderLength)
-						return;
+		public void Parse(Stream stream) {
+			IEnumerable<ReflectionData<TagField>> fields = MetadataFormat.FormatFields(Format);
 
-					var fieldBase = InitFieldFromHeader(header);
+			bool foundField;
+			do {
+				foundField = false;
 
-					var fieldData = stream.ReadBytes((int)fieldBase.Length);
-					if (fieldData.Length < fieldBase.Length)
-						return;
+				//var readBytes = List
+				foreach (var fieldBase in fields) {
+					foreach (var validation in fieldBase.validationFunctions) {
+						/*
+						var header = stream.ReadBytes((int)FieldHeaderLength);
+						if (header.Length < FieldHeaderLength)
+							return;
 
-					dynamic field = System.Convert.ChangeType(fieldBase, f.fieldType);
-					field.Parse(fieldData);
-					*/
+						var fieldBase = InitFieldFromHeader(header);
+
+						var fieldData = stream.ReadBytes((int)fieldBase.Length);
+						if (fieldData.Length < fieldBase.Length)
+							return;
+
+						dynamic field = System.Convert.ChangeType(fieldBase, f.fieldType);
+						field.Parse(fieldData);
+						*/
+					}
 				}
-			}
+			} while (foundField);
 		}
 
 		//protected abstract TagField InitFieldFromHeader(IEnumerable<byte> data);

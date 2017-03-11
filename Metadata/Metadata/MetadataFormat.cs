@@ -11,17 +11,7 @@ namespace Metadata {
 	/// metadata formats.
 	/// </summary>
 	public static class MetadataFormat {
-		internal class FormatData {
-			public class FieldData {
-				public Type fieldType;
-				public List<HeaderValidation<TagField>> fieldValidations = new List<HeaderValidation<TagField>>(1);
-			}
-			public struct HeaderValidation<T> {
-				public uint length;
-				public delegate T Validator(byte[] header);
-				public Validator function;
-			}
-
+		internal class FormatData : ReflectionData<MetadataTag> {
 			/// <summary>
 			/// Maintain a single instance of the comparer rather than
 			/// creating a new one for each dictionary.
@@ -30,17 +20,18 @@ namespace Metadata {
 			/// <remarks>
 			/// TODO: Extract from <see cref="FieldDictionary"/>.
 			/// </remarks>
-			static FieldDictionary.SequenceEqualityComparer<byte> fieldKeyComparer = new FieldDictionary.SequenceEqualityComparer<byte>();
+			static Helpers.SequenceEqualityComparer<byte> fieldKeyComparer = new Helpers.SequenceEqualityComparer<byte>();
 
-			public Type formatType;
-			public List<HeaderValidation<MetadataTag>> formatValidations = new List<HeaderValidation<MetadataTag>>(1);
-			public Dictionary<byte[], FieldData> fields = new Dictionary<byte[], FieldData>(fieldKeyComparer);
+			public Dictionary<byte[], ReflectionData<TagField>> fields = new Dictionary<byte[], ReflectionData<TagField>>(fieldKeyComparer);
 		}
 
 		/// <summary>
 		/// The class encapsulating each registered metadata format.
 		/// </summary>
 		private static Dictionary<string, FormatData> tagFormats = new Dictionary<string, FormatData>();
+
+		internal static IEnumerable<ReflectionData<TagField>> FormatFields(string format) =>
+			tagFormats[format].fields.Values;
 
 		/// <summary>
 		/// A registry of previously-scanned assemblies in order to prevent
@@ -157,7 +148,7 @@ namespace Metadata {
 		public static void Register<T>(string format) where T : MetadataTag {
 			var formatType = typeof(T);
 
-			tagFormats.GetOrCreate(format).formatType = formatType;
+			tagFormats.GetOrCreate(format).type = formatType;
 
 			foreach (var method in formatType.GetRuntimeMethods()
 					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
@@ -183,24 +174,24 @@ namespace Metadata {
 			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
 				throw new NotSupportedException("Metadata tag field types must extend TagField");
 
+			IEnumerable<string> formatAttrs;
 			if (format == null) {
-				var enclosingType = fieldType.DeclaringType;
-				MetadataFormatAttribute formatAttr = null;
+				formatAttrs = fieldType.DeclaringType.GetTypeInfo()
+					.GetCustomAttributes(typeof(MetadataFormatAttribute), true)
+					.Select(a => (a as MetadataFormatAttribute).Name);
 
-				while ((enclosingType != null) && (formatAttr == null)) {
-					formatAttr = enclosingType.GetTypeInfo().GetCustomAttribute(typeof(MetadataFormatAttribute)) as MetadataFormatAttribute;
-					enclosingType = enclosingType.DeclaringType;
-				}
-
-				if (formatAttr == null)
+				if (formatAttrs == null)
 					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"
 						+ " at least one enclosing type must have an attached MetadataFormatAttribute");
 
-				format = formatAttr.Name;
+			} else {
+				formatAttrs = new string[1] { format };
 			}
 
-			var field = tagFormats.GetOrCreate(format).fields.GetOrCreate(header);
-			field.fieldType = fieldType;
+			foreach (var name in formatAttrs) {
+				var field = tagFormats.GetOrCreate(name).fields.GetOrCreate(header);
+				field.type = fieldType;
+			}
 		}
 		
 		/// <summary>
@@ -236,128 +227,33 @@ namespace Metadata {
 
 			var parameters = method.GetParameters();
 			if ((parameters.Length == 0)
-				|| (typeof(byte[]).IsAssignableFrom(parameters[0].ParameterType) == false)
+				|| (typeof(IEnumerable<byte>).IsAssignableFrom(parameters[0].ParameterType) == false)
 				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
-				throw new NotSupportedException("Metadata format header-parsing functions must be able to take only a byte[]");
+				throw new NotSupportedException("Metadata format header-parsing functions must be able to take only an IEnumerable<byte>");
 
 			if (typeof(MetadataTag).IsAssignableFrom(method.ReturnType) == false)
 				throw new NotSupportedException("Metadata format header-parsing functions must return an empty instance of TagFormat");
-			
-			tagFormats.GetOrCreate(format).formatValidations.Add(new FormatData.HeaderValidation<MetadataTag>() {
-				length = headerLength,
-				function = method.CreateDelegate(typeof(FormatData.HeaderValidation<MetadataTag>.Validator))
-					as FormatData.HeaderValidation<MetadataTag>.Validator
-			});
+
+			try {
+				tagFormats.GetOrCreate(format).validationFunctions.Add(new FormatData.HeaderValidation<MetadataTag>() {
+					length = (int)headerLength,
+					function = method.CreateDelegate(typeof(FormatData.HeaderValidation<MetadataTag>.Validator))
+						as FormatData.HeaderValidation<MetadataTag>.Validator
+				});
+			} catch (ArgumentException e) {
+				throw new NotSupportedException(e.Message, e.InnerException);
+			}
 		}
 
 		/// <summary>
-		/// Check the stream against all registered tag formats, and return
-		/// those that match the header.
+		/// Parse all recognized tags in a stream asynchronously.
 		/// </summary>
 		/// 
-		/// <remarks>
-		/// While, in theory, only a single header should match, the class
-		/// structure is such that this is not a restriction; supporting this
-		/// feature allows for nonstandard usages without exclusive headers.
+		/// <param name="stream">The stream to parse.</param>
 		/// 
-		/// The callee is left to determine the best means of handling the
-		/// case of Detect(...).Count > 1.
-		/// </remarks>
-		/// 
-		/// <param name="stream">The bytestream to test.</param>
-		/// 
-		/// <returns>The keys of all matching formats.</returns>
-		public async static Task<List<MetadataTag>> Parse(Stream stream) {
-			var tasks = new List<Task>();
-			var ret = new List<MetadataTag>();
-
-			//TODO: It may be best to return an object explicitly combining
-			// all recognized tags along with unknown data.
-
-			bool foundTag = true;
-			while (foundTag) {
-				foundTag = false;
-
-				// Keep track of all bytes read for headers, to avoid
-				// unnecessarily repeating stream accesses
-				var readBytes = new List<byte>();
-				foreach (var format in tagFormats.Values) {
-					foreach (var validation in format.formatValidations) {
-						// Make sure we have enough bytes to check the header
-						/* Automatically leaves the stream untouched if `header`
-						 * is already longer than `headerLength`
-						 */
-						for (uint i = (uint)readBytes.Count; i < validation.length; ++i) {
-							int b = stream.ReadByte();
-							if (b < 0)
-								// If the stream has ended before the entire
-								// header can fit, then the header's not present
-								continue;
-							else
-								readBytes.Add((byte)b);
-						}
-
-						// Try to construct an empty tag of the current format
-						var tag = validation.function(readBytes.Take((int)validation.length).ToArray());
-						if (tag == null)
-							// The header was invalid, and so this tag isn't the
-							// correct type to parse next
-							continue;
-
-						ret.Add(tag);
-
-						if (tag.Length == 0) {
-							/* The header doesn't contain length data, so we need
-							 * to read the stream directly until whatever end-of-
-							 * tag the format uses is reached
-							 */
-							//BUG: This won't include any bytes already read for
-							// the header
-							tag.Parse(new BinaryReader(stream), format.fields.Values);
-						} else {
-							// Read the entire tag from the stream before parsing
-							// the next tag along
-							var bytes = new byte[tag.Length];
-							// Restore any bytes previously read for the header
-							readBytes.Skip((int)validation.length).ToArray().CopyTo(bytes, 0);
-							int offset = (readBytes.Count - (int)validation.length);
-
-							/* In order to properly continue to the next tag in
-							 * the file while the processing is performed as async
-							 * we need to advance the stream beyond the current
-							 * tag; given that Stream.Read*(...) isn't guaranteed
-							 * to read the full count of bytes, we need to do this
-							 * in a loop.
-							 */
-							while (offset < tag.Length) {
-								var read = await stream.ReadAsync(bytes, offset, (int)(tag.Length - offset));
-
-								if (read == 0)
-									throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
-								else
-									offset += read;
-							}
-
-							// Split off the processing to return to IO-bound code
-							using (var ms = new MemoryStream(bytes))
-							using (var br = new BinaryReader(ms))
-								tasks.Add(Task.Run(() => tag.Parse(br, format.fields.Values)));
-						}
-
-						// All failure conditions were checked before this, so end
-						// the "for the first matched header" loop
-						foundTag = true;
-						break;
-					}
-
-					if (foundTag)
-						break;
-				}
-			}
-			
-			await Task.WhenAll(tasks);
-
-			return ret;
+		/// <returns>The resulting <see cref="MetadataTag"/>s.</returns>
+		public async static Task<IEnumerable<MetadataTag>> ParseAsync(Stream stream) {
+			return await ReflectionData<MetadataTag>.ParseAsync(stream, tagFormats.Values);
 		}
 	}
 }

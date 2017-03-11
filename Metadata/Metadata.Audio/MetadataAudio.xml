@@ -92,7 +92,7 @@
             
             <param name="stream">The stream to rewind.</param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the byte array begins with a valid ID3v2 header.
             </summary>
@@ -208,7 +208,7 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseBaseHeader(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 header into
             usable variables.
@@ -247,7 +247,7 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseInteger(System.Byte[],System.UInt32)">
+        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseUnsignedInteger(System.Byte[],System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -400,7 +400,7 @@
             The display name of the tag format.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.2 header.
             </summary>
@@ -442,7 +442,7 @@
             ID3v2.2 spec recommends ignoring the tag if so.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.#ctor(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V2.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -483,7 +483,7 @@
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.3 header.
             </summary>
@@ -524,7 +524,7 @@
             The size of the empty padding at the end of the tag.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.#ctor(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V3.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -583,7 +583,7 @@
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.4 header.
             </summary>
@@ -629,7 +629,7 @@
             Whether this tag updates any previous tags
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.#ctor(System.Byte[])">
+        <member name="M:Metadata.Audio.ID3v2.V4.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -695,13 +695,13 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.Parse(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.UniqueFileID.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the specific
             type of field.
             </summary>
             
-            <param name="data">The data to read.</param>
+            <param name="stream">The data to read.</param>
         </member>
         <member name="T:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame">
             <summary>
@@ -769,13 +769,13 @@
             
             <returns>The separated and parsed strings.</returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.Parse(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:Metadata.Audio.ID3v2.V4.FieldTypes.TextFrame.Parse(System.IO.Stream)">
             <summary>
-            Read a sequence of bytes in the manner appropriate to the specific
-            type of field.
+            Read a sequence of bytes in the manner appropriate to the
+            specific type of field.
             </summary>
             
-            <param name="data">The data to read.</param>
+            <param name="stream">The data to read.</param>
         </member>
     </members>
 </doc>

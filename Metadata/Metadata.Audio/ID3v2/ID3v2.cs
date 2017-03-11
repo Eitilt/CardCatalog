@@ -77,22 +77,24 @@ namespace Metadata.Audio.ID3v2 {
 		/// `null` if the stream does not begin with a ID3v2 header, and the
 		/// major version if it does.
 		/// </returns>
-		protected static byte? VerifyBaseHeader(byte[] header) {
+		protected static byte? VerifyBaseHeader(IEnumerable<byte> header) {
+			var headerBytes = header.ToArray();
+
 			// If it's shorter than the length, the header can never be valid
-			if (header.Length < 10)
+			if (headerBytes.Length < 10)
 				return null;
 			// Check against the specification
-			else if ((header[0] == 0x49)    // 'I'
-				&& (header[1] == 0x44)      // 'D'
-				&& (header[2] == 0x33)      // '3'
-				&& (header[3] < 0xFF)
-				&& (header[4] < 0xFF)
+			else if ((headerBytes[0] == 0x49)    // 'I'
+				&& (headerBytes[1] == 0x44)      // 'D'
+				&& (headerBytes[2] == 0x33)      // '3'
+				&& (headerBytes[3] < 0xFF)
+				&& (headerBytes[4] < 0xFF)
 				// No restriction on header[5]
-				&& (header[6] < 0x80)
-				&& (header[7] < 0x80)
-				&& (header[8] < 0x80)
-				&& (header[9] < 0x80))
-				return header[3];
+				&& (headerBytes[6] < 0x80)
+				&& (headerBytes[7] < 0x80)
+				&& (headerBytes[8] < 0x80)
+				&& (headerBytes[9] < 0x80))
+				return headerBytes[3];
 			else
 				return null;
 		}
@@ -303,19 +305,21 @@ namespace Metadata.Audio.ID3v2 {
 		/// <param name="header">The sequence of bytes to check.</param>
 		/// 
 		/// <returns>The flag bits in a more accessible format.</returns>
-		protected BitArray ParseBaseHeader(byte[] header) {
+		protected BitArray ParseBaseHeader(IEnumerable<byte> header) {
 			/* Should fail loudly if the tag's not in the correct format, but
              * since this should only be called from the validation function,
              * can simplify avoiding infinite loops by not checking
              */
 
-			VersionMinor = header[4];
+			var headerBytes = header.ToArray();
+
+			VersionMinor = headerBytes[4];
 
 			// Decompose the flags byte
-			var flags = new BitArray(new byte[1] { header[5] });
+			var flags = new BitArray(new byte[1] { headerBytes[5] });
 
 			// Calculate the size from 7-bit "bytes" (the high bit is ignored)
-			Length = ParseInteger(header.Skip(6).ToArray(), 7u);
+			Length = (int)ParseUnsignedInteger(header.Skip(6).ToArray(), 7u);
 
 			return flags;
 		}
@@ -359,7 +363,7 @@ namespace Metadata.Audio.ID3v2 {
 				stream.Read(bytes, 0, (int)count);
 			}
 
-			return ParseInteger(bytes, bits);
+			return ParseUnsignedInteger(bytes, bits);
 		}
 		/// <summary>
 		/// Read a variable number of bytes as a single integer.
@@ -375,7 +379,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// <paramref name="bytes"/> must not be more than four bytes long for
 		/// ID3v2.3 and five for ID3v2.4).
 		/// </exception>
-		protected static uint ParseInteger(byte[] bytes, uint bits = 8) {
+		protected static uint ParseUnsignedInteger(byte[] bytes, uint bits = 8) {
 			if ((bits * bytes.Length) > (sizeof(uint) * 8))
 				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 

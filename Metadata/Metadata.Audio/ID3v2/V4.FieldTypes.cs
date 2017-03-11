@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -53,10 +54,13 @@ namespace Metadata.Audio.ID3v2 {
 				/// type of field.
 				/// </summary>
 				/// 
-				/// <param name="data">The data to read.</param>
-				protected override void Parse(IEnumerable<byte> data) {
-					owner = ISO88591.GetString(data.TakeWhile(b => b != 0x00).ToArray());
-					id = data.Skip(owner.Length + 1).ToArray();
+				/// <param name="stream">The data to read.</param>
+				public override void Parse(Stream stream) {
+					var data = new byte[Length];
+					int read = stream.ReadAll(data, 0, Length);
+
+					owner = ISO88591.GetString(data.Take(read).TakeWhile(b => b != 0x00).ToArray());
+					id = data.Take(read).Skip(owner.Length + 1).ToArray();
 				}
 			}
 			
@@ -196,12 +200,19 @@ namespace Metadata.Audio.ID3v2 {
 				}
 					
 				/// <summary>
-				/// Read a sequence of bytes in the manner appropriate to the specific
-				/// type of field.
+				/// Read a sequence of bytes in the manner appropriate to the
+				/// specific type of field.
 				/// </summary>
 				/// 
-				/// <param name="data">The data to read.</param>
-				protected override void Parse(IEnumerable<byte> data) {
+				/// <param name="stream">The data to read.</param>
+				public override void Parse(Stream stream) {
+					var data = new byte[Length];
+					// SplitStrings doesn't care about length, but shouldn't
+					// be passed the unset tail
+					int read = stream.ReadAll(data, 0, Length);
+					if (read < Length)
+						data = data.Take(read).ToArray();
+
 					switch (data.First()) {
 						case 0x00:
 							values = SplitStrings(data.Skip(1), ISO88591, 1);

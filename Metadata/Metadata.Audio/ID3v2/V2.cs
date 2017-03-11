@@ -31,7 +31,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// format, `null` otherwise.
 		/// </returns>
 		[HeaderParser(10)]
-		public static V2 VerifyHeader(byte[] header) {
+		public static V2 VerifyHeader(IEnumerable<byte> header) {
 			if ((VerifyBaseHeader(header)?.Equals(0x02) ?? false) == false)
 				return null;
 			else
@@ -85,7 +85,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// </remarks>
 		/// 
 		/// <param name="header">The stream to parse.</param>
-		V2(byte[] header) {
+		V2(IEnumerable<byte> header) {
 			var flags = ParseBaseHeader(header);
 
 			bool useUnsync = flags[0];

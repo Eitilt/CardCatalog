@@ -41,7 +41,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// format, `null` otherwise.
 		/// </returns>
 		[HeaderParser(10)]
-		public static V3 VerifyHeader(byte[] header) {
+		public static V3 VerifyHeader(IEnumerable<byte> header) {
 			if ((VerifyBaseHeader(header)?.Equals(0x03) ?? false) == false)
 				return null;
 			else
@@ -94,7 +94,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// </remarks>
 		/// 
 		/// <param name="header">The stream to parse.</param>
-		V3(byte[] header) {
+		V3(IEnumerable<byte> header) {
 			PaddingSize = 0;
 
 			var flags = ParseBaseHeader(header);

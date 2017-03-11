@@ -16,7 +16,7 @@ namespace Metadata {
 	/// A single point of data saved in the tag, with default helper
 	/// implementations.
 	/// </summary>
-	public abstract class TagField {
+	public abstract class TagField : IParsable {
 		/// <summary>
 		/// The byte header used to internally identify the field.
 		/// </summary>
@@ -26,7 +26,7 @@ namespace Metadata {
 		/// The length in bytes of the data contained in the field (excluding
 		/// the header).
 		/// </summary>
-		public uint Length { get; protected set; }
+		public int Length { get; protected set; }
 		/// <summary>
 		/// The human-readable name of the field if available, or a
 		/// representation of <see cref="SystemName"/> if not.
@@ -51,6 +51,6 @@ namespace Metadata {
 		/// </summary>
 		/// 
 		/// <param name="data">The data to read.</param>
-		protected internal abstract void Parse(IEnumerable<byte> data);
+		public abstract void Parse(System.IO.Stream data);
 	}
 }
