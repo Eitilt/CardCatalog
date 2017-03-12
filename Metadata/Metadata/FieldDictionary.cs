@@ -30,6 +30,7 @@ namespace Metadata {
 		/// This constructor is an O(1) operation.
 		/// </remarks>
 		public FieldDictionary() : base(keyComparer) { }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FieldDictionary"/>
 		/// class that is empty and has the specified initial capacity.
@@ -82,7 +83,7 @@ namespace Metadata {
 		/// The <see cref="FieldDictionary"/> whose elements are copied to the
 		/// new <see cref="FieldDictionary"/>.
 		/// </param>
-		public FieldDictionary(FieldDictionary dictionary) : base(dictionary, keyComparer) { }
+		public FieldDictionary(Dictionary<byte[], IEnumerable<TagField>> dictionary) : base(dictionary, keyComparer) { }
 	}
 
 	/// <summary>

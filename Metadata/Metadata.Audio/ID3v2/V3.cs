@@ -52,12 +52,15 @@ namespace Metadata.Audio.ID3v2 {
 		/// The underlying low-level tag data.
 		/// </summary>
 		/// 
-		/// <seealso cref="Fields"/>
+		/// <seealso cref="FieldBase"/>
 		private FieldDictionary fields = new FieldDictionary();
 		/// <summary>
-		/// The low-level representations of the tag data.
+		/// An editable redirect for the low-level data.
 		/// </summary>
-		public override IReadOnlyFieldDictionary Fields => fields;
+		protected override FieldDictionary FieldBase {
+			get => fields;
+			set => fields = value;
+		}
 
 		/// <summary>
 		/// Implement the audio field attribute mappings for ID3v2.3 tags.
@@ -75,7 +78,7 @@ namespace Metadata.Audio.ID3v2 {
 		/// Retrieve the audio field attribute mappings for ID3v2.3 tags.
 		/// </summary>
 		/// 
-		/// <seealso cref="Fields"/>
+		/// <seealso cref="MetadataTag.Fields"/>
 		public override AudioTagAttributes AudioAttributes => new AttributeStruct(this);
 
 		/// <summary>

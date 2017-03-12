@@ -25,9 +25,16 @@ namespace Metadata {
 		public int Length { get; protected set; }
 
 		/// <summary>
+		/// An editable redirect for the low-level data.
+		/// </summary>
+		/// 
+		/// <seealso cref="Fields"/>
+		protected abstract FieldDictionary FieldBase { get; set; }
+
+		/// <summary>
 		/// The low-level representations of the tag data.
 		/// </summary>
-		public abstract IReadOnlyFieldDictionary Fields { get; }
+		public IReadOnlyFieldDictionary Fields => FieldBase;
 
 		/// <summary>
 		/// The proper standardized field redirects for the enclosing
@@ -47,34 +54,9 @@ namespace Metadata {
 		/// 
 		/// <param name="stream">The stream to read.</param>
 		public void Parse(Stream stream) {
-			IEnumerable<ReflectionData<TagField>> fields = MetadataFormat.FormatFields(Format);
+			var fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.FormatFields(Format)).Result;
 
-			bool foundField;
-			do {
-				foundField = false;
-
-				//var readBytes = List
-				foreach (var fieldBase in fields) {
-					foreach (var validation in fieldBase.validationFunctions) {
-						/*
-						var header = stream.ReadBytes((int)FieldHeaderLength);
-						if (header.Length < FieldHeaderLength)
-							return;
-
-						var fieldBase = InitFieldFromHeader(header);
-
-						var fieldData = stream.ReadBytes((int)fieldBase.Length);
-						if (fieldData.Length < fieldBase.Length)
-							return;
-
-						dynamic field = System.Convert.ChangeType(fieldBase, f.fieldType);
-						field.Parse(fieldData);
-						*/
-					}
-				}
-			} while (foundField);
+			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName).ToDictionary((g => g.Key), (g => g.ToList() as IEnumerable<TagField>)));
 		}
-
-		//protected abstract TagField InitFieldFromHeader(IEnumerable<byte> data);
 	}
 }

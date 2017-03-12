@@ -64,7 +64,7 @@
             <paramref name="capacity"/> is less than 0.
             </exception>
         </member>
-        <member name="M:Metadata.FieldDictionary.#ctor(Metadata.FieldDictionary)">
+        <member name="M:Metadata.FieldDictionary.#ctor(System.Collections.Generic.Dictionary{System.Byte[],System.Collections.Generic.IEnumerable{Metadata.TagField}})">
             <summary>
             Initializes a new instance of a <see cref="T:Metadata.FieldDictionary"/>
             that contains elements copied from <paramref name="dictionary"/>.
@@ -501,6 +501,13 @@
             <see cref="T:Metadata.HeaderParserAttribute"/>; if that function
             sets it to 0, the incoming stream will be read according to
             </remarks>
+        </member>
+        <member name="P:Metadata.MetadataTag.FieldBase">
+            <summary>
+            An editable redirect for the low-level data.
+            </summary>
+            
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
         <member name="P:Metadata.MetadataTag.Fields">
             <summary>

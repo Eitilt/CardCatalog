@@ -417,11 +417,11 @@
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V2.Fields"/>
+            <seealso cref="P:Metadata.Audio.ID3v2.V2.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.Fields">
+        <member name="P:Metadata.Audio.ID3v2.V2.FieldBase">
             <summary>
-            The low-level representations of the tag data.
+            An editable redirect for the low-level data.
             </summary>
         </member>
         <member name="T:Metadata.Audio.ID3v2.V2.AttributeStruct">
@@ -434,7 +434,7 @@
             Retrieve the audio field attribute mappings for ID3v2.2 tags.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V2.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V2.Compressed">
             <summary>
@@ -500,11 +500,11 @@
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V3.Fields"/>
+            <seealso cref="P:Metadata.Audio.ID3v2.V3.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.Fields">
+        <member name="P:Metadata.Audio.ID3v2.V3.FieldBase">
             <summary>
-            The low-level representations of the tag data.
+            An editable redirect for the low-level data.
             </summary>
         </member>
         <member name="T:Metadata.Audio.ID3v2.V3.AttributeStruct">
@@ -517,7 +517,7 @@
             Retrieve the audio field attribute mappings for ID3v2.3 tags.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V3.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V3.PaddingSize">
             <summary>
@@ -600,11 +600,11 @@
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V4.Fields"/>
+            <seealso cref="P:Metadata.Audio.ID3v2.V4.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.Fields">
+        <member name="P:Metadata.Audio.ID3v2.V4.FieldBase">
             <summary>
-            The low-level representations of the tag data.
+            An editable redirect for the low-level data.
             </summary>
         </member>
         <member name="T:Metadata.Audio.ID3v2.V4.AttributeStruct">
@@ -617,7 +617,7 @@
             Retrieve the audio field attribute mappings for ID3v2.4 tags.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V4.Fields"/>
+            <seealso cref="P:Metadata.MetadataTag.Fields"/>
         </member>
         <member name="P:Metadata.Audio.ID3v2.V4.HasFooter">
             <summary>
