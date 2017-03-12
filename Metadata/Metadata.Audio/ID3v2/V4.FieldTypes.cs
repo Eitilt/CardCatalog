@@ -108,7 +108,7 @@ namespace Metadata.Audio.ID3v2 {
 							return new[] { BitConverter.ToString(id).Replace('-', ' ') };
 					}
 				}
-					
+
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the specific
 				/// type of field.
@@ -123,11 +123,57 @@ namespace Metadata.Audio.ID3v2 {
 					id = data.Take(read).Skip(owner.Length + 1).ToArray();
 				}
 			}
-			
+
 			/// <summary>
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
+			#region Text field attributes
+			[TagField("TIT1")]
 			[TagField("TIT2")]
+			[TagField("TIT3")]
+			[TagField("TALB")]
+			[TagField("TOAL")]
+			// TRCK
+			// TPOS
+			[TagField("TSST")]
+			// TSRC
+			[TagField("TPE1")]
+			[TagField("TPE2")]
+			[TagField("TPE3")]
+			[TagField("TPE4")]
+			[TagField("TOPE")]
+			[TagField("TEXT")]
+			[TagField("TOLY")]
+			[TagField("TCOM")]
+			// TMCL
+			// TIPL
+			[TagField("TENC")]
+			// TBPM
+			// TLEN
+			// TKEY
+			// TLAN
+			// TCON (genre)
+			// TFLT
+			// TMED
+			[TagField("TMOO")]
+			// TCOP
+			// TPRO
+			[TagField("TPUB")]
+			[TagField("TOWN")]
+			[TagField("TRSN")]
+			[TagField("TRSO")]
+			[TagField("TOFN")]
+			// TDLY
+			// TDEN
+			// TDOR
+			// TDRC
+			// TDRL
+			// TDTG
+			[TagField("TSSE")]
+			[TagField("TSOA")]
+			[TagField("TSOP")]
+			[TagField("TSOT")]
+			#endregion
 			public class TextFrame : V4Field {
 				/// <summary>
 				/// The constructor required by
@@ -161,7 +207,31 @@ namespace Metadata.Audio.ID3v2 {
 				public override string Name {
 					get {
 						switch (ISO88591.GetString(header)) {
+							case "TIT1": return "Work";
 							case "TIT2": return "Title";
+							case "TIT3": return "Subtitle";
+							case "TALB": return "Album";
+							case "TOAL": return "Original album";
+							case "TSST": return "Disk title";
+							case "TPE1": return "Artist";
+							case "TPE2": return "Album artist";
+							case "TPE3": return "Conductor";
+							case "TPE4": return "Remixer";
+							case "TOPE": return "Original artist";
+							case "TEXT": return "Author";
+							case "TOLY": return "Original author";
+							case "TCOM": return "Composer";
+							case "TENC": return "Encoder";
+							case "TMOO": return "Mood";
+							case "TPUB": return "Publisher";
+							case "TOWN": return "Owner";
+							case "TRSN": return "Station name";
+							case "TRSO": return "Station owner";
+							case "TOFN": return "Original filename";
+							case "TSSE": return "Encoding settings";
+							case "TSOA": return "Album sort order";
+							case "TSOP": return "Artists sort order";
+							case "TSOT": return "Title sort order";
 							default:     return base.Name;
 						}
 					}
