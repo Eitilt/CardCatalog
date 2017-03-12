@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -53,9 +54,9 @@ namespace Metadata {
 		/// 
 		/// <param name="stream">The stream to read.</param>
 		public void Parse(Stream stream) {
-			var fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.FormatFields(Format)).Result;
+			var fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.tagFormats[Format].fields.Values).Result;
 
-			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName)
+			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName, FieldDictionary.KeyComparer)
 				.ToDictionary(
 					g => g.Key,
 					g => g.ToList() as IEnumerable<TagField>

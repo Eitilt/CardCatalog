@@ -10,13 +10,13 @@ namespace Metadata {
 		void Parse(Stream stream);
 	}
 
-	internal class ReflectionData<T> where T : IParsable {
-		public struct HeaderValidation<H> {
-			public int length;
-			public delegate H Validator(IEnumerable<byte> header);
-			public Validator function;
-		}
+	internal struct HeaderValidation<H> {
+		public int length;
+		public delegate H Validator(IEnumerable<byte> header);
+		public Validator function;
+	}
 
+	internal class ReflectionData<T> where T : IParsable {
 		public Type type;
 		public List<HeaderValidation<T>> validationFunctions = new List<HeaderValidation<T>>(1);
 
@@ -44,15 +44,13 @@ namespace Metadata {
 			var tasks = new List<Task>();
 			var ret = new List<T>();
 
-			// Keep track of all bytes read for headers, to avoid
-			// unnecessarily repeating stream accesses
-			var readBytes = new List<byte>();
-
 			//TODO: It may be best to return an object explicitly combining
 			// all recognized tags along with unknown data.
 
 			while (true) {
-				readBytes.Clear();
+				// Keep track of all bytes read for headers, to avoid
+				// unnecessarily repeating stream accesses
+				var readBytes = new List<byte>();
 
 				bool found = false;
 				foreach (var v in types.SelectMany(t => t.validationFunctions)) {
@@ -60,16 +58,16 @@ namespace Metadata {
 					/* Automatically leaves the stream untouched if we've
 					 * already read enough of a header
 					 */
-					while (readBytes.Count < v.length) {
+					if (readBytes.Count < v.length) {
 						var buffer = new byte[v.length - readBytes.Count];
-						var readCount = stream.Read(buffer, 0, buffer.Length);
+						var readCount = stream.ReadAll(buffer, 0, buffer.Length);
 
 						// If the stream has ended before the entire
 						// header can fit, then the header's not present
-						if (readCount == 0)
+						if (readCount < buffer.Length)
 							continue;
 						else
-							readBytes.AddRange(buffer.Take(readCount));
+							readBytes.AddRange(buffer);
 					}
 
 					// Try to construct an empty object of the current format
@@ -107,15 +105,20 @@ namespace Metadata {
 						while (offset < tag.Length) {
 							var read = await stream.ReadAsync(bytes, offset, (tag.Length - offset));
 
-							if (read == 0)
-								throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
-							else
+							if (read == 0) {
+								//throw new EndOfStreamException("End of the stream was reached before the expected length of the final tag");
+								bytes = bytes.Take(offset).ToArray();
+								break;
+							} else {
 								offset += read;
+							}
 						}
 
 						// Split off the processing to return to IO-bound code
-						using (var ms = new MemoryStream(bytes))
-							tasks.Add(Task.Run(() => tag.Parse(ms)));
+						tasks.Add(Task.Run(() => {
+							using (var ms = new MemoryStream(bytes))
+								tag.Parse(ms);
+						}));
 					}
 
 					// All failure conditions were checked before this, so end

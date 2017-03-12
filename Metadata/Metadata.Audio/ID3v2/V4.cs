@@ -76,7 +76,15 @@ namespace Metadata.Audio.ID3v2 {
 				this.parent = parent;
 			}
 
-			public override IEnumerable<string> Name => parent.Fields[ISO88591.GetBytes("TIT2")].SelectMany(f => f.Values);
+			public override IEnumerable<string> Name {
+				get {
+					try {
+						return parent.Fields[ISO88591.GetBytes("TIT2")]?.SelectMany(f => f.Values);
+					} catch (KeyNotFoundException) {
+						return System.Array.Empty<string>();
+					}
+				}
+			}
 		}
 		/// <summary>
 		/// Retrieve the audio field attribute mappings for ID3v2.4 tags.

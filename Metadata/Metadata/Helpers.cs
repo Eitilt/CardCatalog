@@ -24,8 +24,10 @@ namespace Metadata {
 		/// </param>
 		/// <param name="key">The dictionary key to access.</param>
 		/// 
-		/// <returns>The object located at <paramref name="key"/> in
-		/// <paramref name="dictionary"/>.</returns>
+		/// <returns>
+		/// The object located at <paramref name="key"/> in
+		/// <paramref name="dictionary"/>.
+		/// </returns>
 		public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key)
 				where TValue : new() {
 			if (dictionary.ContainsKey(key) == false)
@@ -46,7 +48,7 @@ namespace Metadata {
 		/// <typeparam name="ElementType">
 		/// The underlying type of the sequence.
 		/// </typeparam>
-		public class SequenceEqualityComparer<ElementType> : IEqualityComparer<IEnumerable<ElementType>> {
+		public class SequenceEqualityComparer<ElementType> : IEqualityComparer<ElementType[]> {
 			/// <summary>
 			/// Provide a more robust meant of testing the equality of
 			/// elements.
@@ -58,13 +60,13 @@ namespace Metadata {
 			/// </summary>
 			/// 
 			/// <returns>Whether the sequences are equal.</returns>
-			public bool Equals(IEnumerable<ElementType> x, IEnumerable<ElementType> y) {
+			public bool Equals(ElementType[] x, ElementType[] y) {
 				if (x == y)
 					return true;
 				else if ((x == null) || (y == null))
 					return false;
 
-				if (x.Count() != y.Count())
+				if (x.Length != y.Length)
 					return false;
 
 				return x.SequenceEqual(y, elementComparer);
@@ -77,7 +79,7 @@ namespace Metadata {
 			/// <param name="obj">The sequence to hash.</param>
 			/// 
 			/// <returns>The calculated hash.</returns>
-			public int GetHashCode(IEnumerable<ElementType> obj) {
+			public int GetHashCode(ElementType[] obj) {
 				if (obj == null)
 					return 0;
 

@@ -14,6 +14,11 @@ namespace Metadata {
 		static Helpers.SequenceEqualityComparer<byte> keyComparer = new Helpers.SequenceEqualityComparer<byte>();
 
 		/// <summary>
+		/// Provide access to a comparer specialized for field keys.
+		/// </summary>
+		public static IEqualityComparer<byte[]> KeyComparer => keyComparer;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="FieldDictionary"/>
 		/// class that is empty and has the default initial capacity.
 		/// </summary>

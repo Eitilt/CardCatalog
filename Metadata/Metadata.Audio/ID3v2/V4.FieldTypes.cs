@@ -2,19 +2,79 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Metadata.Audio.ID3v2 {
 	partial class V4 {
 		/// <summary>
+		/// Encapsulate parsing ID3v2.4 headers to reduce the functions each
+		/// field is required to implement.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// This needs to be located between <see cref="TagField"/> and the
+		/// field classes in the inheritance hierarchy in order for the type
+		/// registration to recognize the <see cref="HeaderParserAttribute"/>.
+		/// </remarks>
+		public abstract class V4Field : TagField {
+			/// <summary>
+			/// Reduce the lookups of field types by caching the return.
+			/// </summary>
+			private static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
+
+			/// <summary>
+			/// Check whether the stream begins with a valid field header.
+			/// </summary>
+			/// 
+			/// <param name="header">The sequence of bytes to check.</param>
+			/// 
+			/// <returns>
+			/// An empty <see cref="TagField"/> object if the header is in the
+			/// proper format, `null` otherwise.
+			/// </returns>
+			[HeaderParser(10)]
+			public static TagField Initialize(IEnumerable<byte> header) {
+				var bytes = header.Take(4).ToArray();
+				int length = (int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), 7);
+
+				TagField field;
+				if (fields.ContainsKey(bytes)) {
+					Type fieldType = fields[bytes];
+
+					field = Activator.CreateInstance(fieldType, new object[2] { bytes, length }) as TagField;
+				} else {
+					field = new TagField.Empty(bytes, length);
+				}
+
+				//TODO: Handle flag bytes
+				return field;
+			}
+		}
+
+		/// <summary>
 		/// Fields specific to the ID3v2.4 standard.
 		/// </summary>
-		public class FieldTypes {
+		public class FormatFields {
 			/// <summary>
 			/// An identifier unique to a particular database.
 			/// </summary>
 			[TagField(header)]
-			public class UniqueFileID : TagField {
+			public class UniqueFileId : V4Field {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public UniqueFileId(byte[] name, int length) => Length = length;
+
 				/// <summary>
 				/// The easy representation of the field header.
 				/// </summary>
@@ -68,7 +128,24 @@ namespace Metadata.Audio.ID3v2 {
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
 			[TagField("TIT2")]
-			public class TextFrame : TagField {
+			public class TextFrame : V4Field {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public TextFrame(byte[] name, int length) {
+					header = name;
+					Length = length;
+				}
+
 				/// <summary>
 				/// The raw field header.
 				/// </summary>

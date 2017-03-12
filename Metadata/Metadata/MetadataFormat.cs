@@ -12,26 +12,29 @@ namespace Metadata {
 	/// </summary>
 	public static class MetadataFormat {
 		internal class FormatData : ReflectionData<MetadataTag> {
-			/// <summary>
-			/// Maintain a single instance of the comparer rather than
-			/// creating a new one for each dictionary.
-			/// </summary>
-			/// 
-			/// <remarks>
-			/// TODO: Extract from <see cref="FieldDictionary"/>.
-			/// </remarks>
-			static Helpers.SequenceEqualityComparer<byte> fieldKeyComparer = new Helpers.SequenceEqualityComparer<byte>();
-
-			public Dictionary<byte[], ReflectionData<TagField>> fields = new Dictionary<byte[], ReflectionData<TagField>>(fieldKeyComparer);
+			public Dictionary<byte[], ReflectionData<TagField>> fields = new Dictionary<byte[], ReflectionData<TagField>>(FieldDictionary.KeyComparer);
 		}
 
 		/// <summary>
 		/// The class encapsulating each registered metadata format.
 		/// </summary>
-		private static Dictionary<string, FormatData> tagFormats = new Dictionary<string, FormatData>();
+		internal static Dictionary<string, FormatData> tagFormats = new Dictionary<string, FormatData>();
 
-		internal static IEnumerable<ReflectionData<TagField>> FormatFields(string format) =>
-			tagFormats[format].fields.Values;
+		/// <summary>
+		/// Get all field types registered for the given metadata format.
+		/// </summary>
+		/// 
+		/// <param name="format">The short name of the desired format.</param>
+		/// 
+		/// <returns>
+		/// The classes implementing each <see cref="TagField"/>.
+		/// </returns>
+		public static IReadOnlyDictionary<byte[], Type> FieldTypes(string format) =>
+			tagFormats[format].fields.ToDictionary(
+				p => p.Key,
+				p => p.Value.type,
+				FieldDictionary.KeyComparer
+			);
 
 		/// <summary>
 		/// A registry of previously-scanned assemblies in order to prevent
@@ -60,13 +63,13 @@ namespace Metadata {
 		/// </remarks>
 		/// 
 		/// <typeparam name="T">
-		/// A type from the assembly to scan, extending <see cref="MetadataTag"/>.
+		/// Any type from the assembly to scan.
 		/// </typeparam>
 		/*TODO: Could be nice to scan all referenced assemblies (loaded or
 		 * not) and load any with the attribute that aren't yet, to avoid
 		 * needing to refresh manually. See .NET Core's AssemblyLoadContext.
 		 */
-		public static void RefreshFormats<T>() where T : MetadataTag {
+		public static void RefreshFormats<T>() {
 			Register(typeof(T).GetTypeInfo().Assembly);
 		}
 
@@ -88,20 +91,20 @@ namespace Metadata {
 				return;
 
 			foreach (Type t in assembly.ExportedTypes) {
-				var tagAttr = t.GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false);
-				if (tagAttr != null)
-					typeof(MetadataFormat).GetMethod("Register", Array.Empty<Type>())
+				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false) ?? Array.Empty<MetadataFormatAttribute>())
+					typeof(MetadataFormat).GetMethod("Register", new Type[1] { typeof(string) })
 						.MakeGenericMethod(new Type[1] { t })
-						.Invoke(null, null);
+						.Invoke(null, new object[1] { tagAttr.Name });
 
-				var fieldAttr = t.GetTypeInfo().GetCustomAttribute<TagFieldAttribute>(false);
-				if (fieldAttr != null)
-					Register(fieldAttr.Format, fieldAttr.Header, t);
+				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false) ?? Array.Empty<TagFieldAttribute>())
+					typeof(MetadataFormat).GetMethod("Register", new Type[2] { typeof(string), typeof(byte[]) })
+						.MakeGenericMethod(new Type[1] { t })
+						.Invoke(null, new object[2] { fieldAttr.Format, fieldAttr.Header });
 			}
 
 			assemblies.Add(assembly.FullName);
 		}
-		
+
 		/// <summary>
 		/// Add the given metadata format type to the lookup tables according
 		/// to the  descriptor specified in its
@@ -113,7 +116,9 @@ namespace Metadata {
 		/// any later registrations will override the previous.
 		/// </remarks>
 		/// 
-		/// <typeparam name="T">The type to add.</typeparam>
+		/// <typeparam name="T">
+		/// The <see cref="MetadataTag"/> class implementing the format.
+		/// </typeparam>
 		/// 
 		/// <seealso cref="HeaderParserAttribute"/>
 		public static void Register<T>() where T : MetadataTag {
@@ -137,27 +142,33 @@ namespace Metadata {
 		/// any later registrations will override the previous.
 		/// </remarks>
 		/// 
+		/// <typeparam name="T">
+		/// The <see cref="MetadataTag"/> class implementing the format.
+		/// </typeparam>
+		/// 
 		/// <param name="format">
 		/// A short name for the format to be used as an access key for later
 		/// lookups.
 		/// <para/>
 		/// It is recommended that this also be exposed as a constant.
 		/// </param>
-		/// 
-		/// <typeparam name="T">The type to register.</typeparam>
 		public static void Register<T>(string format) where T : MetadataTag {
 			var formatType = typeof(T);
 
 			tagFormats.GetOrCreate(format).type = formatType;
 
 			foreach (var method in formatType.GetRuntimeMethods().Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
-				Register(format, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
+				Register(format, method.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, method);
 		}
 
 		/// <summary>
 		/// Add the given tag field type to the lookup tables under the proper
 		/// format specifier.
 		/// </summary>
+		/// 
+		/// <typeparam name="T">
+		/// The <see cref="TagField"/> class implementing the field.
+		/// </typeparam>
 		/// 
 		/// <param name="format">
 		/// The short name of the format defining this field, or `null` to
@@ -166,20 +177,23 @@ namespace Metadata {
 		/// <param name="header">
 		/// The unique specifier of this field.
 		/// </param>
-		/// <param name="fieldType">
-		/// The <see cref="Type"/> implementing the field.
-		/// </param>
-		private static void Register(string format, byte[] header, Type fieldType) {
+		public static void Register<T>(string format, byte[] header) where T : TagField {
+			var fieldType = typeof(T);
+
 			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
 				throw new NotSupportedException("Metadata tag field types must extend TagField");
 
-			IEnumerable<string> formatAttrs;
+			IEnumerable<string> formatAttrs = Array.Empty<string>();
 			if (format == null) {
-				formatAttrs =
-					from attr in fieldType.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(MetadataFormatAttribute), true)
-					select (attr as MetadataFormatAttribute).Name;
+				for (Type enclosingType = fieldType.DeclaringType;
+						(formatAttrs.Count() == 0) && (enclosingType != null);
+						enclosingType = enclosingType.DeclaringType) {
+					formatAttrs =
+						from attr in enclosingType.GetTypeInfo().GetCustomAttributes(typeof(MetadataFormatAttribute))
+						select (attr as MetadataFormatAttribute).Name;
+				}
 
-				if (formatAttrs == null)
+				if (formatAttrs.Count() == 0)
 					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"
 						+ " at least one enclosing type must have an attached MetadataFormatAttribute");
 
@@ -187,21 +201,57 @@ namespace Metadata {
 				formatAttrs = new string[1] { format };
 			}
 
+			var methods = new List<Tuple<uint, MethodInfo>>();
+			for (Type enclosingType = fieldType; enclosingType != null; enclosingType = enclosingType.GetTypeInfo().BaseType) {
+				methods.AddRange(from method in enclosingType.GetMethods()
+								 where method.IsDefined(typeof(HeaderParserAttribute))
+								 select Tuple.Create(method.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, method)
+				);
+			}
+
 			foreach (var name in formatAttrs) {
 				var field = tagFormats.GetOrCreate(name).fields.GetOrCreate(header);
 				field.type = fieldType;
+
+				foreach (var m in methods)
+					Register(name, header, m.Item1, m.Item2);
 			}
 		}
-		
+
 		/// <summary>
-		/// Add the given method to the lookup tables under the specified
-		/// custom descriptor.
+		/// Group the restriction checking of validation functions for easy
+		/// reuse.
+		/// </summary>
+		/// 
+		/// <typeparam name="T">
+		/// The required return type of <paramref name="method"/>.
+		/// </typeparam>
+		/// 
+		/// <param name="method">The validation function to check.</param>
+		private static void MethodSanityChecks<T>(MethodInfo method) {
+			if (method.IsPrivate)
+				throw new NotSupportedException("Metadata header-parsing functions must not be private");
+			if (method.IsAbstract)
+				throw new NotSupportedException("Metadata header-parsing functions must not be abstract");
+			if (method.IsStatic == false)
+				throw new NotSupportedException("Metadata header-parsing functions must be static");
+
+			var parameters = method.GetParameters();
+			if ((parameters.Length == 0)
+				|| (typeof(IEnumerable<byte>).IsAssignableFrom(parameters[0].ParameterType) == false)
+				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
+				throw new NotSupportedException("Metadata header-parsing functions must be able to take only an IEnumerable<byte>");
+
+			if (typeof(T).IsAssignableFrom(method.ReturnType) == false)
+				throw new NotSupportedException("Metadata header-parsing functions must return an empty instance of their type");
+		}
+
+		/// <summary>
+		/// Add the given format initialization method to the lookup tables
+		/// under the specified custom descriptor.
 		/// </summary>
 		/// 
 		/// <remarks>
-		/// Note that if multiple methods are registered under the same name,
-		/// any later registrations will override the previous.
-		/// <para/>
 		/// This should almost purely be called via
 		/// <see cref="Register{T}(string)"/>, and has been separated
 		/// primarily for code clarity.
@@ -217,28 +267,57 @@ namespace Metadata {
 		/// </param>
 		/// <param name="method">The method to add.</param>
 		private static void Register(string format, uint headerLength, MethodInfo method) {
-			if (method.IsPrivate)
-				throw new NotSupportedException("Metadata format header-parsing functions must not be private");
-			if (method.IsAbstract)
-				throw new NotSupportedException("Metadata format header-parsing functions must not be abstract");
-			if (method.IsStatic == false)
-				throw new NotSupportedException("Metadata format header-parsing functions must be static");
-
-			var parameters = method.GetParameters();
-			if ((parameters.Length == 0)
-				|| (typeof(IEnumerable<byte>).IsAssignableFrom(parameters[0].ParameterType) == false)
-				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
-				throw new NotSupportedException("Metadata format header-parsing functions must be able to take only an IEnumerable<byte>");
-
-			if (typeof(MetadataTag).IsAssignableFrom(method.ReturnType) == false)
-				throw new NotSupportedException("Metadata format header-parsing functions must return an empty instance of TagFormat");
+			MethodSanityChecks<MetadataTag>(method);
 
 			try {
-				tagFormats.GetOrCreate(format).validationFunctions.Add(new FormatData.HeaderValidation<MetadataTag>() {
-					length = (int)headerLength,
-					function = method.CreateDelegate(typeof(FormatData.HeaderValidation<MetadataTag>.Validator))
-						as FormatData.HeaderValidation<MetadataTag>.Validator
-				});
+				tagFormats.GetOrCreate(format)
+					.validationFunctions.Add(new HeaderValidation<MetadataTag>() {
+						length = (int)headerLength,
+						function = method.CreateDelegate(typeof(HeaderValidation<MetadataTag>.Validator))
+							as HeaderValidation<MetadataTag>.Validator
+					});
+			} catch (ArgumentException e) {
+				throw new NotSupportedException(e.Message, e.InnerException);
+			}
+		}
+
+		/// <summary>
+		/// Add the given field initialization method to the lookup tables
+		/// under the specified custom descriptor.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// Note that if multiple methods are registered under the same
+		/// <paramref name="format"/> and <paramref name="field"/> pairing,
+		/// any later registrations will override the previous.
+		/// <para/>
+		/// This should almost purely be called via
+		/// <see cref="Register{T}(string)"/>, and has been separated
+		/// primarily for code clarity.
+		/// </remarks>
+		/// 
+		/// <param name="format">
+		/// A short name for the format to be used as an access key for later
+		/// lookups.
+		/// </param>
+		/// <param name="field">
+		/// The unique identifier for the associated field.
+		/// </param>
+		/// <param name="headerLength">
+		/// The number of bytes <paramref name="method"/> uses to read the tag
+		/// header.
+		/// </param>
+		/// <param name="method">The method to add.</param>
+		private static void Register(string format, byte[] field, uint headerLength, MethodInfo method) {
+			MethodSanityChecks<TagField>(method);
+
+			try {
+				tagFormats.GetOrCreate(format).fields.GetOrCreate(field)
+					.validationFunctions.Add(new HeaderValidation<TagField>() {
+						length = (int)headerLength,
+						function = method.CreateDelegate(typeof(HeaderValidation<TagField>.Validator))
+							as HeaderValidation<TagField>.Validator
+					});
 			} catch (ArgumentException e) {
 				throw new NotSupportedException(e.Message, e.InnerException);
 			}

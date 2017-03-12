@@ -26,7 +26,7 @@ namespace Metadata {
 	/// 
 	/// <seealso cref="ScanAssemblyAttribute"/>
 	/// <seealso cref="MetadataFormat.Register{T}(string)"/>
-	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 	public sealed class MetadataFormatAttribute : Attribute {
 		/// <summary>
 		/// The unique short name representing this format.
@@ -123,7 +123,7 @@ namespace Metadata {
 		/// If this is `null` (the default), the immediately-enclosing type
 		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/> attribute,
 		/// or an  exception will be thrown on the call to
-		/// <see cref="MetadataFormat.Register(string, byte[], Type)"/>.
+		/// <see cref="MetadataFormat.Register{T}(string, byte[])"/>.
 		/// </remarks>
 		/// 
 		/// <seealso cref="MetadataFormatAttribute.Name"/>
