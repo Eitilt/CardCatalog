@@ -150,8 +150,7 @@ namespace Metadata {
 
 			tagFormats.GetOrCreate(format).type = formatType;
 
-			foreach (var method in formatType.GetRuntimeMethods()
-					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
+			foreach (var method in formatType.GetRuntimeMethods().Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
 				Register(format, method.GetCustomAttribute<HeaderParserAttribute>().HeaderLength, method);
 		}
 
@@ -176,9 +175,9 @@ namespace Metadata {
 
 			IEnumerable<string> formatAttrs;
 			if (format == null) {
-				formatAttrs = fieldType.DeclaringType.GetTypeInfo()
-					.GetCustomAttributes(typeof(MetadataFormatAttribute), true)
-					.Select(a => (a as MetadataFormatAttribute).Name);
+				formatAttrs =
+					from attr in fieldType.DeclaringType.GetTypeInfo().GetCustomAttributes(typeof(MetadataFormatAttribute), true)
+					select (attr as MetadataFormatAttribute).Name;
 
 				if (formatAttrs == null)
 					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"

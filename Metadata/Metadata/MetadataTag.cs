@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Metadata {
 	/// <summary>
@@ -56,7 +55,11 @@ namespace Metadata {
 		public void Parse(Stream stream) {
 			var fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.FormatFields(Format)).Result;
 
-			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName).ToDictionary((g => g.Key), (g => g.ToList() as IEnumerable<TagField>)));
+			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName)
+				.ToDictionary(
+					g => g.Key,
+					g => g.ToList() as IEnumerable<TagField>
+			));
 		}
 	}
 }

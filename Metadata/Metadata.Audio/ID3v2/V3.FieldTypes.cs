@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Metadata.Audio.ID3v2 {
 	partial class V3 {
