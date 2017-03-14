@@ -23,6 +23,8 @@ namespace Metadata.Audio.ID3v2 {
 			/// </summary>
 			private static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
 
+			private static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
+
 			/// <summary>
 			/// Check whether the stream begins with a valid field header.
 			/// </summary>
@@ -39,7 +41,9 @@ namespace Metadata.Audio.ID3v2 {
 				int length = (int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), 7);
 
 				TagField field;
-				if (fields.ContainsKey(bytes)) {
+				if (bytes.SequenceEqual(padding)) {
+					return null;
+				} else if (fields.ContainsKey(bytes)) {
 					Type fieldType = fields[bytes];
 
 					field = Activator.CreateInstance(fieldType, new object[2] { bytes, length }) as TagField;
