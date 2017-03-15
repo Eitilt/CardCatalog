@@ -751,6 +751,21 @@
             Any of the many tags containing purely textual data.
             </summary>
         </member>
+        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.headerChars">
+            <summary>
+            Valid ID3v2 field identification characters.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.NameGenerator">
+            <summary>
+            Generate all text field headers that aren't handled by
+            other specialized classes.
+            </summary>
+            
+            <returns>
+            The field headers using default text formatting.
+            </returns>
+        </member>
         <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
@@ -778,6 +793,12 @@
         <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Name">
             <summary>
             The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.BaseName">
+            <summary>
+            Circumvent the title parsing for subclasses that know the
+            field doesn't contain basic text data.
             </summary>
         </member>
         <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.values">
@@ -808,7 +829,7 @@
              isn't headed by a recognized byte-order-mark.
              </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SplitStrings(System.Collections.Generic.IEnumerable{System.Byte},System.Text.Encoding,System.UInt32)">
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SplitStrings(System.Byte[],System.Text.Encoding)">
             <summary>
             Parse a sequence of bytes as a list of null-separated
             strings.
@@ -820,13 +841,54 @@
             or `null` if each string begins with a byte order marker
             which may be used to detect the encoding dynamically.
             </param>
-            <param name="termLength">
-            The number of null bytes in the separator.
-            </param>
             
             <returns>The separated and parsed strings.</returns>
         </member>
         <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Parse(System.IO.Stream)">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the
+            specific type of field.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame">
+            <summary>
+            Any frame containing a URL. By the specification, these differ
+            from the base text by having a maximum of one occurrence and
+            only allowing the ISO-8859-1 encoding.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.NameGenerator">
+            <summary>
+            Generate all text field headers that aren't handled by
+            other specialized classes.
+            </summary>
+            
+            <returns>
+            The field headers using default text formatting.
+            </returns>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.

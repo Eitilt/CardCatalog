@@ -80,8 +80,8 @@ namespace Metadata {
 
 		/// <summary>
 		/// Initializes a new instance of the
-		/// <see cref="HeaderParserAttribute"/> class with the
-		/// specified <see cref="HeaderLength"/>.
+		/// <see cref="HeaderParserAttribute"/> class with the specified
+		/// <see cref="HeaderLength"/>.
 		/// </summary>
 		/// 
 		/// <param name="length">
@@ -98,8 +98,8 @@ namespace Metadata {
 	}
 
 	/// <summary>
-	/// Marks a class as describing a field within a tag in a particular metadata
-	/// format.
+	/// Marks a class as describing a field within a tag in a particular
+	/// metadata format.
 	/// </summary>
 	/// 
 	/// <remarks>
@@ -121,8 +121,8 @@ namespace Metadata {
 		/// 
 		/// <remarks>
 		/// If this is `null` (the default), the immediately-enclosing type
-		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/> attribute,
-		/// or an  exception will be thrown on the call to
+		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/>
+		/// attribute, or an exception will be thrown on the call to
 		/// <see cref="MetadataFormat.Register{T}(string, byte[])"/>.
 		/// </remarks>
 		/// 
@@ -141,9 +141,15 @@ namespace Metadata {
 		public byte[] Header { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the
-		/// <see cref="TagFieldAttribute"/> class with the
-		/// specified <see cref="Header"/>.
+		/// Initializes a new instance of the <see cref="TagFieldAttribute"/>
+		/// class with headers as given by any members decorated with a
+		/// <see cref="FieldNamesAttribute"/>.
+		/// </summary>
+		public TagFieldAttribute() { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TagFieldAttribute"/>
+		/// class with the specified <see cref="Header"/>.
 		/// </summary>
 		/// 
 		/// <remarks>
@@ -152,11 +158,31 @@ namespace Metadata {
 		/// </remarks>
 		/// 
 		/// <param name="header">
-		/// The unique byte header indicating this type of field,
-		/// represented as an ISO-8859-1 string.
+		/// The unique byte header indicating this type of field, represented
+		/// as an ISO-8859-1 string.
 		/// </param>
 		public TagFieldAttribute(string header) {
 			Header = ISO88591.GetBytes(header);
 		}
 	}
+
+	/// <summary>
+	/// Marks a method as returning a list of the headers to which the
+	/// enclosing class applies, or a parameter/property as being such a
+	/// predefined list.
+	/// </summary>
+	/// 
+	/// <remarks>
+	/// The field will not be registered under the returned under the returned
+	/// headers unless the class has a <see cref="TagFieldAttribute"/> without
+	/// any string parameter.
+	/// <para />
+	/// If on a method: an exception will be thrown on class registration if
+	/// it cannot be called without parameters or if it doesn't return an
+	/// <see cref="T:IEnumerable{byte[]}"/>; if on a parameter or property, it
+	/// simply needs to be of that type. In both cases, the member must be
+	/// `static` and `public`.
+	/// </remarks>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+	public sealed class FieldNamesAttribute : Attribute { }
 }

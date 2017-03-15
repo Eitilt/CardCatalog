@@ -157,7 +157,8 @@ namespace Metadata {
 
 			tagFormats.GetOrCreate(format).type = formatType;
 
-			foreach (var method in formatType.GetRuntimeMethods().Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
+			foreach (var method in formatType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
 				Register(format, method.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, method);
 		}
 
@@ -178,6 +179,25 @@ namespace Metadata {
 		/// The unique specifier of this field.
 		/// </param>
 		public static void Register<T>(string format, byte[] header) where T : TagField {
+			Register<T>(format, new[] { header });
+		}
+		/// <summary>
+		/// Add the given tag field type to the lookup tables under the proper
+		/// format specifier.
+		/// </summary>
+		/// 
+		/// <typeparam name="T">
+		/// The <see cref="TagField"/> class implementing the field.
+		/// </typeparam>
+		/// 
+		/// <param name="format">
+		/// The short name of the format defining this field, or `null` to
+		/// autodetect from the enclosing class.
+		/// </param>
+		/// <param name="headerList">
+		/// The unique specifiers of this field.
+		/// </param>
+		public static void Register<T>(string format, IEnumerable<byte[]> headerList) where T: TagField {
 			var fieldType = typeof(T);
 
 			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
@@ -201,20 +221,35 @@ namespace Metadata {
 				formatAttrs = new string[1] { format };
 			}
 
-			var methods = new List<Tuple<uint, MethodInfo>>();
-			for (Type enclosingType = fieldType; enclosingType != null; enclosingType = enclosingType.GetTypeInfo().BaseType) {
-				methods.AddRange(from method in enclosingType.GetMethods()
-								 where method.IsDefined(typeof(HeaderParserAttribute))
-								 select Tuple.Create(method.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, method)
-				);
-			}
+			var parsers = new List<Tuple<uint, MethodInfo>>();
+			parsers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+							 where method.IsDefined(typeof(HeaderParserAttribute))
+							 select Tuple.Create(method.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, method));
+
+			var headers = new List<byte[]>();
+			if (headerList != null)
+				headers.AddRange(headerList.Where(h => h != null));
+			headers.AddRange(from field in fieldType.GetFields(BindingFlags.Static | BindingFlags.Public)
+							 where field.IsDefined(typeof(FieldNamesAttribute))
+							 from name in field.GetValue(null) as IEnumerable<byte[]>
+							 select name);
+			headers.AddRange(from property in fieldType.GetProperties(BindingFlags.Static | BindingFlags.Public)
+							 where property.IsDefined(typeof(FieldNamesAttribute))
+							 from name in property.GetValue(null) as IEnumerable<byte[]>
+							 select name);
+			headers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+							 where method.IsDefined(typeof(FieldNamesAttribute))
+							 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>).Invoke()
+							 select name);
 
 			foreach (var name in formatAttrs) {
-				var field = tagFormats.GetOrCreate(name).fields.GetOrCreate(header);
-				field.type = fieldType;
+				foreach (var head in headers) {
+					var field = tagFormats.GetOrCreate(name).fields.GetOrCreate(head);
+					field.type = fieldType;
 
-				foreach (var m in methods)
-					Register(name, header, m.Item1, m.Item2);
+					foreach (var m in parsers)
+						Register(name, head, m.Item1, m.Item2);
+				}
 			}
 		}
 

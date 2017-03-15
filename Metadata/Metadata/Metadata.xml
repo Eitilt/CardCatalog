@@ -261,8 +261,8 @@
         <member name="M:Metadata.HeaderParserAttribute.#ctor(System.UInt32)">
             <summary>
             Initializes a new instance of the
-            <see cref="T:Metadata.HeaderParserAttribute"/> class with the
-            specified <see cref="P:Metadata.HeaderParserAttribute.HeaderLength"/>.
+            <see cref="T:Metadata.HeaderParserAttribute"/> class with the specified
+            <see cref="P:Metadata.HeaderParserAttribute.HeaderLength"/>.
             </summary>
             
             <param name="length">
@@ -276,8 +276,8 @@
         </member>
         <member name="T:Metadata.TagFieldAttribute">
             <summary>
-            Marks a class as describing a field within a tag in a particular metadata
-            format.
+            Marks a class as describing a field within a tag in a particular
+            metadata format.
             </summary>
             
             <remarks>
@@ -299,8 +299,8 @@
             
             <remarks>
             If this is `null` (the default), the immediately-enclosing type
-            <em>must</em>  have a <see cref="T:Metadata.MetadataFormatAttribute"/> attribute,
-            or an  exception will be thrown on the call to
+            <em>must</em>  have a <see cref="T:Metadata.MetadataFormatAttribute"/>
+            attribute, or an exception will be thrown on the call to
             <see cref="M:Metadata.MetadataFormat.Register``1(System.String,System.Byte[])"/>.
             </remarks>
             
@@ -317,11 +317,17 @@
             common class once for each such tag.
             </remarks>
         </member>
+        <member name="M:Metadata.TagFieldAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Metadata.TagFieldAttribute"/>
+            class with headers as given by any members decorated with a
+            <see cref="T:Metadata.FieldNamesAttribute"/>.
+            </summary>
+        </member>
         <member name="M:Metadata.TagFieldAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the
-            <see cref="T:Metadata.TagFieldAttribute"/> class with the
-            specified <see cref="P:Metadata.TagFieldAttribute.Header"/>.
+            Initializes a new instance of the <see cref="T:Metadata.TagFieldAttribute"/>
+            class with the specified <see cref="P:Metadata.TagFieldAttribute.Header"/>.
             </summary>
             
             <remarks>
@@ -330,9 +336,28 @@
             </remarks>
             
             <param name="header">
-            The unique byte header indicating this type of field,
-            represented as an ISO-8859-1 string.
+            The unique byte header indicating this type of field, represented
+            as an ISO-8859-1 string.
             </param>
+        </member>
+        <member name="T:Metadata.FieldNamesAttribute">
+            <summary>
+            Marks a method as returning a list of the headers to which the
+            enclosing class applies, or a parameter/property as being such a
+            predefined list.
+            </summary>
+            
+            <remarks>
+            The field will not be registered under the returned under the returned
+            headers unless the class has a <see cref="T:Metadata.TagFieldAttribute"/> without
+            any string parameter.
+            <para />
+            If on a method: an exception will be thrown on class registration if
+            it cannot be called without parameters or if it doesn't return an
+            <see cref="T:IEnumerable{byte[]}"/>; if on a parameter or property, it
+            simply needs to be of that type. In both cases, the member must be
+            `static` and `public`.
+            </remarks>
         </member>
         <member name="T:Metadata.MetadataFormat">
             <summary>
@@ -458,6 +483,24 @@
             </param>
             <param name="header">
             The unique specifier of this field.
+            </param>
+        </member>
+        <member name="M:Metadata.MetadataFormat.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
+            <summary>
+            Add the given tag field type to the lookup tables under the proper
+            format specifier.
+            </summary>
+            
+            <typeparam name="T">
+            The <see cref="T:Metadata.TagField"/> class implementing the field.
+            </typeparam>
+            
+            <param name="format">
+            The short name of the format defining this field, or `null` to
+            autodetect from the enclosing class.
+            </param>
+            <param name="headerList">
+            The unique specifiers of this field.
             </param>
         </member>
         <member name="M:Metadata.MetadataFormat.MethodSanityChecks``1(System.Reflection.MethodInfo)">

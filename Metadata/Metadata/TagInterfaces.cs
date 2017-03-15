@@ -59,7 +59,7 @@ namespace Metadata {
 			/// <summary>
 			/// All data contained by this field, in a human-readable format.
 			/// </summary>
-			public override IEnumerable<string> Values => new string[1] { BitConverter.ToString(data).Replace('-', ' ') };
+			public override IEnumerable<string> Values => new string[1] { String.Format("{{ {0} }}", BitConverter.ToString(data).Replace('-', ' ')) };
 
 			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
@@ -98,7 +98,7 @@ namespace Metadata {
 		/// not suitable, the method should be overridden.
 		/// </remarks>
 		public virtual string Name =>
-			System.String.Format("{{ {0} }}", System.Text.Encoding.UTF8.GetString(SystemName));
+			String.Format("{{ {0} }}", System.Text.Encoding.UTF8.GetString(SystemName));
 
 		/// <summary>
 		/// All data contained by this field, in a human-readable format.

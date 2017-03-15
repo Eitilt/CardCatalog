@@ -131,54 +131,60 @@ namespace Metadata.Audio.ID3v2 {
 			/// <summary>
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
-			#region Text field attributes
-			[TagField("TIT1")]
-			[TagField("TIT2")]
-			[TagField("TIT3")]
-			[TagField("TALB")]
-			[TagField("TOAL")]
-			// TRCK
-			// TPOS
-			[TagField("TSST")]
-			// TSRC
-			[TagField("TPE1")]
-			[TagField("TPE2")]
-			[TagField("TPE3")]
-			[TagField("TPE4")]
-			[TagField("TOPE")]
-			[TagField("TEXT")]
-			[TagField("TOLY")]
-			[TagField("TCOM")]
-			// TMCL
-			// TIPL
-			[TagField("TENC")]
-			// TBPM
-			// TLEN
-			// TKEY
-			// TLAN
-			// TCON (genre)
-			// TFLT
-			// TMED
-			[TagField("TMOO")]
-			// TCOP
-			// TPRO
-			[TagField("TPUB")]
-			[TagField("TOWN")]
-			[TagField("TRSN")]
-			[TagField("TRSO")]
-			[TagField("TOFN")]
-			// TDLY
-			// TDEN
-			// TDOR
-			// TDRC
-			// TDRL
-			// TDTG
-			[TagField("TSSE")]
-			[TagField("TSOA")]
-			[TagField("TSOP")]
-			[TagField("TSOT")]
-			#endregion
+			[TagField]
 			public class TextFrame : V4Field {
+				/// <summary>
+				/// Valid ID3v2 field identification characters.
+				/// </summary>
+				protected static char[] headerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+				/// <summary>
+				/// Generate all text field headers that aren't handled by
+				/// other specialized classes.
+				/// </summary>
+				/// 
+				/// <returns>
+				/// The field headers using default text formatting.
+				/// </returns>
+				[FieldNames]
+				public static IEnumerable<byte[]> NameGenerator() {
+					foreach (char b in headerChars) {
+						foreach (char c in headerChars) {
+							foreach (char d in headerChars) {
+								// Individually-handled text tags
+								switch (new string(new char[3] { b, c, d })) {
+									case "BPM":
+									case "CMP":
+									case "CON":
+									case "COP":
+									case "DEN":
+									case "DLY":
+									case "DOR":
+									case "DRC":
+									case "DRL":
+									case "FLT":
+									case "IPL":
+									case "LAN":
+									case "LEN":
+									case "KEY":
+									case "MCL":
+									case "MED":
+									case "POS":
+									case "PRO":
+									case "RCK":
+									case "SRC":
+									case "DTG":
+									case "XXX":
+										continue;
+									default:
+										yield return new byte[4] { (byte)'T', (byte)b, (byte)c, (byte)d };
+										break;
+								}
+							}
+						}
+					}
+				}
+
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
@@ -199,7 +205,7 @@ namespace Metadata.Audio.ID3v2 {
 				/// <summary>
 				/// The raw field header.
 				/// </summary>
-				private byte[] header = null;
+				protected byte[] header = null;
 				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
@@ -236,15 +242,21 @@ namespace Metadata.Audio.ID3v2 {
 							case "TSOA": return "Album sort order";
 							case "TSOP": return "Artists sort order";
 							case "TSOT": return "Title sort order";
-							default:     return base.Name;
+							default: return ("Text " + BaseName);
 						}
 					}
 				}
-					
+
+				/// <summary>
+				/// Circumvent the title parsing for subclasses that know the
+				/// field doesn't contain basic text data.
+				/// </summary>
+				protected string BaseName => base.Name;
+
 				/// <summary>
 				/// All strings contained within this field.
 				/// </summary>
-				private List<string> values = null;
+				protected IEnumerable<string> values = null;
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
@@ -305,7 +317,7 @@ namespace Metadata.Audio.ID3v2 {
 							return null;
 					}
 				}
-					
+
 				/// <summary>
 				/// Parse a sequence of bytes as a list of null-separated
 				/// strings.
@@ -317,39 +329,23 @@ namespace Metadata.Audio.ID3v2 {
 				/// or `null` if each string begins with a byte order marker
 				/// which may be used to detect the encoding dynamically.
 				/// </param>
-				/// <param name="termLength">
-				/// The number of null bytes in the separator.
-				/// </param>
 				/// 
 				/// <returns>The separated and parsed strings.</returns>
-				protected List<string> SplitStrings(IEnumerable<byte> data, Encoding encoding, uint termLength) {
-					var active = new List<byte>();
-					var strings = new List<string>();
-					byte zeros = 0;
+				protected IEnumerable<string> SplitStrings(byte[] data, Encoding encoding) {
+					var strings = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
+					var split = strings.Split(new char[1] { '\0' }, StringSplitOptions.None);
 
-					foreach (var b in data) {
-						if (b == 0x00) {
-							++zeros;
-							if (zeros == termLength) {
-								strings.Add(encoding?.GetString(active.ToArray()) ?? ReadFromByteOrderMark(active.ToArray()));
-								active.Clear();
-								zeros = 0;
-							}
-						} else {
-							for (; zeros > 0; --zeros)
-								active.Add(0x00);
-							active.Add(b);
-						}
-					}
+					var last = split.Length - 1;
+					// Empty array shouldn't happen, but handle it just in case
+					if (last < 0)
+						return split;
 
-					for (; zeros > 0; --zeros)
-						active.Add(0x00);
-					if (active.Count > 0)
-						strings.Add(encoding?.GetString(active.ToArray()) ?? ReadFromByteOrderMark(active.ToArray()));
-
-					return strings;
+					if ((split[last] == null) || (split[last].Length == 0))
+						return split.Take(last);
+					else
+						return split;
 				}
-					
+
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the
 				/// specific type of field.
@@ -359,27 +355,106 @@ namespace Metadata.Audio.ID3v2 {
 				public override void Parse(Stream stream) {
 					var data = new byte[Length];
 					// SplitStrings doesn't care about length, but shouldn't
-					// be passed the unset tail
+					// be passed the unset tail if the stream ended early
 					int read = stream.ReadAll(data, 0, Length);
 					if (read < Length)
 						data = data.Take(read).ToArray();
 
 					switch (data.First()) {
 						case 0x00:
-							values = SplitStrings(data.Skip(1), ISO88591, 1);
+							values = SplitStrings(data.Skip(1).ToArray(), ISO88591);
 							break;
 						case 0x01:
-							values = SplitStrings(data.Skip(1), null, 2);
+							values = SplitStrings(data.Skip(1).ToArray(), null);
 							break;
 						case 0x02:
-							values = SplitStrings(data.Skip(1), Encoding.BigEndianUnicode, 2);
+							values = SplitStrings(data.Skip(1).ToArray(), Encoding.BigEndianUnicode);
 							break;
 						case 0x03:
-							values = SplitStrings(data.Skip(1), Encoding.UTF8, 1);
+							values = SplitStrings(data.Skip(1).ToArray(), Encoding.UTF8);
 							break;
-						default:
-							return;
 					}
+				}
+			}
+
+			/// <summary>
+			/// Any frame containing a URL. By the specification, these differ
+			/// from the base text by having a maximum of one occurrence and
+			/// only allowing the ISO-8859-1 encoding.
+			/// </summary>
+			[TagField]
+			public class UrlFrame : TextFrame {
+				/// <summary>
+				/// Generate all text field headers that aren't handled by
+				/// other specialized classes.
+				/// </summary>
+				/// 
+				/// <returns>
+				/// The field headers using default text formatting.
+				/// </returns>
+				[FieldNames]
+				public static new IEnumerable<byte[]> NameGenerator() {
+					foreach (char b in headerChars) {
+						foreach (char c in headerChars) {
+							foreach (char d in headerChars) {
+								// Individually-handled URL tag
+								if ((b == 'X') && (c == 'X') && (d == 'X'))
+									continue;
+								else
+									yield return new byte[4] { (byte)'W', (byte)b, (byte)c, (byte)d };
+							}
+						}
+					}
+				}
+
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public UrlFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(header)) {
+							case "WCOM": return "Purchasing information";
+							case "WCOP": return "Copyright information";
+							case "WOAF": return "Official website";
+							case "WOAR": return "Artist homepage";
+							case "WOAS": return "Source website";
+							case "WORS": return "Radio station homepage";
+							case "WPAY": return "Payment website";
+							case "WPUB": return "Publisher homepage";
+							default: return ("URL " + BaseName);
+						}
+					}
+				}
+
+				/// <summary>
+				/// Read a sequence of bytes in the manner appropriate to the
+				/// specific type of field.
+				/// </summary>
+				/// 
+				/// <param name="stream">The data to read.</param>
+				public override void Parse(Stream stream) {
+					var data = new byte[Length];
+					// SplitStrings doesn't care about length, but shouldn't
+					// be passed the unset tail if the stream ended early
+					int read = stream.ReadAll(data, 0, Length);
+					if (read < Length)
+						data = data.Take(read).ToArray();
+
+					values = SplitStrings(data, ISO88591).Take(1);
 				}
 			}
 		}
