@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Metadata.Audio.ID3v2 {
@@ -153,7 +153,6 @@ namespace Metadata.Audio.ID3v2 {
 							foreach (char d in headerChars) {
 								// Individually-handled text tags
 								switch (new string(new char[3] { b, c, d })) {
-									case "BPM":
 									case "CMP":
 									case "CON":
 									case "COP":
@@ -162,18 +161,18 @@ namespace Metadata.Audio.ID3v2 {
 									case "DOR":
 									case "DRC":
 									case "DRL":
-									case "FLT":
+									case "DTG":
+									case "FLT":  // TODO: Implement
 									case "IPL":
 									case "LAN":
 									case "LEN":
 									case "KEY":
 									case "MCL":
-									case "MED":
+									case "MED":  // TODO: Implement
 									case "POS":
 									case "PRO":
 									case "RCK":
 									case "SRC":
-									case "DTG":
 									case "XXX":
 										continue;
 									default:
@@ -217,31 +216,34 @@ namespace Metadata.Audio.ID3v2 {
 				public override string Name {
 					get {
 						switch (ISO88591.GetString(header)) {
+							case "TALB": return "Album";
+							case "TBPM": return "Beats per minute";
+							case "TCOM": return "Composer";
+							case "TENC": return "Encoder";
+							case "TEXT": return "Author";
 							case "TIT1": return "Work";
 							case "TIT2": return "Title";
 							case "TIT3": return "Subtitle";
-							case "TALB": return "Album";
+							case "TMOO": return "Mood";
 							case "TOAL": return "Original album";
-							case "TSST": return "Disk title";
+							case "TOFN": return "Original filename";
+							case "TOLY": return "Original author";
+							case "TOPE": return "Original artist";
+							case "TOWN": return "Owner";
 							case "TPE1": return "Artist";
 							case "TPE2": return "Album artist";
 							case "TPE3": return "Conductor";
 							case "TPE4": return "Remixer";
-							case "TOPE": return "Original artist";
-							case "TEXT": return "Author";
-							case "TOLY": return "Original author";
-							case "TCOM": return "Composer";
-							case "TENC": return "Encoder";
-							case "TMOO": return "Mood";
 							case "TPUB": return "Publisher";
-							case "TOWN": return "Owner";
 							case "TRSN": return "Station name";
 							case "TRSO": return "Station owner";
-							case "TOFN": return "Original filename";
-							case "TSSE": return "Encoding settings";
+							case "TSO2": return "Album artist sort order (iTunes)";
 							case "TSOA": return "Album sort order";
-							case "TSOP": return "Artists sort order";
+							case "TSOC": return "Composer sort order (iTunes)";
+							case "TSOP": return "Artist sort order";
 							case "TSOT": return "Title sort order";
+							case "TSSE": return "Encoding settings";
+							case "TSST": return "Disk title";
 							default: return DefaultName;
 						}
 					}
@@ -393,6 +395,559 @@ namespace Metadata.Audio.ID3v2 {
 					}
 				}
 			}
+			/// <summary>
+			/// A frame containing the track number.
+			/// </summary>
+			[TagField("TPOS")]
+			[TagField("TRCK")]
+			public class OfNumberFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public OfNumberFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// The default case should never occur, but is provided for
+				/// future-proofing purposes.
+				/// </remarks>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(header)) {
+							case "TPOS": return "Disk number";
+							case "TRCK": return "Track number";
+							default: return DefaultName;
+						}
+					}
+				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected override string DefaultName { get; } = "Unknown number";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => values.Select(s => s.Replace("/", " of "));
+			}
+			/// <summary>
+			/// A frame containing the track number.
+			/// </summary>
+			[TagField("TSRC")]
+			public class IsrcFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public IsrcFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Recording ISRC";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => from isrc in values
+															  where isrc.Contains('-') == false
+															  where isrc.Length == 12
+															  select isrc.Insert(2, "-")
+																		 .Insert(6, "-")
+																		 .Insert(9, "-");
+			}
+			/// <summary>
+			/// A frame containing a mapping of role to person.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: This is a good candidate for allowing multiple subtitles
+			/// in some form.
+			/// </remarks>
+			[TagField("TIPL")]
+			[TagField("TMCL")]
+			public class ListMappingFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public ListMappingFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// The default case should never occur, but is provided for
+				/// future-proofing purposes.
+				/// </remarks>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(header)) {
+							case "TIPL": return "Production credits";
+							case "TMCL": return "Artist credits";
+							default: return DefaultName;
+						}
+					}
+				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected override string DefaultName { get; } = "Other credits";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values {
+					get {
+						var valArray = values.ToArray();
+						for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
+							if (j == valArray.Length)
+								yield return String.Format("{{ {0} }}", valArray[i]);
+							else
+								yield return (valArray[i] + (valArray[i].Length > 0 ? ": " : "") + valArray[j]);
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing a length of time, in milliseconds.
+			/// </summary>
+			[TagField("TDLY")]
+			[TagField("TLEN")]
+			public class MsFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public MsFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// The default case should never occur, but is provided for
+				/// future-proofing purposes.
+				/// </remarks>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(header)) {
+							case "TDLY": return "Playlist delay";
+							case "TLEN": return "Length";
+							default: return DefaultName;
+						}
+					}
+				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected override string DefaultName { get; } = "Unknown length";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							if (int.TryParse(s, out int ms)) {
+								yield return TimeSpan.FromMilliseconds(ms).ToString();
+							} else {
+								yield return String.Format("{{ {0} }}", s);
+							}
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing the musical key.
+			/// </summary>
+			[TagField("TKEY")]
+			public class KeyFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public KeyFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Key";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							var cs = s.ToCharArray();
+							if (((s.Length >= 1) && (s.Length <= 3))
+									&& "ABCDEFG".Contains(cs[0])
+									&& ((s.Length < 2) || "b#m".Contains(cs[1]))
+									&& ((s.Length < 3) || ('m' == cs[2])))
+								yield return s.Replace('b', '\u266D').Replace('#', '\u266F');
+							else
+								yield return String.Format("{{ {0} }}", s);
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing the language sung/spoken.
+			/// </summary>
+			[TagField("TLAN")]
+			public class LanguageFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public LanguageFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Language";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Needs better ISO 639-2 lookup: see solution at
+				/// http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+				/// Might also be nice to add eg. ISO 639-3 support in the
+				/// same package ("CultureExtensions").
+				/// </remarks>
+				public override IEnumerable<string> Values => base.Values;
+			}
+			/// <summary>
+			/// A frame containing the genre.
+			/// </summary>
+			[TagField("TCON")]
+			public class GenreFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public GenreFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Genre";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Support ID3v1 genre codes.
+				/// <para />
+				/// TODO: Split "Remix" and "Cover" into separately-displayed
+				/// field; likely same fix as <see cref="ListMappingFrame"/>.
+				/// </remarks>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							if (s.Equals("RX"))
+								yield return "Remix";
+							else if (s.Equals("CR"))
+								yield return "Cover";
+							else
+								yield return s;
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing copyright information.
+			/// </summary>
+			[TagField("TCOP")]
+			public class CopyrightFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public CopyrightFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Copyright";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => values.Select(s => "\u00A9 " + s);
+			}
+			/// <summary>
+			/// A frame containing copyright information.
+			/// </summary>
+			[TagField("TPRO")]
+			public class PCopyrightFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public PCopyrightFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Production copyright";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => values.Select(s => "\u2117 " + s);
+			}
+			/// <summary>
+			/// A frame containing a timestamp.
+			/// </summary>
+			[TagField("TDEN")]
+			[TagField("TDOR")]
+			[TagField("TDRC")]
+			[TagField("TDRL")]
+			[TagField("TDTG")]
+			public class TimeFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public TimeFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// The default case should never occur, but is provided for
+				/// future-proofing purposes.
+				/// </remarks>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(header)) {
+							case "TDEN": return "Encoding date";
+							case "TDOR": return "Original release date";
+							case "TDRC": return "Recording date";
+							case "TDRL": return "Release date";
+							case "TDTG": return "Tagging date";
+							default: return DefaultName;
+						}
+					}
+				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected override string DefaultName { get; } = "Unknown time";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							var times = new DateTime[2];
+							/*TODO: ID3v2 describes timestamps as a "subset"
+							 * of ISO 8601, but may still want to support
+							 * interval notation for additional robustness
+							 */
+
+							bool first = true;
+							foreach (var time in s.Split(new string[2] { "/", "--" }, StringSplitOptions.RemoveEmptyEntries)) {
+								/* This will lose data if more than two
+								 * timestamps are included, but that violates
+								 * ISO 8601 anyway
+								 */
+								if (DateTime.TryParse(
+										time,
+										CultureInfo.InvariantCulture,
+										DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+										out times[first ? 0 : 1]
+										) == false) {
+									times = null;
+									break;
+								}
+								first = false;
+							}
+
+							if (times == null) {
+								yield return s;
+								continue;
+							}
+
+							string ret;
+							if ((times[0] == null) || (times[0] == DateTime.MinValue))
+								ret = "Unknown";
+							else
+								//TODO: Only return the given values
+								ret = times[0].ToString();
+
+							if ((times[1] != null) && (times[1] != DateTime.MinValue)) {
+								//TODO: Localize separator
+								ret += "\u2013";
+
+								//TODO: Only return the given values
+								ret += times[1].ToString();
+							}
+							yield return ret;
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing the "Compilation" flag defined by iTunes.
+			/// </summary>
+			[TagField("TCMP")]
+			public class ITunesCompilationFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public ITunesCompilationFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Compilation (iTunes)";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => from cmp in values
+															  select (cmp.Equals("0")
+																		 ? "Not part of a compilation"
+																		 : (cmp.Equals("1")
+																			   ? "Compilation track"
+																			   : String.Format("{{ {0} }}", cmp)));
+			}
+			/// <summary>
+			/// A frame containing encoder-defined text.
+			/// </summary>
+			[TagField("TXXX")]
+			public class UserTextFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public UserTextFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Other text";
+
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Subtitle => values.FirstOrDefault();
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => values.Skip(1);
+			}
 
 			/// <summary>
 			/// Any frame containing a URL. By the specification, these differ
@@ -475,8 +1030,42 @@ namespace Metadata.Audio.ID3v2 {
 					if (read < Length)
 						data = data.Take(read).ToArray();
 
-					values = SplitStrings(data, ISO88591).Take(1);
+					values = SplitStrings(data, ISO88591);
 				}
+			}
+			/// <summary>
+			/// A frame containing an encoder-defined URL.
+			/// </summary>
+			[TagField("WXXX")]
+			public class UserUrlFrame : UrlFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public UserUrlFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Other URL";
+
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Subtitle => values.FirstOrDefault();
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => values.Skip(1);
 			}
 		}
 	}

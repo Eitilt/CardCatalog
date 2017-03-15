@@ -863,6 +863,418 @@
             
             <param name="stream">The data to read.</param>
         </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame">
+            <summary>
+            A frame containing the track number.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+            
+            <remarks>
+            The default case should never occur, but is provided for
+            future-proofing purposes.
+            </remarks>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame">
+            <summary>
+            A frame containing the track number.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame">
+            <summary>
+            A frame containing a mapping of role to person.
+            </summary>
+            
+            <remarks>
+            TODO: This is a good candidate for allowing multiple subtitles
+            in some form.
+            </remarks>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+            
+            <remarks>
+            The default case should never occur, but is provided for
+            future-proofing purposes.
+            </remarks>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame">
+            <summary>
+            A frame containing a length of time, in milliseconds.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+            
+            <remarks>
+            The default case should never occur, but is provided for
+            future-proofing purposes.
+            </remarks>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame">
+            <summary>
+            A frame containing the musical key.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame">
+            <summary>
+            A frame containing the language sung/spoken.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+            
+            <remarks>
+            TODO: Needs better ISO 639-2 lookup: see solution at
+            http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+            Might also be nice to add eg. ISO 639-3 support in the
+            same package ("CultureExtensions").
+            </remarks>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame">
+            <summary>
+            A frame containing the genre.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+            
+            <remarks>
+            TODO: Support ID3v1 genre codes.
+            <para />
+            TODO: Split "Remix" and "Cover" into separately-displayed
+            field; likely same fix as <see cref="T:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
+            </remarks>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame">
+            <summary>
+            A frame containing copyright information.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame">
+            <summary>
+            A frame containing copyright information.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame">
+            <summary>
+            A frame containing a timestamp.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+            
+            <remarks>
+            The default case should never occur, but is provided for
+            future-proofing purposes.
+            </remarks>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame">
+            <summary>
+            A frame containing the "Compilation" flag defined by iTunes.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame">
+            <summary>
+            A frame containing encoder-defined text.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Subtitle">
+            <summary>
+            The description of the contained values.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
         <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame">
             <summary>
             Any frame containing a URL. By the specification, these differ
@@ -911,6 +1323,40 @@
             </summary>
             
             <param name="stream">The data to read.</param>
+        </member>
+        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame">
+            <summary>
+            A frame containing an encoder-defined URL.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Subtitle">
+            <summary>
+            The description of the contained values.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
         </member>
     </members>
 </doc>
