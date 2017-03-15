@@ -242,8 +242,25 @@ namespace Metadata.Audio.ID3v2 {
 							case "TSOA": return "Album sort order";
 							case "TSOP": return "Artists sort order";
 							case "TSOT": return "Title sort order";
-							default: return ("Text " + BaseName);
+							default: return DefaultName;
 						}
+					}
+				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected virtual string DefaultName { get; } = "Unknown text";
+
+				/// <summary>
+				/// Extra human-readable information describing the field, such as the
+				/// "category" of a header with multiple realizations.
+				/// </summary>
+				public override string Subtitle {
+					get {
+						if (Name.Equals(DefaultName))
+							return BaseName;
+						else
+							return base.Subtitle;
 					}
 				}
 
@@ -435,10 +452,14 @@ namespace Metadata.Audio.ID3v2 {
 							case "WORS": return "Radio station homepage";
 							case "WPAY": return "Payment website";
 							case "WPUB": return "Publisher homepage";
-							default: return ("URL " + BaseName);
+							default: return DefaultName;
 						}
 					}
 				}
+				/// <summary>
+				/// The name to use if the header was not matched.
+				/// </summary>
+				protected override string DefaultName { get; } = "Unknown URL";
 
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the

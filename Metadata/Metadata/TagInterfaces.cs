@@ -101,6 +101,17 @@ namespace Metadata {
 			String.Format("{{ {0} }}", System.Text.Encoding.UTF8.GetString(SystemName));
 
 		/// <summary>
+		/// Extra human-readable information describing the field, such as the
+		/// "category" of a header with multiple realizations.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// The default implementation is to return `null`; if this is not
+		/// suitable, the method should be overridden.
+		/// </remarks>
+		public virtual string Subtitle => null;
+
+		/// <summary>
 		/// All data contained by this field, in a human-readable format.
 		/// </summary>
 		public abstract IEnumerable<string> Values { get; }

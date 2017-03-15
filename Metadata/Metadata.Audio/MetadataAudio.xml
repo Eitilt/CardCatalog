@@ -795,6 +795,17 @@
             The human-readable name of the field.
             </summary>
         </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Subtitle">
+            <summary>
+            Extra human-readable information describing the field, such as the
+            "category" of a header with multiple realizations.
+            </summary>
+        </member>
         <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.BaseName">
             <summary>
             Circumvent the title parsing for subclasses that know the
@@ -886,6 +897,11 @@
         <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Name">
             <summary>
             The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
             </summary>
         </member>
         <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Parse(System.IO.Stream)">
