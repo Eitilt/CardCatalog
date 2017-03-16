@@ -5,41 +5,32 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <DocumentationFile>MetadataAudio.xml</DocumentationFile>
+    <DocumentationFile>CardCatalogCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Crc32.NET" Version="1.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Metadata\Metadata.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Strings\ID3v1.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
+    <PackageReference Include="System.AppDomain" Version="2.0.11" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

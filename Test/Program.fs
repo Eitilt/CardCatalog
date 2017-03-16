@@ -1,6 +1,6 @@
 ﻿open FsCheck
 
-open Metadata.Test.Generators
+open CardCatalog.Test.Generators
 
 [<EntryPoint>]
 let main argv =

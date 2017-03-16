@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Metadata {
+namespace CardCatalog {
 	/// <summary>
 	/// Common properties to retrieve info from multiple tag formats.
 	/// </summary>

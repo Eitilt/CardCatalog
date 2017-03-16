@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Metadata.Audio {
+namespace CardCatalog.Audio {
 	/// <summary>
 	/// Common format-agnostic attributes specific to audio encoding, mapping
 	/// to different fields depending on the particular metadata format.

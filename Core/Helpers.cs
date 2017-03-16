@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Metadata {
+namespace CardCatalog {
 	/// <summary>
 	/// Miscellaneous helper functions and classes.
 	/// </summary>

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-[assembly: Metadata.ScanAssembly]
+[assembly: CardCatalog.ScanAssembly]
 
-namespace Metadata.Audio {
+namespace CardCatalog.Audio {
 	/// <summary>
 	/// Common properties to retrieve info from multiple audio formats.
 	/// </summary>

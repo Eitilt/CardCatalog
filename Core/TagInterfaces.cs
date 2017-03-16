@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Metadata {
+namespace CardCatalog {
 	/// <summary>
 	/// Common format-agnostic attributes mapping to different fields
 	/// depending on how each is expressed in the particular format.

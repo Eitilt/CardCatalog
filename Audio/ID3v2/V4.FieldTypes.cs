@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Metadata.Audio.ID3v2 {
+namespace CardCatalog.Audio.ID3v2 {
 	partial class V4 {
 		/// <summary>
 		/// Encapsulate parsing ID3v2.4 headers to reduce the functions each

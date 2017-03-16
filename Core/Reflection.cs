@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Metadata {
+namespace CardCatalog {
 	internal interface IParsable {
 		int Length { get; }
 		void Parse(Stream stream);

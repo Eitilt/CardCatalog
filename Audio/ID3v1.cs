@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 
-namespace Metadata.Audio {
+namespace CardCatalog.Audio {
 	/// <summary>
 	/// An implementation of the ID3v2.4 standard as described at
 	/// <see href="http://id3.org/ID3v1"/>.

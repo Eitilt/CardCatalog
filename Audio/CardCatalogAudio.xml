@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Metadata.Audio</name>
+        <name>CardCatalog.Audio</name>
     </assembly>
     <members>
         <member name="T:Metadata.Audio.AudioTagAttributes">

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Metadata.Audio.ID3v2 {
+namespace CardCatalog.Audio.ID3v2 {
 	/// <summary>
 	/// An implementation of the ID3v2.2 standard as described at
 	/// <see href="http://id3.org/id3v2-00"/>
