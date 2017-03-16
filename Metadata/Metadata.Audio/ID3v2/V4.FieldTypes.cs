@@ -924,7 +924,7 @@ namespace Metadata.Audio.ID3v2 {
 															  select (cmp.Equals("0")
 																		 ? "Not part of a compilation"
 																		 : (cmp.Equals("1")
-																			   ? "Compilation track"
+																			   ? "From a compilation album"
 																			   : String.Format("{{ {0} }}", cmp)));
 			}
 			/// <summary>
