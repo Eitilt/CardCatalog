@@ -40,6 +40,37 @@
             <seealso cref="P:Metadata.MetadataTag.Fields"/>
             <seealso cref="P:Metadata.Audio.AudioTagFormat.Attributes"/>
         </member>
+        <member name="T:Metadata.Audio.ID3v1">
+            <summary>
+            An implementation of the ID3v2.4 standard as described at
+            <see href="http://id3.org/ID3v1"/>.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v1.Genre">
+            <summary>
+            The list of genres defined by the standard.
+            </summary>
+        </member>
+        <member name="T:Metadata.Audio.ID3v1Extension">
+            <summary>
+            Extension methods for the <see cref="T:Metadata.Audio.ID3v1"/> class.
+            </summary>
+        </member>
+        <member name="F:Metadata.Audio.ID3v1Extension.resources">
+            <summary>
+            Cached reference to the resource dictionary to reduce reflection.
+            </summary>
+        </member>
+        <member name="M:Metadata.Audio.ID3v1Extension.PrintableName(Metadata.Audio.ID3v1.Genre)">
+            <summary>
+            Convert a <see cref="T:Metadata.Audio.ID3v1.Genre"/> value to a human-readable
+            string for the current locale.
+            </summary>
+            
+            <param name="value">The <see cref="T:Metadata.Audio.ID3v1.Genre"/> to format.</param>
+            
+            <returns>The formatted name.</returns>
+        </member>
         <member name="T:Metadata.Audio.ID3v2.ID3v2">
             <summary>
             Shared code for all versions of the ID3v2 standard.
@@ -1109,8 +1140,6 @@
             </summary>
             
             <remarks>
-            TODO: Support ID3v1 genre codes.
-            <para />
             TODO: Split "Remix" and "Cover" into separately-displayed
             field; likely same fix as <see cref="T:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
             </remarks>

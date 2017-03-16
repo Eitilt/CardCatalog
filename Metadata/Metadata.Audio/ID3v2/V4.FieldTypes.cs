@@ -706,8 +706,6 @@ namespace Metadata.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <remarks>
-				/// TODO: Support ID3v1 genre codes.
-				/// <para />
 				/// TODO: Split "Remix" and "Cover" into separately-displayed
 				/// field; likely same fix as <see cref="ListMappingFrame"/>.
 				/// </remarks>
@@ -718,7 +716,18 @@ namespace Metadata.Audio.ID3v2 {
 								yield return "Remix";
 							else if (s.Equals("CR"))
 								yield return "Cover";
-							else
+							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
+								/* Between everything being a digit and the
+								 * length being capped, Parse is guaranteed to
+								 * not throw an exception with the larger
+								 * datatype.
+								 */
+								var num = uint.Parse(s);
+								if (num > byte.MaxValue)
+									yield return s;
+								else
+									yield return ((ID3v1.Genre)num).PrintableName();
+							} else
 								yield return s;
 						}
 					}
