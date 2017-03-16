@@ -4,79 +4,79 @@
         <name>CardCatalog.Audio</name>
     </assembly>
     <members>
-        <member name="T:Metadata.Audio.AudioTagAttributes">
+        <member name="T:CardCatalog.Audio.AudioTagAttributes">
             <summary>
             Common format-agnostic attributes specific to audio encoding, mapping
             to different fields depending on the particular metadata format.
             </summary>
             
-            <seealso cref="T:Metadata.TagField"/>
+            <seealso cref="T:CardCatalog.TagField"/>
         </member>
-        <member name="P:Metadata.Audio.AudioTagAttributes.Name">
+        <member name="P:CardCatalog.Audio.AudioTagAttributes.Name">
             <summary>
             The display name of the enclosing file.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.AudioTagFormat">
+        <member name="T:CardCatalog.Audio.AudioTagFormat">
             <summary>
             Common properties to retrieve info from multiple audio formats.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.Attributes">
+        <member name="P:CardCatalog.Audio.AudioTagFormat.Attributes">
             <summary>
             The proper standardized field redirects for the enclosing
             metadata format.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
-            <seealso cref="P:Metadata.Audio.AudioTagFormat.AudioAttributes"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.Audio.AudioTagFormat.AudioAttributes"/>
         </member>
-        <member name="P:Metadata.Audio.AudioTagFormat.AudioAttributes">
+        <member name="P:CardCatalog.Audio.AudioTagFormat.AudioAttributes">
             <summary>
             The standard field redirects extended with attributes specific to
             audio metadata.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
-            <seealso cref="P:Metadata.Audio.AudioTagFormat.Attributes"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.Audio.AudioTagFormat.Attributes"/>
         </member>
-        <member name="T:Metadata.Audio.ID3v1">
+        <member name="T:CardCatalog.Audio.ID3v1">
             <summary>
             An implementation of the ID3v2.4 standard as described at
             <see href="http://id3.org/ID3v1"/>.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v1.Genre">
+        <member name="T:CardCatalog.Audio.ID3v1.Genre">
             <summary>
             The list of genres defined by the standard.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v1Extension">
+        <member name="T:CardCatalog.Audio.ID3v1Extension">
             <summary>
-            Extension methods for the <see cref="T:Metadata.Audio.ID3v1"/> class.
+            Extension methods for the <see cref="T:CardCatalog.Audio.ID3v1"/> class.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v1Extension.resources">
+        <member name="F:CardCatalog.Audio.ID3v1Extension.resources">
             <summary>
             Cached reference to the resource dictionary to reduce reflection.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v1Extension.PrintableName(Metadata.Audio.ID3v1.Genre)">
+        <member name="M:CardCatalog.Audio.ID3v1Extension.PrintableName(CardCatalog.Audio.ID3v1.Genre)">
             <summary>
-            Convert a <see cref="T:Metadata.Audio.ID3v1.Genre"/> value to a human-readable
+            Convert a <see cref="T:CardCatalog.Audio.ID3v1.Genre"/> value to a human-readable
             string for the current locale.
             </summary>
             
-            <param name="value">The <see cref="T:Metadata.Audio.ID3v1.Genre"/> to format.</param>
+            <param name="value">The <see cref="T:CardCatalog.Audio.ID3v1.Genre"/> to format.</param>
             
             <returns>The formatted name.</returns>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.ID3v2">
+        <member name="T:CardCatalog.Audio.ID3v2.ID3v2">
             <summary>
             Shared code for all versions of the ID3v2 standard.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.ID3v2.ISO88591">
+        <member name="F:CardCatalog.Audio.ID3v2.ID3v2.ISO88591">
             <summary>
             ID3v2 string fields use ISO-8859-1 by default but it does not have
             a static reference like <see cref="P:System.Text.Encoding.UTF8"/>,
@@ -84,12 +84,12 @@
             <see cref="M:System.Text.Encoding.GetEncoding(System.String)"/> each time.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v2.VersionMinor">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v2.VersionMinor">
             <summary>
             The minor version number of the specification used.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v2.FlagUnknown">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v2.FlagUnknown">
             <summary>
             Whether the header includes a non-standard tag, which may result
             in unrecognizable data.
@@ -100,12 +100,12 @@
             indicating their presence.
             </remarks>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.#ctor">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.#ctor">
             <summary>
             Initialize instance properties to default values.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.RetrieveHeader(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.RetrieveHeader(System.IO.Stream)">
             <summary>
             Retrieve the proper number of bytes from the stream to contain the
             header.
@@ -115,7 +115,7 @@
             
             <returns>The number of bytes used by a ID3 header.</returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.UnreadHeader(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.UnreadHeader(System.IO.Stream)">
             <summary>
             "Rewind" retrieving the header so that the stream is left in the
             same state as it started in.
@@ -123,7 +123,7 @@
             
             <param name="stream">The stream to rewind.</param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.VerifyBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the byte array begins with a valid ID3v2 header.
             </summary>
@@ -135,7 +135,7 @@
             major version if it does.
             </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@)">
             <summary>
             Manipulate the byte array to remove the historic synchronization
             pattern, according to the ID3v2 specifications.
@@ -149,9 +149,9 @@
             
             <returns>A new, synchronization-safe byte array.</returns>
             
-            <seealso cref="M:Metadata.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])"/>
+            <seealso cref="M:CardCatalog.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])"/>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)">
             <summary>
             Manipulate the byte array to remove the historic synchronization
             pattern, according to the ID3v2 specifications.
@@ -174,9 +174,9 @@
             
             <returns>A new, synchronization-safe byte array.</returns>
             
-            <seealso cref="M:Metadata.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])"/>
+            <seealso cref="M:CardCatalog.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])"/>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.DeUnsynchronize(System.Byte[])">
             <summary>
             Reverse the unsynchronization scheme as described in the ID3v2
             specifications.
@@ -194,9 +194,9 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
             
-            <seealso cref="M:Metadata.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)"/>
+            <seealso cref="M:CardCatalog.Audio.ID3v2.ID3v2.Unsynchronize(System.Byte[],System.Boolean@,System.Boolean@)"/>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ReadBytesAsync(System.IO.Stream,System.UInt32,System.Boolean)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ReadBytesAsync(System.IO.Stream,System.UInt32,System.Boolean)">
             <summary>
             Asynchronously read a given number of bytes from a stream,
             optionally reversing ID3v2 unsynchronization.
@@ -213,7 +213,7 @@
             may be less than <paramref name="count"/>).
             </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.GetUnsyncronizedBytes(System.IO.Stream,System.UInt32@)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.GetUnsyncronizedBytes(System.IO.Stream,System.UInt32@)">
             <summary>
             Retrieve a given number of bytes from a stream, properly handling
             ID3v2 unsynchronization.
@@ -239,7 +239,7 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseBaseHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 header into
             usable variables.
@@ -249,7 +249,7 @@
             
             <returns>The flag bits in a more accessible format.</returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -278,7 +278,7 @@
             reconstruct a malformed byte array is beyond the intended scope.
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseUnsignedInteger(System.Byte[],System.UInt32)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseUnsignedInteger(System.Byte[],System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -294,7 +294,7 @@
             ID3v2.3 and five for ID3v2.4).
             </exception>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v2.ParseInteger(System.Collections.Generic.IEnumerable{System.Byte},System.UInt32)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseInteger(System.Collections.Generic.IEnumerable{System.Byte},System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -309,57 +309,57 @@
             ID3v2.3 and five for ID3v2.4).
             </exception>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.ID3v23Plus">
+        <member name="T:CardCatalog.Audio.ID3v2.ID3v23Plus">
             <summary>
             Shared code for ID3v2.3 and later.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps">
+        <member name="T:CardCatalog.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps">
             <summary>
             Minor behaviour dependent on the version of the specification.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps.sizeIncludesItself">
+        <member name="F:CardCatalog.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps.sizeIncludesItself">
             <summary>
             Whether the listed size of the extended header includes the
             four bytes containing that size.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps.bitsInSize">
+        <member name="F:CardCatalog.Audio.ID3v2.ID3v23Plus.ExtendedHeaderProps.bitsInSize">
             <summary>
             The number of content bits per byte used to store the size.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.ExtendedHeader">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v23Plus.ExtendedHeader">
             <summary>
             Minor behaviour dependent on the version of the specification.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.HasExtendedHeader">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v23Plus.HasExtendedHeader">
             <summary>
             Indicates that the tag contains an extended header that needs to
             be parsed before any fields.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.IsExperimental">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v23Plus.IsExperimental">
             <summary>
             Indicates that the tag is in an experimental stage.
             </summary>
             
             <remarks>Just as ill-defined in the ID3v2 specification.</remarks>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.ID3v23Plus.TagCRC">
+        <member name="P:CardCatalog.Audio.ID3v2.ID3v23Plus.TagCRC">
             <summary>
             The CRC calculated for the data in the tag, or `null` if is was
             not (yet) read.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v23Plus.#ctor">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v23Plus.#ctor">
             <summary>
             Initialize instance properties to default values.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)">
             <summary>
             Parse an ID3v2 extended header starting at the current position in
             the stream, while retrieving the remainder of the tag in the
@@ -380,7 +380,7 @@
             unsynchronization.
             </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v23Plus.ParseExtendedHeader(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v23Plus.ParseExtendedHeader(System.Byte[])">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 extended
             header into usable variables.
@@ -391,7 +391,7 @@
             
             <remarks>
             This takes a `byte[]` rather than a `Stream` like
-            <see cref="M:Metadata.Audio.ID3v2.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)"/>
+            <see cref="M:CardCatalog.Audio.ID3v2.ID3v23Plus.ReadExtHeaderWithTagAsync(System.IO.Stream,System.UInt32,System.Boolean,System.Boolean)"/>
             because this is intended to be called on pre-processed data of the
             proper length, rather than the raw bytestream.
             </remarks>
@@ -400,7 +400,7 @@
             The de-unsynchronized byte array to parse.
             </param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.ID3v23Plus.CheckCRCIfPresent(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v23Plus.CheckCRCIfPresent(System.Byte[])">
             <summary>
             Compares the CRC saved in the tag with that calculated from the
             given data to ensure no corruption has occurred.
@@ -413,25 +413,25 @@
             data, false if they differ.
             </returns>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V2">
+        <member name="T:CardCatalog.Audio.ID3v2.V2">
             <summary>
             An implementation of the ID3v2.2 standard as described at
             <see href="http://id3.org/id3v2-00"/>
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V2.format">
+        <member name="F:CardCatalog.Audio.ID3v2.V2.format">
             <summary>
             The short name used to represent ID3v2.2 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.Format">
+        <member name="P:CardCatalog.Audio.ID3v2.V2.Format">
             <summary>
             The display name of the tag format.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V2.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.2 header.
             </summary>
@@ -439,41 +439,41 @@
             <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            An empty <see cref="T:CardCatalog.Audio.ID3v2.V2"/> object if the header is in the proper
             format, `null` otherwise.
             </returns>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V2.fields">
+        <member name="F:CardCatalog.Audio.ID3v2.V2.fields">
             <summary>
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V2.FieldBase"/>
+            <seealso cref="P:CardCatalog.Audio.ID3v2.V2.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.FieldBase">
+        <member name="P:CardCatalog.Audio.ID3v2.V2.FieldBase">
             <summary>
             An editable redirect for the low-level data.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V2.AttributeStruct">
+        <member name="T:CardCatalog.Audio.ID3v2.V2.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.2 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.AudioAttributes">
+        <member name="P:CardCatalog.Audio.ID3v2.V2.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.2 tags.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V2.Compressed">
+        <member name="P:CardCatalog.Audio.ID3v2.V2.Compressed">
             <summary>
             Indicates whether the data in the tag has been compressed; the
             ID3v2.2 spec recommends ignoring the tag if so.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V2.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V2.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -486,35 +486,35 @@
             
             <param name="header">The stream to parse.</param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V2.FieldTypes">
+        <member name="T:CardCatalog.Audio.ID3v2.V2.FieldTypes">
             <summary>
             Fields defined in the ID3v2.2 standard.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V3">
+        <member name="T:CardCatalog.Audio.ID3v2.V3">
             <summary>
             An implementation of the ID3v2.3 standard as described at
             <see href="http://id3.org/d3v2.3.0"/>
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V3.format">
+        <member name="F:CardCatalog.Audio.ID3v2.V3.format">
             <summary>
             The short name used to represent ID3v2.3 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.Format">
+        <member name="P:CardCatalog.Audio.ID3v2.V3.Format">
             <summary>
             The display name of the tag format.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.ExtendedHeader">
+        <member name="P:CardCatalog.Audio.ID3v2.V3.ExtendedHeader">
             <summary>
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V3.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.3 header.
             </summary>
@@ -522,40 +522,40 @@
             <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            An empty <see cref="T:CardCatalog.Audio.ID3v2.V2"/> object if the header is in the proper
             format, `null` otherwise.
             </returns>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V3.fields">
+        <member name="F:CardCatalog.Audio.ID3v2.V3.fields">
             <summary>
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V3.FieldBase"/>
+            <seealso cref="P:CardCatalog.Audio.ID3v2.V3.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.FieldBase">
+        <member name="P:CardCatalog.Audio.ID3v2.V3.FieldBase">
             <summary>
             An editable redirect for the low-level data.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V3.AttributeStruct">
+        <member name="T:CardCatalog.Audio.ID3v2.V3.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.3 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.AudioAttributes">
+        <member name="P:CardCatalog.Audio.ID3v2.V3.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.3 tags.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V3.PaddingSize">
+        <member name="P:CardCatalog.Audio.ID3v2.V3.PaddingSize">
             <summary>
             The size of the empty padding at the end of the tag.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V3.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -568,7 +568,7 @@
             
             <param name="header">The stream to parse.</param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V3.ParseExtendedHeader(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.V3.ParseExtendedHeader(System.Byte[])">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 extended
             header into usable variables.
@@ -581,12 +581,12 @@
             The de-unsynchronized byte array to parse.
             </param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V3.FieldTypes">
+        <member name="T:CardCatalog.Audio.ID3v2.V3.FieldTypes">
             <summary>
             Fields specific to the ID3v2.3 standard.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4">
+        <member name="T:CardCatalog.Audio.ID3v2.V4">
             <summary>
             An implementation of the ID3v2.4 standard as described at
             <see href="http://id3.org/id3v2.4.0-structure"/> and
@@ -597,24 +597,24 @@
             TODO: Handle footer
             </remarks>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.format">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.format">
             <summary>
             The short name used to represent ID3v2.4 metadata.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.Format">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.Format">
             <summary>
             The display name of the tag format.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.ExtendedHeader">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.ExtendedHeader">
             <summary>
             Describe the behaviour of the extended header.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.VerifyHeader(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid ID3v2.4 header.
             </summary>
@@ -622,45 +622,45 @@
             <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            An empty <see cref="T:Metadata.Audio.ID3v2.V2"/> object if the header is in the proper
+            An empty <see cref="T:CardCatalog.Audio.ID3v2.V2"/> object if the header is in the proper
             format, `null` otherwise.
             </returns>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.fields">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.fields">
             <summary>
             The underlying low-level tag data.
             </summary>
             
-            <seealso cref="P:Metadata.Audio.ID3v2.V4.FieldBase"/>
+            <seealso cref="P:CardCatalog.Audio.ID3v2.V4.FieldBase"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FieldBase">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FieldBase">
             <summary>
             An editable redirect for the low-level data.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.AttributeStruct">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.4 tags.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.AudioAttributes">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.AudioAttributes">
             <summary>
             Retrieve the audio field attribute mappings for ID3v2.4 tags.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.HasFooter">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.HasFooter">
             <summary>
             Whether the tag is closed with a footer.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.TagIsUpdate">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.TagIsUpdate">
             <summary>
             Whether this tag updates any previous tags
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.#ctor(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Parse a stream according the proper version of the ID3v2
             specification, from the current location.
@@ -673,7 +673,7 @@
             
             <param name="header">The stream to parse.</param>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.ParseExtendedHeader(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.ParseExtendedHeader(System.Byte[])">
             <summary>
             Extract and encapsulate the code used to parse a ID3v2 extended
             header into usable variables.
@@ -686,24 +686,24 @@
             The de-unsynchronized byte array to parse.
             </param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.V4Field">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.V4Field">
             <summary>
             Encapsulate parsing ID3v2.4 headers to reduce the functions each
             field is required to implement.
             </summary>
             
             <remarks>
-            This needs to be located between <see cref="T:Metadata.TagField"/> and the
+            This needs to be located between <see cref="T:CardCatalog.TagField"/> and the
             field classes in the inheritance hierarchy in order for the type
-            registration to recognize the <see cref="T:Metadata.HeaderParserAttribute"/>.
+            registration to recognize the <see cref="T:CardCatalog.HeaderParserAttribute"/>.
             </remarks>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.V4Field.fields">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.fields">
             <summary>
             Reduce the lookups of field types by caching the return.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid field header.
             </summary>
@@ -711,65 +711,65 @@
             <param name="header">The sequence of bytes to check.</param>
             
             <returns>
-            An empty <see cref="T:Metadata.TagField"/> object if the header is in the
+            An empty <see cref="T:CardCatalog.TagField"/> object if the header is in the
             proper format, `null` otherwise.
             </returns>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields">
             <summary>
             Fields specific to the ID3v2.4 standard.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId">
             <summary>
             An identifier unique to a particular database.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.header">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.header">
             <summary>
             The easy representation of the field header.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.SystemName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.owner">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.owner">
             <summary>
             The database with which this ID is associated.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.id">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.id">
             <summary>
             The raw identifier.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UniqueFileId.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the specific
             type of field.
@@ -777,17 +777,17 @@
             
             <param name="stream">The data to read.</param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame">
             <summary>
             Any of the many tags containing purely textual data.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.headerChars">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.headerChars">
             <summary>
             Valid ID3v2 field identification characters.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.NameGenerator">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.NameGenerator">
             <summary>
             Generate all text field headers that aren't handled by
             other specialized classes.
@@ -797,63 +797,63 @@
             The field headers using default text formatting.
             </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.header">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.header">
             <summary>
             The raw field header.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Subtitle">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.Subtitle">
             <summary>
             Extra human-readable information describing the field, such as the
             "category" of a header with multiple realizations.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.BaseName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.BaseName">
             <summary>
             Circumvent the title parsing for subclasses that know the
             field doesn't contain basic text data.
             </summary>
         </member>
-        <member name="F:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.values">
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.values">
             <summary>
             All strings contained within this field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.ReadFromByteOrderMark(System.Byte[])">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.ReadFromByteOrderMark(System.Byte[])">
              <summary>
              Read a sequence of bytes according to the encoding implied
              by a byte-order-mark at the head.
@@ -871,7 +871,7 @@
              isn't headed by a recognized byte-order-mark.
              </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SplitStrings(System.Byte[],System.Text.Encoding)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SplitStrings(System.Byte[],System.Text.Encoding)">
             <summary>
             Parse a sequence of bytes as a list of null-separated
             strings.
@@ -886,7 +886,7 @@
             
             <returns>The separated and parsed strings.</returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.
@@ -894,26 +894,26 @@
             
             <param name="stream">The data to read.</param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame">
             <summary>
             A frame containing the track number.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
@@ -923,46 +923,46 @@
             future-proofing purposes.
             </remarks>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.IsrcFrame">
             <summary>
             A frame containing the track number.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.IsrcFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.IsrcFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.IsrcFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.IsrcFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame">
             <summary>
             A frame containing a mapping of role to person.
             </summary>
@@ -972,21 +972,21 @@
             in some form.
             </remarks>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
@@ -996,36 +996,36 @@
             future-proofing purposes.
             </remarks>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame">
             <summary>
             A frame containing a length of time, in milliseconds.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
@@ -1035,70 +1035,70 @@
             future-proofing purposes.
             </remarks>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.MsFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.KeyFrame">
             <summary>
             A frame containing the musical key.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.KeyFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.KeyFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.KeyFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.KeyFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.LanguageFrame">
             <summary>
             A frame containing the language sung/spoken.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.LanguageFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.LanguageFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.LanguageFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.LanguageFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
@@ -1110,118 +1110,118 @@
             same package ("CultureExtensions").
             </remarks>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame">
             <summary>
             A frame containing the genre.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.GenreFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
             
             <remarks>
             TODO: Split "Remix" and "Cover" into separately-displayed
-            field; likely same fix as <see cref="T:Metadata.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
+            field; likely same fix as <see cref="T:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
             </remarks>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.CopyrightFrame">
             <summary>
             A frame containing copyright information.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.CopyrightFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.CopyrightFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.PCopyrightFrame">
             <summary>
             A frame containing copyright information.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame">
             <summary>
             A frame containing a timestamp.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
@@ -1231,87 +1231,87 @@
             future-proofing purposes.
             </remarks>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.TimeFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame">
             <summary>
             A frame containing the "Compilation" flag defined by iTunes.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.ITunesCompilationFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame">
             <summary>
             A frame containing encoder-defined text.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Subtitle">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame.Subtitle">
             <summary>
             The description of the contained values.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserTextFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame">
             <summary>
             Any frame containing a URL. By the specification, these differ
             from the base text by having a maximum of one occurrence and
             only allowing the ISO-8859-1 encoding.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.NameGenerator">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.NameGenerator">
             <summary>
             Generate all text field headers that aren't handled by
             other specialized classes.
@@ -1321,31 +1321,31 @@
             The field headers using default text formatting.
             </returns>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.DefaultName">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UrlFrame.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.
@@ -1353,36 +1353,36 @@
             
             <param name="stream">The data to read.</param>
         </member>
-        <member name="T:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame">
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame">
             <summary>
             A frame containing an encoder-defined URL.
             </summary>
         </member>
-        <member name="M:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:Metadata.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
             should not be called manually.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Name">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Name">
             <summary>
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Subtitle">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Subtitle">
             <summary>
             The description of the contained values.
             </summary>
         </member>
-        <member name="P:Metadata.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Values">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame.Values">
             <summary>
             All values contained within this field.
             </summary>

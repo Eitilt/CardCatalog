@@ -4,83 +4,83 @@
         <name>CardCatalog.Core</name>
     </assembly>
     <members>
-        <member name="T:Metadata.FieldDictionary">
+        <member name="T:CardCatalog.FieldDictionary">
             <summary>
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
-            proper equality of keys to <see cref="T:Metadata.TagField"/> objects.
+            proper equality of keys to <see cref="T:CardCatalog.TagField"/> objects.
             </summary>
         </member>
-        <member name="F:Metadata.FieldDictionary.keyComparer">
+        <member name="F:CardCatalog.FieldDictionary.keyComparer">
             <summary>
-            An instance of <see cref="T:Metadata.Helpers.SequenceEqualityComparer`1"/>
+            An instance of <see cref="T:CardCatalog.Helpers.SequenceEqualityComparer`1"/>
             specialized to byte arrays.
             </summary>
         </member>
-        <member name="P:Metadata.FieldDictionary.KeyComparer">
+        <member name="P:CardCatalog.FieldDictionary.KeyComparer">
             <summary>
             Provide access to a comparer specialized for field keys.
             </summary>
         </member>
-        <member name="M:Metadata.FieldDictionary.#ctor">
+        <member name="M:CardCatalog.FieldDictionary.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Metadata.FieldDictionary"/>
+            Initializes a new instance of the <see cref="T:CardCatalog.FieldDictionary"/>
             class that is empty and has the default initial capacity.
             </summary>
             
             <remarks>
-            Every key in a <see cref="T:Metadata.FieldDictionary"/> must have a unique
+            Every key in a <see cref="T:CardCatalog.FieldDictionary"/> must have a unique
             sequence of values.
             <para/>
             If you can estimate the size of the collection, using
-            <see cref="M:Metadata.FieldDictionary.#ctor(System.Int32)"/> eliminates the need to perform
+            <see cref="M:CardCatalog.FieldDictionary.#ctor(System.Int32)"/> eliminates the need to perform
             a number of resizing operations while adding elements.
             <para/>
             This constructor is an O(1) operation.
             </remarks>
         </member>
-        <member name="M:Metadata.FieldDictionary.#ctor(System.Int32)">
+        <member name="M:CardCatalog.FieldDictionary.#ctor(System.Int32)">
             <summary>
-            Initializes a new instance of the <see cref="T:Metadata.FieldDictionary"/>
+            Initializes a new instance of the <see cref="T:CardCatalog.FieldDictionary"/>
             class that is empty and has the specified initial capacity.
             </summary>
             
             <remarks>
-            Every key in a <see cref="T:Metadata.FieldDictionary"/> must have a unique
+            Every key in a <see cref="T:CardCatalog.FieldDictionary"/> must have a unique
             sequence of values.
             <para/>
-            The capacity of a <see cref="T:Metadata.FieldDictionary"/> is the number of
-            elements that can be added to the <see cref="T:Metadata.FieldDictionary"/>
+            The capacity of a <see cref="T:CardCatalog.FieldDictionary"/> is the number of
+            elements that can be added to the <see cref="T:CardCatalog.FieldDictionary"/>
             before resizing is necessary. As elements are added to a
-            <see cref="T:Metadata.FieldDictionary"/>, the capacity is automatically
+            <see cref="T:CardCatalog.FieldDictionary"/>, the capacity is automatically
             increased as required by reallocating the internal array.
             Therefore, if the largest size of the collection can be estimated,
             specifying an initial capacity of that size or greater eliminates
             the need to perform a number of resizing operations while adding
-            elements to the <see cref="T:Metadata.FieldDictionary"/>.
+            elements to the <see cref="T:CardCatalog.FieldDictionary"/>.
             <para/>
             This constructor is an O(1) operation.
             </remarks>
             
             <param name="capacity">
             The initial number of elements that the
-            <see cref="T:Metadata.FieldDictionary"/> can contain.
+            <see cref="T:CardCatalog.FieldDictionary"/> can contain.
             </param>
             <exception cref="T:System.ArgumentOutOfRangeException">
             <paramref name="capacity"/> is less than 0.
             </exception>
         </member>
-        <member name="M:Metadata.FieldDictionary.#ctor(System.Collections.Generic.Dictionary{System.Byte[],System.Collections.Generic.IEnumerable{Metadata.TagField}})">
+        <member name="M:CardCatalog.FieldDictionary.#ctor(System.Collections.Generic.Dictionary{System.Byte[],System.Collections.Generic.IEnumerable{CardCatalog.TagField}})">
             <summary>
-            Initializes a new instance of a <see cref="T:Metadata.FieldDictionary"/>
+            Initializes a new instance of a <see cref="T:CardCatalog.FieldDictionary"/>
             that contains elements copied from <paramref name="dictionary"/>.
             </summary>
             
             <remarks>
-            Every key in a <see cref="T:Metadata.FieldDictionary"/> must have a unique
+            Every key in a <see cref="T:CardCatalog.FieldDictionary"/> must have a unique
             sequence of values; every key in <paramref name="dictionary"/>
             must therefore also have a unique sequence of values.
             <para/>
-            IThe initial capacity of the new <see cref="T:Metadata.FieldDictionary"/> is
+            IThe initial capacity of the new <see cref="T:CardCatalog.FieldDictionary"/> is
             large enough to contain all the elements in
             <paramref name="dictionary"/>.
             <para/>
@@ -89,22 +89,22 @@
             </remarks>
             
             <param name="dictionary">
-            The <see cref="T:Metadata.FieldDictionary"/> whose elements are copied to the
-            new <see cref="T:Metadata.FieldDictionary"/>.
+            The <see cref="T:CardCatalog.FieldDictionary"/> whose elements are copied to the
+            new <see cref="T:CardCatalog.FieldDictionary"/>.
             </param>
         </member>
-        <member name="T:Metadata.IReadOnlyFieldDictionary">
+        <member name="T:CardCatalog.IReadOnlyFieldDictionary">
             <summary>
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
-            proper format for keys to <see cref="T:Metadata.TagField"/> objects.
+            proper format for keys to <see cref="T:CardCatalog.TagField"/> objects.
             </summary>
         </member>
-        <member name="T:Metadata.Helpers">
+        <member name="T:CardCatalog.Helpers">
             <summary>
             Miscellaneous helper functions and classes.
             </summary>
         </member>
-        <member name="M:Metadata.Helpers.GetOrCreate``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
+        <member name="M:CardCatalog.Helpers.GetOrCreate``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
             <summary>
             Retrieve the requested value from the dictionary, creating a new
             entry if necessary.
@@ -127,7 +127,7 @@
             <paramref name="dictionary"/>.
             </returns>
         </member>
-        <member name="T:Metadata.Helpers.SequenceEqualityComparer`1">
+        <member name="T:CardCatalog.Helpers.SequenceEqualityComparer`1">
             <summary>
             Test sequences for equality based on their values, not their
             object references.
@@ -141,20 +141,20 @@
             The underlying type of the sequence.
             </typeparam>
         </member>
-        <member name="F:Metadata.Helpers.SequenceEqualityComparer`1.elementComparer">
+        <member name="F:CardCatalog.Helpers.SequenceEqualityComparer`1.elementComparer">
             <summary>
             Provide a more robust meant of testing the equality of
             elements.
             </summary>
         </member>
-        <member name="M:Metadata.Helpers.SequenceEqualityComparer`1.Equals(`0[],`0[])">
+        <member name="M:CardCatalog.Helpers.SequenceEqualityComparer`1.Equals(`0[],`0[])">
             <summary>
             Check two sequences for value equality.
             </summary>
             
             <returns>Whether the sequences are equal.</returns>
         </member>
-        <member name="M:Metadata.Helpers.SequenceEqualityComparer`1.GetHashCode(`0[])">
+        <member name="M:CardCatalog.Helpers.SequenceEqualityComparer`1.GetHashCode(`0[])">
             <summary>
             Calculate a hash code based on the values of the sequence.
             </summary>
@@ -163,7 +163,7 @@
             
             <returns>The calculated hash.</returns>
         </member>
-        <member name="M:Metadata.Helpers.ReadAll(System.IO.Stream,System.Byte[],System.Int32,System.Int32)">
+        <member name="M:CardCatalog.Helpers.ReadAll(System.IO.Stream,System.Byte[],System.Int32,System.Int32)">
             <summary>
             Read from the stream until it ends or the requested number of
             bytes has been reached.
@@ -186,18 +186,18 @@
             number of bytes was reached.
             </returns>
         </member>
-        <member name="T:Metadata.ScanAssemblyAttribute">
+        <member name="T:CardCatalog.ScanAssemblyAttribute">
             <summary>
             Indicate that the assembly should be scanned for classes marked with
-            <see cref="T:Metadata.MetadataFormatAttribute"/> to automatically register.
+            <see cref="T:CardCatalog.MetadataFormatAttribute"/> to automatically register.
             
             This class cannot be inherited.
             </summary>
             
-            <seealso cref="T:Metadata.MetadataFormatAttribute"/>
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)"/>
+            <seealso cref="T:CardCatalog.MetadataFormatAttribute"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register(System.Reflection.Assembly)"/>
         </member>
-        <member name="T:Metadata.MetadataFormatAttribute">
+        <member name="T:CardCatalog.MetadataFormatAttribute">
             <summary>
             Indicate that the class implements a metadata format specification.
             
@@ -205,22 +205,22 @@
             </summary>
             
             <remarks>
-            The class must implement <see cref="T:Metadata.MetadataTag"/>.
+            The class must implement <see cref="T:CardCatalog.MetadataTag"/>.
             </remarks>
             
-            <seealso cref="T:Metadata.ScanAssemblyAttribute"/>
-            <seealso cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>
+            <seealso cref="T:CardCatalog.ScanAssemblyAttribute"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>
         </member>
-        <member name="P:Metadata.MetadataFormatAttribute.Name">
+        <member name="P:CardCatalog.MetadataFormatAttribute.Name">
             <summary>
             The unique short name representing this format.
             </summary>
         </member>
-        <member name="M:Metadata.MetadataFormatAttribute.#ctor(System.String)">
+        <member name="M:CardCatalog.MetadataFormatAttribute.#ctor(System.String)">
             <summary>
             Initializes a new instance of the
-            <see cref="T:Metadata.MetadataFormatAttribute"/> class with the specified
-            <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
+            <see cref="T:CardCatalog.MetadataFormatAttribute"/> class with the specified
+            <see cref="P:CardCatalog.MetadataFormatAttribute.Name"/>.
             </summary>
             
             <param name="name">
@@ -230,7 +230,7 @@
             type itself.
             </param>
         </member>
-        <member name="T:Metadata.HeaderParserAttribute">
+        <member name="T:CardCatalog.HeaderParserAttribute">
             <summary>
             Marks a method as being a validation function checking a binary header
             against that defined by the enclosing metadata specification.
@@ -246,9 +246,9 @@
             TODO: Add discussion of required signature according to exceptions in
             method Register(...)
             
-            <seealso cref="M:Metadata.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
         </member>
-        <member name="P:Metadata.HeaderParserAttribute.HeaderLength">
+        <member name="P:CardCatalog.HeaderParserAttribute.HeaderLength">
             <summary>
             The number of bytes this function processes to verify that the
             proper format header is present.
@@ -258,11 +258,11 @@
             New value for `set` is less than one.
             </exception>
         </member>
-        <member name="M:Metadata.HeaderParserAttribute.#ctor(System.UInt32)">
+        <member name="M:CardCatalog.HeaderParserAttribute.#ctor(System.UInt32)">
             <summary>
             Initializes a new instance of the
-            <see cref="T:Metadata.HeaderParserAttribute"/> class with the specified
-            <see cref="P:Metadata.HeaderParserAttribute.HeaderLength"/>.
+            <see cref="T:CardCatalog.HeaderParserAttribute"/> class with the specified
+            <see cref="P:CardCatalog.HeaderParserAttribute.HeaderLength"/>.
             </summary>
             
             <param name="length">
@@ -274,7 +274,7 @@
             Value of <paramref name="length"/> is less than one.
             </exception>
         </member>
-        <member name="T:Metadata.TagFieldAttribute">
+        <member name="T:CardCatalog.TagFieldAttribute">
             <summary>
             Marks a class as describing a field within a tag in a particular
             metadata format.
@@ -282,16 +282,16 @@
             
             <remarks>
             An exception will be thrown on registration if the class does not
-            implement <see cref="T:Metadata.TagField"/>.
+            implement <see cref="T:CardCatalog.TagField"/>.
             </remarks>
         </member>
-        <member name="F:Metadata.TagFieldAttribute.ISO88591">
+        <member name="F:CardCatalog.TagFieldAttribute.ISO88591">
             <summary>
             Reference to the ISO-8859-1 character encoding to allow passing
             byte headers as compile-time constant `string`s.
             </summary>
         </member>
-        <member name="P:Metadata.TagFieldAttribute.Format">
+        <member name="P:CardCatalog.TagFieldAttribute.Format">
             <summary>
             The short name associated with the metadata format, or `null` if
             it should be obtained from the enclosing type.
@@ -299,35 +299,35 @@
             
             <remarks>
             If this is `null` (the default), the immediately-enclosing type
-            <em>must</em>  have a <see cref="T:Metadata.MetadataFormatAttribute"/>
+            <em>must</em>  have a <see cref="T:CardCatalog.MetadataFormatAttribute"/>
             attribute, or an exception will be thrown on the call to
-            <see cref="M:Metadata.MetadataFormat.Register``1(System.String,System.Byte[])"/>.
+            <see cref="M:CardCatalog.MetadataFormat.Register``1(System.String,System.Byte[])"/>.
             </remarks>
             
-            <seealso cref="P:Metadata.MetadataFormatAttribute.Name"/>
+            <seealso cref="P:CardCatalog.MetadataFormatAttribute.Name"/>
         </member>
-        <member name="P:Metadata.TagFieldAttribute.Header">
+        <member name="P:CardCatalog.TagFieldAttribute.Header">
             <summary>
             A sequence of bytes used to uniquely identify this type of field.
             </summary>
             
             <remarks>
             If multiple fields have the same structure and differ only in this
-            identifier, the <see cref="T:Metadata.TagFieldAttribute"/> may be added to a
+            identifier, the <see cref="T:CardCatalog.TagFieldAttribute"/> may be added to a
             common class once for each such tag.
             </remarks>
         </member>
-        <member name="M:Metadata.TagFieldAttribute.#ctor">
+        <member name="M:CardCatalog.TagFieldAttribute.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:Metadata.TagFieldAttribute"/>
+            Initializes a new instance of the <see cref="T:CardCatalog.TagFieldAttribute"/>
             class with headers as given by any members decorated with a
-            <see cref="T:Metadata.FieldNamesAttribute"/>.
+            <see cref="T:CardCatalog.FieldNamesAttribute"/>.
             </summary>
         </member>
-        <member name="M:Metadata.TagFieldAttribute.#ctor(System.String)">
+        <member name="M:CardCatalog.TagFieldAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:Metadata.TagFieldAttribute"/>
-            class with the specified <see cref="P:Metadata.TagFieldAttribute.Header"/>.
+            Initializes a new instance of the <see cref="T:CardCatalog.TagFieldAttribute"/>
+            class with the specified <see cref="P:CardCatalog.TagFieldAttribute.Header"/>.
             </summary>
             
             <remarks>
@@ -340,7 +340,7 @@
             as an ISO-8859-1 string.
             </param>
         </member>
-        <member name="T:Metadata.FieldNamesAttribute">
+        <member name="T:CardCatalog.FieldNamesAttribute">
             <summary>
             Marks a method as returning a list of the headers to which the
             enclosing class applies, or a parameter/property as being such a
@@ -349,7 +349,7 @@
             
             <remarks>
             The field will not be registered under the returned under the returned
-            headers unless the class has a <see cref="T:Metadata.TagFieldAttribute"/> without
+            headers unless the class has a <see cref="T:CardCatalog.TagFieldAttribute"/> without
             any string parameter.
             <para />
             If on a method: an exception will be thrown on class registration if
@@ -359,18 +359,18 @@
             `static` and `public`.
             </remarks>
         </member>
-        <member name="T:Metadata.MetadataFormat">
+        <member name="T:CardCatalog.MetadataFormat">
             <summary>
             A data-free class providing a common means to work with multiple
             metadata formats.
             </summary>
         </member>
-        <member name="F:Metadata.MetadataFormat.tagFormats">
+        <member name="F:CardCatalog.MetadataFormat.tagFormats">
             <summary>
             The class encapsulating each registered metadata format.
             </summary>
         </member>
-        <member name="M:Metadata.MetadataFormat.FieldTypes(System.String)">
+        <member name="M:CardCatalog.MetadataFormat.FieldTypes(System.String)">
             <summary>
             Get all field types registered for the given metadata format.
             </summary>
@@ -378,24 +378,24 @@
             <param name="format">The short name of the desired format.</param>
             
             <returns>
-            The classes implementing each <see cref="T:Metadata.TagField"/>.
+            The classes implementing each <see cref="T:CardCatalog.TagField"/>.
             </returns>
         </member>
-        <member name="F:Metadata.MetadataFormat.assemblies">
+        <member name="F:CardCatalog.MetadataFormat.assemblies">
             <summary>
             A registry of previously-scanned assemblies in order to prevent
             unnecessary use of reflection methods.
             </summary>
         </member>
-        <member name="M:Metadata.MetadataFormat.#cctor">
+        <member name="M:CardCatalog.MetadataFormat.#cctor">
             <summary>
             Automatically add any metadata classes in opened assemblies on
             first call to the class.
             </summary>
             
-            <seealso cref="M:Metadata.MetadataFormat.RefreshFormats``1"/>
+            <seealso cref="M:CardCatalog.MetadataFormat.RefreshFormats``1"/>
         </member>
-        <member name="M:Metadata.MetadataFormat.RefreshFormats``1">
+        <member name="M:CardCatalog.MetadataFormat.RefreshFormats``1">
             <summary>
             Scan the assembly enclosing the specified for implementations of
             metadata formats.
@@ -410,7 +410,7 @@
             Any type from the assembly to scan.
             </typeparam>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.Reflection.Assembly)">
+        <member name="M:CardCatalog.MetadataFormat.Register(System.Reflection.Assembly)">
             <summary>
             Scan the given assembly for all types marked as implementing a
             metadata format in a suitable manner for automatic lookup.
@@ -421,13 +421,13 @@
             
             <param name="assembly">The assembly to scan.</param>
             
-            <seealso cref="T:Metadata.MetadataFormatAttribute"/>
+            <seealso cref="T:CardCatalog.MetadataFormatAttribute"/>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register``1">
+        <member name="M:CardCatalog.MetadataFormat.Register``1">
             <summary>
             Add the given metadata format type to the lookup tables according
             to the  descriptor specified in its
-            <see cref="P:Metadata.MetadataFormatAttribute.Name"/>.
+            <see cref="P:CardCatalog.MetadataFormatAttribute.Name"/>.
             </summary>
             
             <remarks>
@@ -436,28 +436,28 @@
             </remarks>
             
             <typeparam name="T">
-            The <see cref="T:Metadata.MetadataTag"/> class implementing the format.
+            The <see cref="T:CardCatalog.MetadataTag"/> class implementing the format.
             </typeparam>
             
-            <seealso cref="T:Metadata.HeaderParserAttribute"/>
+            <seealso cref="T:CardCatalog.HeaderParserAttribute"/>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register``1(System.String)">
+        <member name="M:CardCatalog.MetadataFormat.Register``1(System.String)">
             <summary>
             Add the given metadata format type to the lookup tables under the
             specified custom descriptor, even if it does not have any
-            associated <see cref="T:Metadata.MetadataFormatAttribute"/>.
+            associated <see cref="T:CardCatalog.MetadataFormatAttribute"/>.
             </summary>
             
             <remarks>
             The validation function must still be identified with a
-            <see cref="T:Metadata.HeaderParserAttribute"/>.
+            <see cref="T:CardCatalog.HeaderParserAttribute"/>.
             <para/>
             Note that if multiple types are registered under the same name,
             any later registrations will override the previous.
             </remarks>
             
             <typeparam name="T">
-            The <see cref="T:Metadata.MetadataTag"/> class implementing the format.
+            The <see cref="T:CardCatalog.MetadataTag"/> class implementing the format.
             </typeparam>
             
             <param name="format">
@@ -467,14 +467,14 @@
             It is recommended that this also be exposed as a constant.
             </param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register``1(System.String,System.Byte[])">
+        <member name="M:CardCatalog.MetadataFormat.Register``1(System.String,System.Byte[])">
             <summary>
             Add the given tag field type to the lookup tables under the proper
             format specifier.
             </summary>
             
             <typeparam name="T">
-            The <see cref="T:Metadata.TagField"/> class implementing the field.
+            The <see cref="T:CardCatalog.TagField"/> class implementing the field.
             </typeparam>
             
             <param name="format">
@@ -485,14 +485,14 @@
             The unique specifier of this field.
             </param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
+        <member name="M:CardCatalog.MetadataFormat.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
             <summary>
             Add the given tag field type to the lookup tables under the proper
             format specifier.
             </summary>
             
             <typeparam name="T">
-            The <see cref="T:Metadata.TagField"/> class implementing the field.
+            The <see cref="T:CardCatalog.TagField"/> class implementing the field.
             </typeparam>
             
             <param name="format">
@@ -503,7 +503,7 @@
             The unique specifiers of this field.
             </param>
         </member>
-        <member name="M:Metadata.MetadataFormat.MethodSanityChecks``1(System.Reflection.MethodInfo)">
+        <member name="M:CardCatalog.MetadataFormat.MethodSanityChecks``1(System.Reflection.MethodInfo)">
             <summary>
             Group the restriction checking of validation functions for easy
             reuse.
@@ -515,7 +515,7 @@
             
             <param name="method">The validation function to check.</param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
+        <member name="M:CardCatalog.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
             <summary>
             Add the given format initialization method to the lookup tables
             under the specified custom descriptor.
@@ -523,7 +523,7 @@
             
             <remarks>
             This should almost purely be called via
-            <see cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>, and has been separated
+            <see cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>, and has been separated
             primarily for code clarity.
             </remarks>
             
@@ -537,7 +537,7 @@
             </param>
             <param name="method">The method to add.</param>
         </member>
-        <member name="M:Metadata.MetadataFormat.Register(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
+        <member name="M:CardCatalog.MetadataFormat.Register(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
             <summary>
             Add the given field initialization method to the lookup tables
             under the specified custom descriptor.
@@ -549,7 +549,7 @@
             any later registrations will override the previous.
             <para/>
             This should almost purely be called via
-            <see cref="M:Metadata.MetadataFormat.Register``1(System.String)"/>, and has been separated
+            <see cref="M:CardCatalog.MetadataFormat.Register``1(System.String)"/>, and has been separated
             primarily for code clarity.
             </remarks>
             
@@ -566,57 +566,57 @@
             </param>
             <param name="method">The method to add.</param>
         </member>
-        <member name="M:Metadata.MetadataFormat.ParseAsync(System.IO.Stream)">
+        <member name="M:CardCatalog.MetadataFormat.ParseAsync(System.IO.Stream)">
             <summary>
             Parse all recognized tags in a stream asynchronously.
             </summary>
             
             <param name="stream">The stream to parse.</param>
             
-            <returns>The resulting <see cref="T:Metadata.MetadataTag"/>s.</returns>
+            <returns>The resulting <see cref="T:CardCatalog.MetadataTag"/>s.</returns>
         </member>
-        <member name="T:Metadata.MetadataTag">
+        <member name="T:CardCatalog.MetadataTag">
             <summary>
             Common properties to retrieve info from multiple tag formats.
             </summary>
         </member>
-        <member name="P:Metadata.MetadataTag.Format">
+        <member name="P:CardCatalog.MetadataTag.Format">
             <summary>
             The display name of the tag format.
             </summary>
         </member>
-        <member name="P:Metadata.MetadataTag.Length">
+        <member name="P:CardCatalog.MetadataTag.Length">
             <summary>
             The length in bytes of the tag, not including the header.
             </summary>
             
             <remarks>
             The underlying value should be set in any function marked with
-            <see cref="T:Metadata.HeaderParserAttribute"/>; if that function
+            <see cref="T:CardCatalog.HeaderParserAttribute"/>; if that function
             sets it to 0, the incoming stream will be read according to
             </remarks>
         </member>
-        <member name="P:Metadata.MetadataTag.FieldBase">
+        <member name="P:CardCatalog.MetadataTag.FieldBase">
             <summary>
             An editable redirect for the low-level data.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
         </member>
-        <member name="P:Metadata.MetadataTag.Fields">
+        <member name="P:CardCatalog.MetadataTag.Fields">
             <summary>
             The low-level representations of the tag data.
             </summary>
         </member>
-        <member name="P:Metadata.MetadataTag.Attributes">
+        <member name="P:CardCatalog.MetadataTag.Attributes">
             <summary>
             The proper standardized field redirects for the enclosing
             metadata format.
             </summary>
             
-            <seealso cref="P:Metadata.MetadataTag.Fields"/>
+            <seealso cref="P:CardCatalog.MetadataTag.Fields"/>
         </member>
-        <member name="M:Metadata.MetadataTag.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.MetadataTag.Parse(System.IO.Stream)">
             <summary>
             Parse the fields contained within a tag.
             </summary>
@@ -627,9 +627,9 @@
             
             <param name="stream">The stream to read.</param>
         </member>
-        <member name="M:Metadata.ReflectionData`1.ParseAsync(System.IO.Stream,System.Collections.Generic.IEnumerable{Metadata.ReflectionData{`0}})">
+        <member name="M:CardCatalog.ReflectionData`1.ParseAsync(System.IO.Stream,System.Collections.Generic.IEnumerable{CardCatalog.ReflectionData{`0}})">
             <summary>
-            Check the stream against all registered <see cref="T:Metadata.IParsable"/>
+            Check the stream against all registered <see cref="T:CardCatalog.IParsable"/>
             formats, and return the sequence the occur in within the file.
             </summary>
             
@@ -649,63 +649,63 @@
             
             <returns>The generated objects.</returns>
         </member>
-        <member name="T:Metadata.ITagAttributes">
+        <member name="T:CardCatalog.ITagAttributes">
             <summary>
             Common format-agnostic attributes mapping to different fields
             depending on how each is expressed in the particular format.
             </summary>
         </member>
-        <member name="P:Metadata.ITagAttributes.Name">
+        <member name="P:CardCatalog.ITagAttributes.Name">
             <summary>
             The display names of the enclosing file.
             </summary>
         </member>
-        <member name="T:Metadata.TagField">
+        <member name="T:CardCatalog.TagField">
             <summary>
             A single point of data saved in the tag, with default helper
             implementations.
             </summary>
         </member>
-        <member name="T:Metadata.TagField.Empty">
+        <member name="T:CardCatalog.TagField.Empty">
             <summary>
-            A default implementation of <see cref="T:Metadata.TagField"/>, not providing
+            A default implementation of <see cref="T:CardCatalog.TagField"/>, not providing
             any data formatting.
             </summary>
         </member>
-        <member name="M:Metadata.TagField.Empty.#ctor(System.Byte[],System.Int32)">
+        <member name="M:CardCatalog.TagField.Empty.#ctor(System.Byte[],System.Int32)">
             <summary>
             The minimal constructor for creating a skeleton instance.
             </summary>
             
             <param name="name">
-            The value to save to <see cref="P:Metadata.TagField.Empty.SystemName"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Empty.SystemName"/>.
             </param>
             <param name="length">
-            The value to save to <see cref="P:Metadata.TagField.Length"/>.
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="F:Metadata.TagField.Empty.name">
+        <member name="F:CardCatalog.TagField.Empty.name">
             <summary>
             Underlying field ID to work around the lack of a
-            <see cref="P:Metadata.TagField.Empty.SystemName"/>.set.
+            <see cref="P:CardCatalog.TagField.Empty.SystemName"/>.set.
             </summary>
         </member>
-        <member name="P:Metadata.TagField.Empty.SystemName">
+        <member name="P:CardCatalog.TagField.Empty.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="F:Metadata.TagField.Empty.data">
+        <member name="F:CardCatalog.TagField.Empty.data">
             <summary>
             The container to hold the raw data of this field.
             </summary>
         </member>
-        <member name="P:Metadata.TagField.Empty.Values">
+        <member name="P:CardCatalog.TagField.Empty.Values">
             <summary>
             All data contained by this field, in a human-readable format.
             </summary>
         </member>
-        <member name="M:Metadata.TagField.Empty.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.TagField.Empty.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.
@@ -713,30 +713,30 @@
             
             <param name="stream">The data to read.</param>
         </member>
-        <member name="P:Metadata.TagField.SystemName">
+        <member name="P:CardCatalog.TagField.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="P:Metadata.TagField.Length">
+        <member name="P:CardCatalog.TagField.Length">
             <summary>
             The length in bytes of the data contained in the field (excluding
             the header).
             </summary>
         </member>
-        <member name="P:Metadata.TagField.Name">
+        <member name="P:CardCatalog.TagField.Name">
             <summary>
             The human-readable name of the field if available, or a
-            representation of <see cref="P:Metadata.TagField.SystemName"/> if not.
+            representation of <see cref="P:CardCatalog.TagField.SystemName"/> if not.
             </summary>
             
             <remarks>
-            The default implementation is to read the <see cref="P:Metadata.TagField.SystemName"/>
+            The default implementation is to read the <see cref="P:CardCatalog.TagField.SystemName"/>
             as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
             not suitable, the method should be overridden.
             </remarks>
         </member>
-        <member name="P:Metadata.TagField.Subtitle">
+        <member name="P:CardCatalog.TagField.Subtitle">
             <summary>
             Extra human-readable information describing the field, such as the
             "category" of a header with multiple realizations.
@@ -747,12 +747,12 @@
             suitable, the method should be overridden.
             </remarks>
         </member>
-        <member name="P:Metadata.TagField.Values">
+        <member name="P:CardCatalog.TagField.Values">
             <summary>
             All data contained by this field, in a human-readable format.
             </summary>
         </member>
-        <member name="M:Metadata.TagField.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.TagField.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the specific
             type of field.
