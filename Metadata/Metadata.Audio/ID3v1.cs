@@ -92,7 +92,124 @@ namespace Metadata.Audio {
 			Retro = 76,
 			Musical = 77,
 			RockRoll = 78,
-			HardRock = 79
+			HardRock = 79,
+			// Additional genres as defined by Winamp
+			Folk = 80,
+			FolkRock = 81,
+			NationalFolk = 82,
+			Swing = 83,
+			FastFusion = 84,
+			Bebop = 85,
+			Latin = 86,
+			Revival = 87,
+			Celtic = 88,
+			Bluegrass = 89,
+			Avantgarde = 90,
+			GothicRock = 91,
+			ProgRock = 92,
+			PsychRock = 93,
+			SymphRock = 94,
+			SlowRock = 95,
+			BigBand = 96,
+			Chorus = 97,
+			EasyListening = 98,
+			Acoustic = 99,
+			Humor = 100,
+			Speech = 101,
+			Chanson = 102,
+			Opera = 103,
+			ChamberMusic = 104,
+			Sonata = 105,
+			Symphony = 106,
+			BootyBass = 107,
+			Primus = 108,
+			PornGroove = 109,
+			Satire = 110,
+			SlowJam = 111,
+			Club = 112,
+			Tango = 113,
+			Samba = 114,
+			Folklore = 115,
+			Ballad = 116,
+			PowerBallad = 117,
+			RhythmicSoul = 118,
+			Freestyle = 119,
+			Duet = 120,
+			PunkRock = 121,
+			DrumSolo = 122,
+			ACapella = 123,
+			EuroHouse = 124,
+			DanceHall = 125,
+			// Further supplemental genres of unknown provenance
+			Goa = 126,
+			DrumBass = 127,
+			ClubHouse = 128,
+			Hardcore = 129,
+			Terror = 130,
+			Indie = 131,
+			BritPop = 132,
+			AfroPunk = 133,
+			PolskPunk = 134,
+			Beat = 135,
+			ChristianGangstaRap = 136,
+			HeavyMetal = 137,
+			BlackMetal = 138,
+			Crossover = 139,
+			ContempChristian = 140,
+			ChristianRock = 141,
+			Merengue = 142,
+			Salsa = 143,
+			ThrashMetal = 144,
+			Anime = 145,
+			JPop = 146,
+			Synthpop = 147,
+			// Even-less-standardized genres, attributed only at
+			// <http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/ID3.html>
+			Abstract = 148,
+			ArtRock = 149,
+			Baroque = 150,
+			Bhangra = 151,
+			BigBeat = 152,
+			Breakbeat = 153,
+			Chillout = 154,
+			Downtempo = 155,
+			Dub = 156,
+			EBM = 157,
+			Eclectic = 158,
+			Electro = 159,
+			Electroclash = 160,
+			Emo = 161,
+			Experimental = 162,
+			Garage = 163,
+			Global = 164,
+			IDM = 165,
+			Illbient = 166,
+			IndustroGoth = 167,
+			JamBand = 168,
+			Krautrock = 169,
+			Leftfield = 170,
+			Lounge = 171,
+			MathRock = 172,
+			NewRomantic = 173,
+			NuBreakz = 174,
+			PostPunk = 175,
+			PostRock = 176,
+			Psytrance = 177,
+			Shoegaze = 178,
+			SpaceRock = 179,
+			TropRock = 180,
+			WorldMusic = 181,
+			Neoclassical = 182,
+			Audiobook = 183,
+			AudioTheatre = 184,
+			NeueDeutscheWelle = 185,
+			Podcast = 186,
+			IndieRock = 187,
+			GFunk = 188,
+			Dubstep = 189,
+			GarageRock = 190,
+			Psybient = 191,
+			None = 255
 		}
 	}
 	
@@ -116,10 +233,13 @@ namespace Metadata.Audio {
 		public static string PrintableName(this ID3v1.Genre value) {
 			var str = value.ToString();
 
-			if (str.All(char.IsDigit))
-				return String.Format(resources.GetString("Genre.Unknown"), str);
-			else
-				return resources.GetString("Genre_" + str) ?? str;
+			// If `str` is purely digits, the lookup has failed
+			if (str.All(char.IsDigit) == false) {
+				var genre = resources.GetString("Genre_" + str);
+				if (genre != null)
+					return genre;
+			}
+			return String.Format(resources.GetString("Genre_Unknown"), str);
 		}
 	}
 }
