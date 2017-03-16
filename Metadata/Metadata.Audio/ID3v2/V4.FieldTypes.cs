@@ -153,27 +153,27 @@ namespace Metadata.Audio.ID3v2 {
 							foreach (char d in headerChars) {
 								// Individually-handled text tags
 								switch (new string(new char[3] { b, c, d })) {
-									case "CMP":
-									case "CON":
-									case "COP":
-									case "DEN":
-									case "DLY":
-									case "DOR":
-									case "DRC":
-									case "DRL":
-									case "DTG":
-									case "FLT":  // TODO: Implement
-									case "IPL":
-									case "LAN":
-									case "LEN":
-									case "KEY":
-									case "MCL":
-									case "MED":  // TODO: Implement
-									case "POS":
-									case "PRO":
-									case "RCK":
-									case "SRC":
-									case "XXX":
+									case "CMP":  // Unofficial: iTunes Compilation
+									case "CON":  // Genre
+									case "COP":  // Copyright
+									case "DEN":  // Encoding date
+									case "DLY":  // Playlist delay
+									case "DOR":  // Original release date
+									case "DRC":  // Recording date                (Picard: "Release date")
+									case "DRL":  // Release date
+									case "DTG":  // Tagging date
+									case "FLT":  //TODO: Implement "Audio type"
+									case "IPL":  // Production credits
+									case "LAN":  // Language
+									case "LEN":  // Length
+									case "KEY":  // Key
+									case "MCL":  // Performer credits
+									case "MED":  //TODO: Implement "Medium type"
+									case "POS":  // Disk number
+									case "PRO":  // Production copyright
+									case "RCK":  // Track number
+									case "SRC":  // Recording ISRC
+									case "XXX":  // (User text field)
 										continue;
 									default:
 										yield return new byte[4] { (byte)'T', (byte)b, (byte)c, (byte)d };
@@ -218,14 +218,18 @@ namespace Metadata.Audio.ID3v2 {
 						switch (ISO88591.GetString(header)) {
 							case "TALB": return "Album";
 							case "TBPM": return "Beats per minute";
+							case "TCAT": return "Category";                 // Unofficial (podcasts)
 							case "TCOM": return "Composer";
+							case "TDES": return "Description";              // Unofficial (podcasts)
 							case "TENC": return "Encoder";
 							case "TEXT": return "Author";
-							case "TIT1": return "Work";
+							case "TGID": return "Album ID";                 // Unofficial (podcasts): "Podcast ID"
+							case "TIT1": return "Work";                     // Official title: "Grouping"
 							case "TIT2": return "Title";
 							case "TIT3": return "Subtitle";
+							case "TKWD": return "Keywords";                 // Unofficial (podcasts)
 							case "TMOO": return "Mood";
-							case "TOAL": return "Original album";
+							case "TOAL": return "Original album";           // Picard: "Work title"
 							case "TOFN": return "Original filename";
 							case "TOLY": return "Original author";
 							case "TOPE": return "Original artist";
@@ -234,12 +238,12 @@ namespace Metadata.Audio.ID3v2 {
 							case "TPE2": return "Album artist";
 							case "TPE3": return "Conductor";
 							case "TPE4": return "Remixer";
-							case "TPUB": return "Publisher";
+							case "TPUB": return "Publisher";                // Picard: "Record label"
 							case "TRSN": return "Station name";
 							case "TRSO": return "Station owner";
-							case "TSO2": return "Album artist sort order (iTunes)";
+							case "TSO2": return "Album artist sort order";  // Unofficial
 							case "TSOA": return "Album sort order";
-							case "TSOC": return "Composer sort order (iTunes)";
+							case "TSOC": return "Composer sort order";      // Unofficial
 							case "TSOP": return "Artist sort order";
 							case "TSOT": return "Title sort order";
 							case "TSSE": return "Encoding settings";
@@ -513,7 +517,7 @@ namespace Metadata.Audio.ID3v2 {
 					get {
 						switch (ISO88591.GetString(header)) {
 							case "TIPL": return "Production credits";
-							case "TMCL": return "Artist credits";
+							case "TMCL": return "Performer credits";
 							default: return DefaultName;
 						}
 					}
@@ -1001,6 +1005,7 @@ namespace Metadata.Audio.ID3v2 {
 						switch (ISO88591.GetString(header)) {
 							case "WCOM": return "Purchasing information";
 							case "WCOP": return "Copyright information";
+							case "WFED": return "Feed";                    // Unofficial: MP3Tag/iTunes "Podcast URL"
 							case "WOAF": return "Official website";
 							case "WOAR": return "Artist homepage";
 							case "WOAS": return "Source website";
