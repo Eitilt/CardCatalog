@@ -182,9 +182,22 @@ namespace CardCatalog.Audio.ID3v2 {
 		/// Fields specific to the ID3v2.4 standard.
 		/// </summary>
 		public class FormatFields {
+			/* Tag usage found at several websites:
+			 * https://picard.musicbrainz.org/docs/mappings/
+			 * https://msdn.microsoft.com/en-us/library/windows/desktop/dd743220(v=vs.85).aspx
+			 * http://joelverhagen.com/blog/2010/12/how-itunes-uses-id3-tags/
+			 * http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/ID3.html
+			 * http://wiki.hydrogenaud.io/index.php?title=Tag_Mapping
+			 * http://wiki.hydrogenaud.io/index.php?title=Foobar2000:ID3_Tag_Mapping
+			 */
+
 			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVA2, EQU2, RVRB, APIC,
 			 * GEOB, POPM, RBUF, AENC, LINK, POSS, USER, OWNE, COMR, ENCR,
 			 * GRID, PRIV, SIGN, SEEK, ASPI
+			 * 
+			 * Unofficial (most may never have a need for inclusion):
+			 * GRP1, MVNM, MVIN, PCST, TSIZ, MCDI, ITNU, XDOR, XOLY, XOSA,
+			 * XSOP, XSOT
 			 */
 
 			/// <summary>

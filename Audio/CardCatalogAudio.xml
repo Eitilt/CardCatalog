@@ -249,7 +249,7 @@
             
             <returns>The flag bits in a more accessible format.</returns>
         </member>
-        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseUnsignedInteger(System.IO.Stream,System.Boolean,System.UInt32@,System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -294,7 +294,7 @@
             ID3v2.3 and five for ID3v2.4).
             </exception>
         </member>
-        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseInteger(System.Collections.Generic.IEnumerable{System.Byte},System.UInt32)">
+        <member name="M:CardCatalog.Audio.ID3v2.ID3v2.ParseUnsignedInteger(System.Collections.Generic.IEnumerable{System.Byte},System.UInt32)">
             <summary>
             Read a variable number of bytes as a single integer.
             </summary>
@@ -703,6 +703,11 @@
             Reduce the lookups of field types by caching the return.
             </summary>
         </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.headerChars">
+            <summary>
+            Valid ID3v2 field identification characters.
+            </summary>
+        </member>
         <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.padding">
             <summary>
             A byte sequence indicating that the "header" read is actually
@@ -847,11 +852,6 @@
             Any of the many tags containing purely textual data.
             </summary>
         </member>
-        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.headerChars">
-            <summary>
-            Valid ID3v2 field identification characters.
-            </summary>
-        </member>
         <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.NameGenerator">
             <summary>
             Generate all text field headers that aren't handled by
@@ -935,6 +935,20 @@
              The decoded string, or `null` if <paramref name="data"/>
              isn't headed by a recognized byte-order-mark.
              </returns>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.TryGetEncoding(System.Byte)">
+            <summary>
+            Convert a ID3v2 byte representation of an encoding into the
+            proper <see cref="T:System.Text.Encoding"/> object.
+            </summary>
+            
+            <param name="enc"></param>
+            
+            <returns>
+            The proper <see cref="T:System.Text.Encoding"/>, or `null` if the encoding
+            is either unrecognized or "Detect Unicode endianness from byte
+            order marker."
+            </returns>
         </member>
         <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SplitStrings(System.Byte[],System.Text.Encoding)">
             <summary>
@@ -1169,8 +1183,8 @@
             </summary>
             
             <remarks>
-            TODO: Needs better ISO 639-2 lookup: see solution at
-            http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+            TODO: Needs better ISO 639-2 lookup ability: see solution
+            at http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
             Might also be nice to add e.g. ISO 639-3 support in the
             same package ("CultureExtensions").
             </remarks>
@@ -1519,6 +1533,134 @@
             <summary>
             All values contained within this field.
             </summary>
+        </member>
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame">
+            <summary>
+            A frame containing text with a language, a description, and
+            non-null-separated text.
+            </summary>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.description">
+            <summary>
+            The description of the lyrics instance.
+            </summary>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.language">
+            <summary>
+            The language in which the lyrics are
+            transcribed/translated.
+            </summary>
+            
+            <remarks>
+            TODO: Replace with <see cref="T:System.Globalization.CultureInfo"/> object.
+            </remarks>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.Subtitle">
+            <summary>
+            Extra human-readable information describing the field, such as the
+            "category" of a header with multiple realizations.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+            
+            <remarks>
+            TODO: Needs better ISO 639-2 lookup ability: see solution
+            at http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+            Might also be nice to add e.g. ISO 639-3 support in the
+            same package ("CultureExtensions").
+            </remarks>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.ParseData(System.IO.Stream)">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
+        </member>
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame">
+            <summary>
+            A frame containing a single binary counter.
+            </summary>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.header">
+            <summary>
+            The easy representation of the field header.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.count">
+            <summary>
+            The value contained by this field.
+            </summary>
+            
+            <remarks>
+            The specification implements a potentially-infinite
+            integer, but a `ulong` should in theory never overflow
+            given the effort required to play one file of a one song
+            18,446,744,073,709,551,615 times.
+            
+            TODO: Probably should allow that
+            18,446,744,073,709,551,616th play anyway.
+            </remarks>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.ParseData(System.IO.Stream)">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
         </member>
     </members>
 </doc>
