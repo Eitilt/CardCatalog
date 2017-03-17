@@ -171,7 +171,7 @@ namespace CardCatalog.Audio.ID3v2 {
 			if (flags[2]) {
 				if (extHeader[pos] != 0x05)
 					throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'CRC data present' data");
-				TagCRC = ParseInteger(extHeader.ToList().GetRange(pos + 1, 5), 7);
+				TagCRC = ParseUnsignedInteger(extHeader.ToList().GetRange(pos + 1, 5), 7);
 				pos += 6;
 			}
 			if (flags[3]) {
@@ -183,8 +183,9 @@ namespace CardCatalog.Audio.ID3v2 {
 			}
 			FlagUnknown = (flags.Cast<bool>().Skip(4).Contains(true));
 
-			//            if (CheckCRCIfPresent(tag) == false)
-			//                throw new InvalidDataException("ID3 tag does not match saved checksum");
+			//TODO: Implement
+			//if (CheckCRCIfPresent(tag) == false)
+			//	throw new InvalidDataException("ID3 tag does not match saved checksum");
 		}
 	}
 }

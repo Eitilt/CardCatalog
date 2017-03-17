@@ -132,13 +132,13 @@ namespace CardCatalog.Audio.ID3v2 {
 				throw new InvalidDataException("Extended header too short to be valid for ID3v2.3");
 
 			var flags = new BitArray(extHeader.Take(2).ToArray());
-			PaddingSize = ParseInteger(extHeader.ToList().GetRange(2, 4));
+			PaddingSize = ParseUnsignedInteger(extHeader.ToList().GetRange(2, 4));
 
 			if (flags[0]) {
 				if (extHeader.Length < 10)
 					throw new InvalidDataException("Extended header too short to contain a valid ID3v2.3 CRC");
 
-				TagCRC = ParseInteger(extHeader.ToList().GetRange(6, 4));
+				TagCRC = ParseUnsignedInteger(extHeader.ToList().GetRange(6, 4));
 			}
 			FlagUnknown = (flags.Cast<bool>().Skip(1).Contains(true));
 

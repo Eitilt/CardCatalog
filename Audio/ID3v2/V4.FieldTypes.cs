@@ -30,6 +30,11 @@ namespace CardCatalog.Audio.ID3v2 {
 			private static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
 
 			/// <summary>
+			/// Valid ID3v2 field identification characters.
+			/// </summary>
+			protected static char[] headerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
+			/// <summary>
 			/// A byte sequence indicating that the "header" read is actually
 			/// padding rather than data.
 			/// </summary>
@@ -125,12 +130,16 @@ namespace CardCatalog.Audio.ID3v2 {
 					if (read < Length)
 						bytes = bytes.Take(read).ToArray();
 
+					Length -= bytes.Length;
+
 					stream = new MemoryStream(DeUnsynchronize(bytes));
 				}
 
 				// Grouping
 				if (flags[9]) {
 					int b = stream.ReadByte();
+					--Length;
+
 					if (b >= 0)
 						group = (byte)b;
 				}
@@ -143,6 +152,8 @@ namespace CardCatalog.Audio.ID3v2 {
 				byte? encryption = null;
 				if (flags[13]) {
 					int b = stream.ReadByte();
+					--Length;
+
 					if (b >= 0)
 						encryption = (byte)b;
 				}
@@ -151,7 +162,8 @@ namespace CardCatalog.Audio.ID3v2 {
 				// decryption, but we currently have no use for it
 				if (flags[14]) {
 					var bytes = new byte[4];
-					stream.ReadAll(bytes, 0, 4);
+					if (stream.ReadAll(bytes, 0, 4) == 4)
+						Length = (int)ParseUnsignedInteger(bytes);
 				}
 
 				ParseData(stream);
@@ -170,6 +182,11 @@ namespace CardCatalog.Audio.ID3v2 {
 		/// Fields specific to the ID3v2.4 standard.
 		/// </summary>
 		public class FormatFields {
+			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVA2, EQU2, RVRB, APIC,
+			 * GEOB, POPM, RBUF, AENC, LINK, POSS, USER, OWNE, COMR, ENCR,
+			 * GRID, PRIV, SIGN, SEEK, ASPI
+			 */
+
 			/// <summary>
 			/// An identifier unique to a particular database.
 			/// </summary>
@@ -243,11 +260,6 @@ namespace CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			[TagField]
 			public class TextFrame : V4Field {
-				/// <summary>
-				/// Valid ID3v2 field identification characters.
-				/// </summary>
-				protected static char[] headerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
-
 				/// <summary>
 				/// Generate all text field headers that aren't handled by
 				/// other specialized classes.
@@ -452,6 +464,31 @@ namespace CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
+				/// Convert a ID3v2 byte representation of an encoding into the
+				/// proper <see cref="Encoding"/> object.
+				/// </summary>
+				/// 
+				/// <param name="enc"></param>
+				/// 
+				/// <returns>
+				/// The proper <see cref="Encoding"/>, or `null` if the encoding
+				/// is either unrecognized or "Detect Unicode endianness from byte
+				/// order marker."
+				/// </returns>
+				public static Encoding TryGetEncoding(byte enc) {
+					switch (enc) {
+						case 0x00:
+							return ISO88591;
+						case 0x02:
+							return Encoding.BigEndianUnicode;
+						case 0x03:
+							return Encoding.UTF8;
+						default:
+							return null;
+					}
+				}
+
+				/// <summary>
 				/// Parse a sequence of bytes as a list of null-separated
 				/// strings.
 				/// </summary>
@@ -493,20 +530,7 @@ namespace CardCatalog.Audio.ID3v2 {
 					if (read < Length)
 						data = data.Take(read).ToArray();
 
-					switch (data.First()) {
-						case 0x00:
-							values = SplitStrings(data.Skip(1).ToArray(), ISO88591);
-							break;
-						case 0x01:
-							values = SplitStrings(data.Skip(1).ToArray(), null);
-							break;
-						case 0x02:
-							values = SplitStrings(data.Skip(1).ToArray(), Encoding.BigEndianUnicode);
-							break;
-						case 0x03:
-							values = SplitStrings(data.Skip(1).ToArray(), Encoding.UTF8);
-							break;
-					}
+					values = SplitStrings(data.Skip(1).ToArray(), TryGetEncoding(data.First()));
 				}
 			}
 			/// <summary>
@@ -780,8 +804,8 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <remarks>
-				/// TODO: Needs better ISO 639-2 lookup: see solution at
-				/// http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+				/// TODO: Needs better ISO 639-2 lookup ability: see solution
+				/// at http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
 				/// Might also be nice to add e.g. ISO 639-3 support in the
 				/// same package ("CultureExtensions").
 				/// </remarks>
@@ -1503,6 +1527,173 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<string> Values => values.Skip(1);
+			}
+
+			/// <summary>
+			/// A frame containing text with a language, a description, and
+			/// non-null-separated text.
+			/// </summary>
+			[TagField("COMM")]
+			[TagField("USLT")]
+			public class LongTextFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public LongTextFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The description of the lyrics instance.
+				/// </summary>
+				private string description = null;
+				/// <summary>
+				/// The language in which the lyrics are
+				/// transcribed/translated.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Replace with <see cref="CultureInfo"/> object.
+				/// </remarks>
+				private string language = null;
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name {
+					get {
+						switch (ISO88591.GetString(SystemName)) {
+							case "COMM": return "Comment";
+							case "USLT": return "Lyrics";
+							default: return DefaultName;
+						}
+					}
+				}
+
+				/// <summary>
+				/// Extra human-readable information describing the field, such as the
+				/// "category" of a header with multiple realizations.
+				/// </summary>
+				public override string Subtitle {
+					get {
+						if ((description == null) || (language == null))
+							return null;
+						else
+							return String.Format("{0} ({1})", description, language);
+					}
+				}
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Needs better ISO 639-2 lookup ability: see solution
+				/// at http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
+				/// Might also be nice to add e.g. ISO 639-3 support in the
+				/// same package ("CultureExtensions").
+				/// </remarks>
+				public override IEnumerable<string> Values => base.Values;
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				/// 
+				/// <param name="stream">The data to read.</param>
+				protected override void ParseData(Stream stream) {
+					var bytes = new byte[4];
+					if (stream.ReadAll(bytes, 0, 4) < 4)
+						return;
+
+					language = ISO88591.GetString(bytes, 1, 3);
+
+					var content = new byte[Length];
+					int read = stream.ReadAll(content, 0, Length);
+					if (read < Length)
+						content = content.Take(read).ToArray();
+
+					var split = SplitStrings(content, TryGetEncoding(bytes[0]));
+					description = split.First();
+					// Unlike the text tags, this says nothing about nulls
+					values = new string[1] { String.Join("\0", split.Skip(1)) };
+				}
+			}
+
+			/// <summary>
+			/// A frame containing a single binary counter.
+			/// </summary>
+			[TagField(header)]
+			public class CountFrame : V4Field {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public CountFrame(byte[] name, int length) => Length = length;
+
+				/// <summary>
+				/// The easy representation of the field header.
+				/// </summary>
+				private const string header = "PCNT";
+				/// <summary>
+				/// The byte header used to internally identify the field.
+				/// </summary>
+				public override byte[] SystemName => ISO88591.GetBytes(header);
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Play count";
+
+				/// <summary>
+				/// The value contained by this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// The specification implements a potentially-infinite
+				/// integer, but a `ulong` should in theory never overflow
+				/// given the effort required to play one file of a one song
+				/// 18,446,744,073,709,551,615 times.
+				/// 
+				/// TODO: Probably should allow that
+				/// 18,446,744,073,709,551,616th play anyway.
+				/// </remarks>
+				private ulong count = 0;
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<string> Values => new string[1] { count.ToString() };
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				/// 
+				/// <param name="stream">The data to read.</param>
+				protected override void ParseData(Stream stream) {
+					var bytes = new byte[Length];
+					int read = stream.ReadAll(bytes, 0, Length);
+
+					if (read < Length)
+						bytes = bytes.Take(read).ToArray();
+
+					count = ParseUnsignedInteger(bytes);
+				}
 			}
 		}
 	}

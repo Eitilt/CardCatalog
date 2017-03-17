@@ -356,7 +356,7 @@ namespace CardCatalog.Audio.ID3v2 {
 		/// basic sanity check is performed to ensure this, but attempting to
 		/// reconstruct a malformed byte array is beyond the intended scope.
 		/// </exception>
-		protected static uint ParseInteger(Stream stream, bool unsynced, ref uint count, uint bits = 8) {
+		protected static uint ParseUnsignedInteger(Stream stream, bool unsynced, ref uint count, uint bits = 8) {
 			if ((bits * count) > (sizeof(uint) * 8))
 				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 
@@ -407,7 +407,7 @@ namespace CardCatalog.Audio.ID3v2 {
 		/// <paramref name="bytes"/> must not be more than four bytes long for
 		/// ID3v2.3 and five for ID3v2.4).
 		/// </exception>
-		protected static uint ParseInteger(IEnumerable<byte> bytes, uint bits = 8) {
+		protected static uint ParseUnsignedInteger(IEnumerable<byte> bytes, uint bits = 8) {
 			if ((bits * bytes.Count()) > (sizeof(uint) * 8))
 				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
 
@@ -494,7 +494,7 @@ namespace CardCatalog.Audio.ID3v2 {
 				return await ReadBytesAsync(stream, tagSize, useUnsync).ConfigureAwait(false);
 
 			uint sizeCount = 4;
-			uint extSize = ParseInteger(stream, useUnsync, ref sizeCount, ExtendedHeader.bitsInSize);
+			uint extSize = ParseUnsignedInteger(stream, useUnsync, ref sizeCount, ExtendedHeader.bitsInSize);
 
 			// The size data in ID3v2.4 includes the size bytes, which can
 			// be disregarded as they've already been read.
