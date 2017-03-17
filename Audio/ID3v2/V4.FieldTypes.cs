@@ -196,8 +196,7 @@ namespace CardCatalog.Audio.ID3v2 {
 			 * GRID, PRIV, SIGN, SEEK, ASPI
 			 * 
 			 * Unofficial (most may never have a need for inclusion):
-			 * GRP1, MVNM, MVIN, PCST, TSIZ, MCDI, ITNU, XDOR, XOLY, XOSA,
-			 * XSOP, XSOT
+			 * GRP1, MVNM, MVIN, PCST, TSIZ, MCDI, ITNU, XDOR, XOLY
 			 */
 
 			/// <summary>
@@ -272,6 +271,9 @@ namespace CardCatalog.Audio.ID3v2 {
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
 			[TagField]
+			[TagField("XSOA")]
+			[TagField("XSOP")]
+			[TagField("XSOT")]
 			public class TextFrame : V4Field {
 				/// <summary>
 				/// Generate all text field headers that aren't handled by
@@ -332,7 +334,18 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public TextFrame(byte[] name, int length) {
-					header = name;
+					// Remapping of unofficial to official names
+					switch (ISO88591.GetString(name)) {
+						case "XSOA":
+						case "XSOP":
+						case "XSOT":
+							header = new byte[4] { 0x54, name[1], name[2], name[3] };
+							break;
+						default:
+							header = name;
+							break;
+					}
+
 					Length = length;
 				}
 
