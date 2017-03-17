@@ -13,12 +13,16 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
     <Version>0.1.0</Version>
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <FileVersion>0.1.0.0</FileVersion>
+    <RepositoryUrl>https://github.com/Eitilt/CardCatalog</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>cardcatalog metadata parse file music audio mp3 id3 id3v2</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'And'$(NUGET_DIR)'!=''">
     <!--<PostBuildEvent>copy /Y $(TargetDir)\..\$(TargetName).*.nupkg $(NUGET_DIR)</PostBuildEvent>-->
   </PropertyGroup>
 
