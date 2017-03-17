@@ -269,16 +269,16 @@ namespace CardCatalog.Audio.ID3v2 {
 									case "DEN":  // Encoding date
 									case "DLY":  // Playlist delay
 									case "DOR":  // Original release date
-									case "DRC":  // Recording date                (Picard: "Release date")
+									case "DRC":  // Recording date         (de-facto: "Release date")
 									case "DRL":  // Release date
 									case "DTG":  // Tagging date
-									case "FLT":  //TODO: Implement "Audio type"
+									case "FLT":  // Audio encoding
 									case "IPL":  // Production credits
 									case "LAN":  // Language
 									case "LEN":  // Length
 									case "KEY":  // Key
 									case "MCL":  // Performer credits
-									case "MED":  //TODO: Implement "Medium type"
+									case "MED":  // Original medium
 									case "POS":  // Disk number
 									case "PRO":  // Production copyright
 									case "RCK":  // Track number
@@ -782,7 +782,7 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// <remarks>
 				/// TODO: Needs better ISO 639-2 lookup: see solution at
 				/// http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
-				/// Might also be nice to add eg. ISO 639-3 support in the
+				/// Might also be nice to add e.g. ISO 639-3 support in the
 				/// same package ("CultureExtensions").
 				/// </remarks>
 				public override IEnumerable<string> Values => base.Values;
@@ -839,6 +839,319 @@ namespace CardCatalog.Audio.ID3v2 {
 									yield return ((ID3v1.Genre)num).PrintableName();
 							} else
 								yield return s;
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing the genre.
+			/// </summary>
+			[TagField("TFLT")]
+			public class FiletypeFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public FiletypeFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Audio encoding";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Split "Remix" and "Cover" into separately-displayed
+				/// field; likely same fix as <see cref="ListMappingFrame"/>.
+				/// </remarks>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							switch (s) {
+								case "MIME":
+									yield return "MIME type as follows";
+									break;
+								case "MPG":
+									yield return "MPEG audio";
+									break;
+								case "MPG/1":
+									yield return "MPEG 1/2 layer I";
+									break;
+								case "MPG/2":
+									yield return "MPEG 1/2 layer II";
+									break;
+								case "MPG/2.5":
+									yield return "MPEG 2.5";
+									break;
+								case "MPG/3":
+									yield return "MPEG 1/2 layer III";
+									break;
+								case "MPG/AAC":
+									yield return "Advanced audio compression (MPEG)";
+									break;
+								case "VQF":
+									yield return "Transform-domain weighted interleave vector quantisation";
+									break;
+								case "PCM":
+									yield return "Pulse code modulated audio";
+									break;
+								default:
+									yield return s;
+									break;
+							}
+						}
+					}
+				}
+			}
+			/// <summary>
+			/// A frame containing the genre.
+			/// </summary>
+			[TagField("TMED")]
+			public class MediumFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TextFrame.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public MediumFrame(byte[] name, int length) : base(name, length) { }
+
+				/// <summary>
+				/// The human-readable name of the field.
+				/// </summary>
+				public override string Name => "Original medium";
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// TODO: Split "Remix" and "Cover" into separately-displayed
+				/// field; likely same fix as <see cref="ListMappingFrame"/>.
+				/// </remarks>
+				public override IEnumerable<string> Values {
+					get {
+						foreach (var s in values) {
+							switch (s) {
+								case "DIG":
+									yield return "Unknown digital source";
+									break;
+								case "DIG/A":
+									yield return "Analog transfer from digital";
+									break;
+								case "ANA":
+									yield return "Unknown analog source";
+									break;
+								case "ANA/WAC":
+									yield return "Wax cylinder";
+									break;
+								case "ANA/8CA":
+									yield return "8-track tape cassette";
+									break;
+								case "CD":
+									yield return "Compact disk";
+									break;
+								case "CD/A":
+									yield return "Analog transfer from CD";
+									break;
+								case "CD/DDD":
+									yield return "Compact disk (SPARS DDD)";
+									break;
+								case "CD/ADD":
+									yield return "Compact disk (SPARS ADD)";
+									break;
+								case "CD/AAD":
+									yield return "Compact disk (SPARS AAD)";
+									break;
+								case "LD":
+									yield return "Laserdisk";
+									break;
+								case "TT":
+									yield return "Turntable record";
+									break;
+								case "TT/33":
+									yield return "33.33 rpm record";
+									break;
+								case "TT/45":
+									yield return "45 rpm record";
+									break;
+								case "TT/71":
+									yield return "71.29 rpm record";
+									break;
+								case "TT/76":
+									yield return "76.59 rpm record";
+									break;
+								case "TT/78":
+									yield return "78.26 rpm record";
+									break;
+								case "TT/80":
+									yield return "80 rpm record";
+									break;
+								case "MD":
+									yield return "MiniDisc";
+									break;
+								case "MD/A":
+									yield return "Analog transfer from MiniDisc";
+									break;
+								case "DAT":
+									yield return "DAT cassette";
+									break;
+								case "DAT/A":
+									yield return "Analog transfer from DAT cassette";
+									break;
+								case "DAT/1":
+									yield return "DAT standard: 48 kHz/16 bits, linear";
+									break;
+								case "DAT/2":
+									yield return "DAT mode 2: 32 kHz/16 bits, linear";
+									break;
+								case "DAT/3":
+									yield return "DAT mode 3: 32 kHz/12 bits, non-linear, low speed";
+									break;
+								case "DAT/4":
+									yield return "DAT mode 4: 32 kHz/12 bits, 4 channels";
+									break;
+								case "DAT/5":
+									yield return "DAT mode 5: 44.1 kHz/16 bits, linear";
+									break;
+								case "DAT/6":
+									yield return "DAT mode 6: 44.1 kHz/16 bits, 'wide track' play";
+									break;
+								case "DCC":
+									yield return "DCC cassette";
+									break;
+								case "DCC/A":
+									yield return "Analog transfer from DCC cassette";
+									break;
+								case "DVD":
+									yield return "DVD";
+									break;
+								case "DVD/A":
+									yield return "Analog transfer from DVD";
+									break;
+								case "TV":
+									yield return "Television";
+									break;
+								case "TV/PAL":
+									yield return "Television (PAL)";
+									break;
+								case "TV/NTSC":
+									yield return "Television (NTSC)";
+									break;
+								case "TV/SECAM":
+									yield return "Television (SECAM)";
+									break;
+								case "VID":
+									yield return "Video";
+									break;
+								case "VID/PAL":
+									yield return "Video (PAL)";
+									break;
+								case "VID/NTSC":
+									yield return "Video (NTSC)";
+									break;
+								case "VID/SECAM":
+									yield return "Video (SECAM)";
+									break;
+								case "VID/VHS":
+									yield return "VHS tape";
+									break;
+								case "VID/SVHS":
+									yield return "S-VHS tape";
+									break;
+								case "VID/BETA":
+									yield return "BETAMAX tape";
+									break;
+								case "RAD":
+									yield return "Radio";
+									break;
+								case "RAD/FM":
+									yield return "FM radio";
+									break;
+								case "RAD/AM":
+									yield return "AM radio";
+									break;
+								case "RAD/LW":
+									yield return "Longwave radio";
+									break;
+								case "RAD/MW":
+									yield return "Medium wave radio";
+									break;
+								case "TEL":
+									yield return "Telephone";
+									break;
+								case "TEL/I":
+									yield return "ISDN telephone";
+									break;
+								case "MC":
+									yield return "Tape cassette";
+									break;
+								case "MC/4":
+									yield return "4.75 cm/s cassette";
+									break;
+								case "MC/9":
+									yield return "9.5 cm/s cassette";
+									break;
+								case "MC/I":
+									yield return "Type I (ferric) cassette";
+									break;
+								case "MC/II":
+									yield return "Type II (chrome) cassette";
+									break;
+								case "MC/III":
+									yield return "Type III (ferric chrome) cassette";
+									break;
+								case "MC/IV":
+									yield return "Type IV (metal) cassette";
+									break;
+								case "REE":
+									yield return "Tape cassette";
+									break;
+								case "REE/9":
+									yield return "9.5 cm/s cassette";
+									break;
+								case "REE/19":
+									yield return "19 cm/s cassette";
+									break;
+								case "REE/38":
+									yield return "38 cm/s cassette";
+									break;
+								case "REE/76":
+									yield return "76 cm/s cassette";
+									break;
+								case "REE/I":
+									yield return "Type I (ferric) cassette";
+									break;
+								case "REE/II":
+									yield return "Type II (chrome) cassette";
+									break;
+								case "REE/III":
+									yield return "Type III (ferric chrome) cassette";
+									break;
+								case "REE/IV":
+									yield return "Type IV (metal) cassette";
+									break;
+								default:
+									yield return s;
+									break;
+							}
 						}
 					}
 				}
@@ -1146,7 +1459,7 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
+				protected override void ParseData(Stream stream) {
 					var data = new byte[Length];
 					// SplitStrings doesn't care about length, but shouldn't
 					// be passed the unset tail if the stream ended early

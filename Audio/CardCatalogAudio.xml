@@ -703,6 +703,55 @@
             Reduce the lookups of field types by caching the return.
             </summary>
         </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.padding">
+            <summary>
+            A byte sequence indicating that the "header" read is actually
+            padding rather than data.
+            </summary>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.flags">
+            <summary>
+            The flags set on the field.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.V4Field.DiscardUnknownOnTagEdit">
+            <summary>
+            Indicates that this field should be removed if the tag is
+            edited in any way, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.V4Field.DiscardUnknownOnFileEdit">
+            <summary>
+            Indicates that this field should be removed if the file
+            external to the tag is edited in any way EXCEPT if the audio
+            is completely replaced, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.V4Field.ReadOnlyIfUnknown">
+            <summary>
+            Indicates that this field should not be changed without direct
+            knowledge of its contents and structure.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.V4Field.FlagUnknown">
+            <summary>
+            Whether the header includes a non-standard tag, which may result
+            in unrecognizable data.
+            </summary>
+            
+            <remarks>
+            TODO: Store data about the unknown flags rather than simply
+            indicating their presence.
+            </remarks>
+        </member>
+        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.group">
+            <summary>
+            The group identifier for associating multiple fields, or
+            `null` if this field isn't part of any group.
+            </summary>
+        </member>
         <member name="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid field header.
@@ -714,6 +763,22 @@
             An empty <see cref="T:CardCatalog.TagField"/> object if the header is in the
             proper format, `null` otherwise.
             </returns>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.V4Field.Parse(System.IO.Stream)">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the
+            specific type of field.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.V4Field.ParseData(System.IO.Stream)">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
         </member>
         <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields">
             <summary>
@@ -769,10 +834,10 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.ParseData(System.IO.Stream)">
             <summary>
-            Read a sequence of bytes in the manner appropriate to the specific
-            type of field.
+            Preform field-specific parsing after the required common
+            parsing has been handled.
             </summary>
             
             <param name="stream">The data to read.</param>
@@ -886,10 +951,10 @@
             
             <returns>The separated and parsed strings.</returns>
         </member>
-        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.ParseData(System.IO.Stream)">
             <summary>
-            Read a sequence of bytes in the manner appropriate to the
-            specific type of field.
+            Preform field-specific parsing after the required common
+            parsing has been handled.
             </summary>
             
             <param name="stream">The data to read.</param>
@@ -1106,7 +1171,7 @@
             <remarks>
             TODO: Needs better ISO 639-2 lookup: see solution at
             http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
-            Might also be nice to add eg. ISO 639-3 support in the
+            Might also be nice to add e.g. ISO 639-3 support in the
             same package ("CultureExtensions").
             </remarks>
         </member>
@@ -1135,6 +1200,74 @@
             </summary>
         </member>
         <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+            
+            <remarks>
+            TODO: Split "Remix" and "Cover" into separately-displayed
+            field; likely same fix as <see cref="T:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
+            </remarks>
+        </member>
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.FiletypeFrame">
+            <summary>
+            A frame containing the genre.
+            </summary>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.FiletypeFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.FiletypeFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.FiletypeFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+            
+            <remarks>
+            TODO: Split "Remix" and "Cover" into separately-displayed
+            field; likely same fix as <see cref="T:CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
+            </remarks>
+        </member>
+        <member name="T:CardCatalog.Audio.ID3v2.V4.FormatFields.MediumFrame">
+            <summary>
+            A frame containing the genre.
+            </summary>
+        </member>
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.MediumFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.MediumFrame.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="P:CardCatalog.Audio.ID3v2.V4.FormatFields.MediumFrame.Values">
             <summary>
             All values contained within this field.
             </summary>
@@ -1345,7 +1478,7 @@
             The name to use if the header was not matched.
             </summary>
         </member>
-        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.Parse(System.IO.Stream)">
+        <member name="M:CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.ParseData(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.
