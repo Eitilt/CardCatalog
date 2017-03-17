@@ -4,6 +4,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -28,7 +29,51 @@ namespace CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			private static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
 
+			/// <summary>
+			/// A byte sequence indicating that the "header" read is actually
+			/// padding rather than data.
+			/// </summary>
 			private static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
+
+			/// <summary>
+			/// The flags set on the field.
+			/// </summary>
+			private BitArray flags;
+			/// <summary>
+			/// Indicates that this field should be removed if the tag is
+			/// edited in any way, and the program doesn't know how to
+			/// compensate.
+			/// </summary>
+			public bool DiscardUnknownOnTagEdit => flags[1];
+			/// <summary>
+			/// Indicates that this field should be removed if the file
+			/// external to the tag is edited in any way EXCEPT if the audio
+			/// is completely replaced, and the program doesn't know how to
+			/// compensate.
+			/// </summary>
+			public bool DiscardUnknownOnFileEdit => flags[2];
+			/// <summary>
+			/// Indicates that this field should not be changed without direct
+			/// knowledge of its contents and structure.
+			/// </summary>
+			public bool ReadOnlyIfUnknown => flags[3];
+
+			/// <summary>
+			/// Whether the header includes a non-standard tag, which may result
+			/// in unrecognizable data.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Store data about the unknown flags rather than simply
+			/// indicating their presence.
+			/// </remarks>
+			protected bool FlagUnknown { get; private set; }
+
+			/// <summary>
+			/// The group identifier for associating multiple fields, or
+			/// `null` if this field isn't part of any group.
+			/// </summary>
+			private byte? group = null;
 
 			/// <summary>
 			/// Check whether the stream begins with a valid field header.
@@ -45,20 +90,80 @@ namespace CardCatalog.Audio.ID3v2 {
 				var bytes = header.Take(4).ToArray();
 				int length = (int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), 7);
 
-				TagField field;
+				V4Field field;
 				if (bytes.SequenceEqual(padding)) {
 					return null;
-				} else if (fields.ContainsKey(bytes)) {
-					Type fieldType = fields[bytes];
-
-					field = Activator.CreateInstance(fieldType, new object[2] { bytes, length }) as TagField;
-				} else {
-					field = new TagField.Empty(bytes, length);
+				} else if (fields.ContainsKey(bytes) == false) {
+					return new TagField.Empty(bytes, length);
 				}
 
-				//TODO: Handle flag bytes
+				field = Activator.CreateInstance(fields[bytes], new object[2] { bytes, length }) as V4Field;
+
+				// Store this now, but it needs to be parsed when we get the
+				// rest of the data
+				field.flags = new BitArray(header.Skip(8).ToArray());
+				field.FlagUnknown = field.flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
+
 				return field;
 			}
+
+			/// <summary>
+			/// Read a sequence of bytes in the manner appropriate to the
+			/// specific type of field.
+			/// </summary>
+			/// 
+			/// <param name="stream">The data to read.</param>
+			public sealed override void Parse(Stream stream) {
+				// Unsynchronization
+				/* Implied to affect the flag data bytes, unlike the
+				 * compression and encryption
+				 */
+				if (flags[14]) {
+					var bytes = new byte[Length];
+					int read = stream.ReadAll(bytes, 0, Length);
+
+					if (read < Length)
+						bytes = bytes.Take(read).ToArray();
+
+					stream = new MemoryStream(DeUnsynchronize(bytes));
+				}
+
+				// Grouping
+				if (flags[9]) {
+					int b = stream.ReadByte();
+					if (b >= 0)
+						group = (byte)b;
+				}
+
+				// Compression
+				bool zlib = flags[12];
+
+				// Encryption
+				//TODO: Parse according to the ENCR frame
+				byte? encryption = null;
+				if (flags[13]) {
+					int b = stream.ReadByte();
+					if (b >= 0)
+						encryption = (byte)b;
+				}
+
+				// Data length; this may come into play in decompression and
+				// decryption, but we currently have no use for it
+				if (flags[14]) {
+					var bytes = new byte[4];
+					stream.ReadAll(bytes, 0, 4);
+				}
+
+				ParseData(stream);
+			}
+
+			/// <summary>
+			/// Preform field-specific parsing after the required common
+			/// parsing has been handled.
+			/// </summary>
+			/// 
+			/// <param name="stream">The data to read.</param>
+			protected abstract void ParseData(Stream stream);
 		}
 
 		/// <summary>
@@ -119,12 +224,12 @@ namespace CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
-				/// Read a sequence of bytes in the manner appropriate to the specific
-				/// type of field.
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
 				/// </summary>
 				/// 
 				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
+				protected override void ParseData(Stream stream) {
 					var data = new byte[Length];
 					int read = stream.ReadAll(data, 0, Length);
 
@@ -375,12 +480,12 @@ namespace CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
-				/// Read a sequence of bytes in the manner appropriate to the
-				/// specific type of field.
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
 				/// </summary>
 				/// 
 				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
+				protected override void ParseData(Stream stream) {
 					var data = new byte[Length];
 					// SplitStrings doesn't care about length, but shouldn't
 					// be passed the unset tail if the stream ended early
