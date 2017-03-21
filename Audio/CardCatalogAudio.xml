@@ -703,7 +703,7 @@
             Reduce the lookups of field types by caching the return.
             </summary>
         </member>
-        <member name="F:CardCatalog.Audio.ID3v2.V4.V4Field.headerChars">
+        <member name="P:CardCatalog.Audio.ID3v2.V4.V4Field.HeaderChars">
             <summary>
             Valid ID3v2 field identification characters.
             </summary>

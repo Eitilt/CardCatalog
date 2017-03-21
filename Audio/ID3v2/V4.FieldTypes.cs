@@ -32,7 +32,7 @@ namespace CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Valid ID3v2 field identification characters.
 			/// </summary>
-			protected static char[] headerChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+			protected static char[] HeaderChars => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
 
 			/// <summary>
 			/// A byte sequence indicating that the "header" read is actually
@@ -285,9 +285,9 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// </returns>
 				[FieldNames]
 				public static IEnumerable<byte[]> NameGenerator() {
-					foreach (char b in headerChars) {
-						foreach (char c in headerChars) {
-							foreach (char d in headerChars) {
+					foreach (char b in HeaderChars) {
+						foreach (char c in HeaderChars) {
+							foreach (char d in HeaderChars) {
 								// Individually-handled text tags
 								switch (new string(new char[3] { b, c, d })) {
 									case "CMP":  // Unofficial: iTunes Compilation
@@ -1452,9 +1452,9 @@ namespace CardCatalog.Audio.ID3v2 {
 				/// </returns>
 				[FieldNames]
 				public static new IEnumerable<byte[]> NameGenerator() {
-					foreach (char b in headerChars) {
-						foreach (char c in headerChars) {
-							foreach (char d in headerChars) {
+					foreach (char b in HeaderChars) {
+						foreach (char c in HeaderChars) {
+							foreach (char d in HeaderChars) {
 								// Individually-handled URL tag
 								if ((b == 'X') && (c == 'X') && (d == 'X'))
 									continue;
