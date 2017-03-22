@@ -35,6 +35,12 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Stream">
+      <HintPath>..\..\CommonHelpers\Stream\bin\Release\netstandard1.0\Stream.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Strings\ID3v1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>

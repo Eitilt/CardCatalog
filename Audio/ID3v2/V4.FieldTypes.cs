@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using AgEitilt.Common.Stream;
+
 namespace CardCatalog.Audio.ID3v2 {
 	partial class V4 {
 		/// <summary>

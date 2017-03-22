@@ -12,7 +12,7 @@
         </member>
         <member name="F:CardCatalog.FieldDictionary.keyComparer">
             <summary>
-            An instance of <see cref="T:CardCatalog.Helpers.SequenceEqualityComparer`1"/>
+            An instance of <see cref="T:AgEitilt.Common.Dictionary.ArrayEqualityComparer`1"/>
             specialized to byte arrays.
             </summary>
         </member>
@@ -98,93 +98,6 @@
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
             proper format for keys to <see cref="T:CardCatalog.TagField"/> objects.
             </summary>
-        </member>
-        <member name="T:CardCatalog.Helpers">
-            <summary>
-            Miscellaneous helper functions and classes.
-            </summary>
-        </member>
-        <member name="M:CardCatalog.Helpers.GetOrCreate``2(System.Collections.Generic.Dictionary{``0,``1},``0)">
-            <summary>
-            Retrieve the requested value from the dictionary, creating a new
-            entry if necessary.
-            </summary>
-            
-            <typeparam name="TKey">
-            The type used for the dictionary's keys.
-            </typeparam>
-            <typeparam name="TValue">
-            The type used for the dictionary's values.
-            </typeparam>
-            
-            <param name="dictionary">
-            The <see cref="T:System.Collections.Generic.Dictionary`2"/> on which to operate.
-            </param>
-            <param name="key">The dictionary key to access.</param>
-            
-            <returns>
-            The object located at <paramref name="key"/> in
-            <paramref name="dictionary"/>.
-            </returns>
-        </member>
-        <member name="T:CardCatalog.Helpers.SequenceEqualityComparer`1">
-            <summary>
-            Test sequences for equality based on their values, not their
-            object references.
-            </summary>
-            
-            <remarks>
-            Implementation from <see href="http://stackoverflow.com/a/7244729"/>.
-            </remarks>
-            
-            <typeparam name="ElementType">
-            The underlying type of the sequence.
-            </typeparam>
-        </member>
-        <member name="F:CardCatalog.Helpers.SequenceEqualityComparer`1.elementComparer">
-            <summary>
-            Provide a more robust meant of testing the equality of
-            elements.
-            </summary>
-        </member>
-        <member name="M:CardCatalog.Helpers.SequenceEqualityComparer`1.Equals(`0[],`0[])">
-            <summary>
-            Check two sequences for value equality.
-            </summary>
-            
-            <returns>Whether the sequences are equal.</returns>
-        </member>
-        <member name="M:CardCatalog.Helpers.SequenceEqualityComparer`1.GetHashCode(`0[])">
-            <summary>
-            Calculate a hash code based on the values of the sequence.
-            </summary>
-            
-            <param name="obj">The sequence to hash.</param>
-            
-            <returns>The calculated hash.</returns>
-        </member>
-        <member name="M:CardCatalog.Helpers.ReadAll(System.IO.Stream,System.Byte[],System.Int32,System.Int32)">
-            <summary>
-            Read from the stream until it ends or the requested number of
-            bytes has been reached.
-            </summary>
-            
-            <param name="stream">
-            The <see cref="T:System.IO.Stream"/> on which to operate.
-            </param>
-            <param name="buffer">
-            The destination in which to save the read bytes.
-            </param>
-            <param name="offset">
-            The index in <paramref name="buffer"/> of the first read byte.
-            </param>
-            <param name="count">The number of bytes to read.</param>
-            
-            <returns>
-            The number of bytes that were successfully read. This may be less
-            than <paramref name="count"/> if the stream ended before that
-            number of bytes was reached.
-            </returns>
         </member>
         <member name="T:CardCatalog.ScanAssemblyAttribute">
             <summary>

@@ -10,6 +10,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using AgEitilt.Common.Dictionary;
+
 namespace CardCatalog {
 	/// <summary>
 	/// A data-free class providing a common means to work with multiple

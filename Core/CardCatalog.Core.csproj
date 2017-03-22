@@ -31,4 +31,13 @@ All format support is provided by the dependent packages.</Description>
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Dictionary">
+      <HintPath>..\..\CommonHelpers\Dictionary\bin\Release\netstandard1.0\Dictionary.dll</HintPath>
+    </Reference>
+    <Reference Include="Stream">
+      <HintPath>..\..\CommonHelpers\Stream\bin\Release\netstandard1.0\Stream.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

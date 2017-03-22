@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 
+using AgEitilt.Common.Dictionary;
+
 namespace CardCatalog {
 	/// <summary>
 	/// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
@@ -13,10 +15,10 @@ namespace CardCatalog {
 	/// </summary>
 	public class FieldDictionary : Dictionary<byte[], IEnumerable<TagField>>, IReadOnlyFieldDictionary {
 		/// <summary>
-		/// An instance of <see cref="Helpers.SequenceEqualityComparer{ElementType}"/>
+		/// An instance of <see cref="ArrayEqualityComparer{ElementType}"/>
 		/// specialized to byte arrays.
 		/// </summary>
-		static Helpers.SequenceEqualityComparer<byte> keyComparer = new Helpers.SequenceEqualityComparer<byte>();
+		static ArrayEqualityComparer<byte> keyComparer = new ArrayEqualityComparer<byte>();
 
 		/// <summary>
 		/// Provide access to a comparer specialized for field keys.

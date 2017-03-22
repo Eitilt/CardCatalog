@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using AgEitilt.Common.Stream;
+
 namespace CardCatalog {
 	internal interface IParsable {
 		int Length { get; }

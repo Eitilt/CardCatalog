@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using AgEitilt.Common.Stream;
+
 namespace CardCatalog {
 	/// <summary>
 	/// Common format-agnostic attributes mapping to different fields
