@@ -8,7 +8,7 @@
     <ProjectGuid>365b24b3-7f0d-484c-9645-fb27a497ba9e</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Metadata.Test</RootNamespace>
-    <AssemblyName>CardCatalog.Test</AssemblyName>
+    <AssemblyName>AgEitilt.CardCatalog.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.1.0</TargetFSharpCoreVersion>

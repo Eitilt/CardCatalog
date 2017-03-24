@@ -2,6 +2,6 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  *)
 
-module CardCatalog.Test.Generators
+module AgEitilt.CardCatalog.Test.Generators
 
 open FsCheck

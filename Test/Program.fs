@@ -4,7 +4,7 @@
 
 open FsCheck
 
-open CardCatalog.Test.Generators
+open AgEitilt.CardCatalog.Test.Generators
 
 [<EntryPoint>]
 let main argv =
