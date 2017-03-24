@@ -129,14 +129,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// </param>
 		protected override void ParseExtendedHeader(byte[] extHeader) {
 			if (extHeader.Length < 6)
-				throw new InvalidDataException("Extended header too short to be valid for ID3v2.3");
+				throw new InvalidDataException(Strings.ID3v23.Exception_HeaderTooShort);
 
 			var flags = new BitArray(extHeader.Take(2).ToArray());
 			PaddingSize = ParseUnsignedInteger(extHeader.ToList().GetRange(2, 4));
 
 			if (flags[0]) {
 				if (extHeader.Length < 10)
-					throw new InvalidDataException("Extended header too short to contain a valid ID3v2.3 CRC");
+					throw new InvalidDataException(Strings.ID3v23.Exception_HeaderTooShortCRC);
 
 				TagCRC = ParseUnsignedInteger(extHeader.ToList().GetRange(6, 4));
 			}

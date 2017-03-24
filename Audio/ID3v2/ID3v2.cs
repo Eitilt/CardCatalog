@@ -209,7 +209,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						// These characters should never occur in a properly
 						// unsynchronized tag
 						else if (input[i] >= 0xE0)
-							throw new InvalidDataException("Attempted to reverse ID3v2 unsynchronization on a stream with an invalid byte following 0xFF");
+							throw new InvalidDataException(Strings.ID3v2.Exception_NotUnsynchronized);
 						else
 							ret.Add(input[i]);
 					}
@@ -281,7 +281,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			for (uint i = 0; i < ret.Length; ++i) {
 				var b = stream.ReadByte();
 				if (b < 0)
-					throw new EndOfStreamException("Reached end of ID3v2 stream while trying to read " + count + " unsynchronized bytes");
+					throw new EndOfStreamException(String.Format(Strings.ID3v2.Exception_StreamEnded, count));
 				else
 					ret[i] = (byte)b;
 
@@ -293,7 +293,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						// Indicate that an additional byte was read
 						++count;
 					} else if (b >= 0xE0)
-						throw new InvalidDataException("Attempted to reverse ID3v2 unsynchronization on a stream with an invalid byte following 0xFF");
+						throw new InvalidDataException(Strings.ID3v2.Exception_NotUnsynchronized);
 				}
 
 				isPrevFF = (ret[i] == 0xFF);
@@ -358,7 +358,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// </exception>
 		protected static uint ParseUnsignedInteger(Stream stream, bool unsynced, ref uint count, uint bits = 8) {
 			if ((bits * count) > (sizeof(uint) * 8))
-				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
+				throw new ArgumentOutOfRangeException(Strings.ID3v2.Exception_ParsedIntTooLarge);
 
 			byte[] bytes;
 			if (unsynced)
@@ -386,7 +386,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// </exception>
 		protected static uint ParseUnsignedInteger(byte[] bytes, uint bits = 8) {
 			if ((bits * bytes.Length) > (sizeof(uint) * 8))
-				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
+				throw new ArgumentOutOfRangeException(Strings.ID3v2.Exception_ParsedIntTooLarge);
 
 			uint ret = 0;
 			for (uint i = 0; i < bytes.Length; ++i)
@@ -409,7 +409,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// </exception>
 		protected static uint ParseUnsignedInteger(IEnumerable<byte> bytes, uint bits = 8) {
 			if ((bits * bytes.Count()) > (sizeof(uint) * 8))
-				throw new ArgumentOutOfRangeException("Attempting to read a larger integer from ID3 stream than supported by the storage type");
+				throw new ArgumentOutOfRangeException(Strings.ID3v2.Exception_ParsedIntTooLarge);
 
 			uint ret = 0;
 			var iter = bytes.GetEnumerator();

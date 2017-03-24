@@ -356,7 +356,8 @@
   </data>
   <data name="Genre_Unknown" xml:space="preserve">
     <value>Unknown genre: {0}</value>
-    <comment>Numerical genre ID is passed as the index-0 format item</comment>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the numerical genre ID</comment>
   </data>
   <data name="Genre_Vocal" xml:space="preserve">
     <value>Vocal</value>

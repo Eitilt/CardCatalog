@@ -149,7 +149,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			//TODO: Doesn't ensure that the length is enough for the flag data
 			// and so array index out-of-bounds exceptions may be thrown.
 			if (extHeader.Length < 2)
-				throw new InvalidDataException("Extended header too short to be valid for ID3v2.4");
+				throw new InvalidDataException(Strings.ID3v24.Exception_HeaderTooShort);
 
 			int flagBytes = (int)ParseUnsignedInteger(new byte[1]{ extHeader[0] });
 			var flags = new BitArray(extHeader.ToList().GetRange(1, flagBytes).ToArray());
@@ -164,19 +164,19 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 			if (flags[1]) {
 				if (extHeader[pos] != 0x00)
-					throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'Tag is an update' data");
+					throw new InvalidDataException(string.Format(Strings.ID3v24.Exception_HeaderUpdateTooShort, extHeader[pos]));
 				TagIsUpdate = true;
 				++pos;
 			}
 			if (flags[2]) {
 				if (extHeader[pos] != 0x05)
-					throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'CRC data present' data");
+					throw new InvalidDataException(string.Format(Strings.ID3v24.Exception_HeaderCrcTooShort, extHeader[pos]));
 				TagCRC = ParseUnsignedInteger(extHeader.ToList().GetRange(pos + 1, 5), 7);
 				pos += 6;
 			}
 			if (flags[3]) {
 				if (extHeader[pos] != 0x01)
-					throw new InvalidDataException("Invalid length (" + extHeader[pos] + ") given for ID3v2.4 'Tag restrictions' data");
+					throw new InvalidDataException(string.Format(Strings.ID3v24.Exception_HeaderRestrictionsTooShort, extHeader[pos]));
 				//TODO: This only affects behaviour before encoding, but
 				// should still be handled
 				++pos;

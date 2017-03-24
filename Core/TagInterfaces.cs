@@ -66,7 +66,9 @@ namespace AgEitilt.CardCatalog {
 			/// <summary>
 			/// All data contained by this field, in a human-readable format.
 			/// </summary>
-			public override IEnumerable<string> Values => new string[1] { String.Format("{{ {0} }}", BitConverter.ToString(data).Replace('-', ' ')) };
+			public override IEnumerable<string> Values => new string[1] {
+				String.Format(Strings.Base.Field_DefaultValue, BitConverter.ToString(data).Replace('-', ' '))
+			};
 
 			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
@@ -105,7 +107,7 @@ namespace AgEitilt.CardCatalog {
 		/// not suitable, the method should be overridden.
 		/// </remarks>
 		public virtual string Name =>
-			String.Format("{{ {0} }}", System.Text.Encoding.UTF8.GetString(SystemName));
+			String.Format(Strings.Base.Field_DefaultName, System.Text.Encoding.UTF8.GetString(SystemName));
 
 		/// <summary>
 		/// Extra human-readable information describing the field, such as the

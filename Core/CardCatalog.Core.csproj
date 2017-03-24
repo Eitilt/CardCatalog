@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;net46</TargetFrameworks>
     <AssemblyName>AgEitilt.CardCatalog.Core</AssemblyName>
-    <RootNamespace>AgEitilt.CardCatalog.Core</RootNamespace>
+    <RootNamespace>AgEitilt.CardCatalog</RootNamespace>
     <Authors>Sam May</Authors>
     <Company>Ag Eitilt</Company>
     <Product>CardCatalog</Product>
@@ -33,6 +33,21 @@ All format support is provided by the dependent packages.</Description>
     <PackageReference Include="AgEitilt.Stream" Version="0.2.0" />
     <PackageReference Include="System.AppDomain" Version="2.0.11" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Strings\Base.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Base.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Strings\Base.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Base.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

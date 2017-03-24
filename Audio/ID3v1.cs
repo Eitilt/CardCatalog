@@ -5,8 +5,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
-using System.Resources;
 
 namespace AgEitilt.CardCatalog.Audio {
 	/// <summary>
@@ -225,11 +223,6 @@ namespace AgEitilt.CardCatalog.Audio {
 	/// </summary>
 	public static class ID3v1Extension {
 		/// <summary>
-		/// Cached reference to the resource dictionary to reduce reflection.
-		/// </summary>
-		private static ResourceManager resources = new ResourceManager("Metadata.Audio.Strings.ID3v1", typeof(ID3v1).GetTypeInfo().Assembly);
-
-		/// <summary>
 		/// Convert a <see cref="ID3v1.Genre"/> value to a human-readable
 		/// string for the current locale.
 		/// </summary>
@@ -242,11 +235,11 @@ namespace AgEitilt.CardCatalog.Audio {
 
 			// If `str` is purely digits, the lookup has failed
 			if (str.All(char.IsDigit) == false) {
-				var genre = resources.GetString("Genre_" + str);
+				var genre = Strings.ID3v1.ResourceManager.GetString("Genre_" + str);
 				if (genre != null)
 					return genre;
 			}
-			return String.Format(resources.GetString("Genre_Unknown"), str);
+			return String.Format(Strings.ID3v1.Genre_Unknown, str);
 		}
 	}
 }

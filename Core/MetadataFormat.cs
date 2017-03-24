@@ -99,12 +99,12 @@ namespace AgEitilt.CardCatalog {
 
 			foreach (Type t in assembly.ExportedTypes) {
 				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false) ?? Array.Empty<MetadataFormatAttribute>())
-					typeof(MetadataFormat).GetMethod("Register", new Type[1] { typeof(string) })
+					typeof(MetadataFormat).GetMethod(nameof(Register), new Type[1] { typeof(string) })
 						.MakeGenericMethod(new Type[1] { t })
 						.Invoke(null, new object[1] { tagAttr.Name });
 
 				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false) ?? Array.Empty<TagFieldAttribute>())
-					typeof(MetadataFormat).GetMethod("Register", new Type[2] { typeof(string), typeof(byte[]) })
+					typeof(MetadataFormat).GetMethod(nameof(Register), new Type[2] { typeof(string), typeof(byte[]) })
 						.MakeGenericMethod(new Type[1] { t })
 						.Invoke(null, new object[2] { fieldAttr.Format, fieldAttr.Header });
 			}
@@ -130,7 +130,7 @@ namespace AgEitilt.CardCatalog {
 		/// <seealso cref="HeaderParserAttribute"/>
 		public static void Register<T>() where T : MetadataTag {
 			var attr = typeof(T).GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false)
-				?? throw new TypeLoadException("No explicit format name was passed, and the type has no attribute to infer it from");
+				?? throw new TypeLoadException(Strings.Base.Exception_NoFormatName);
 
 			Register<T>(attr.Name);
 		}
@@ -208,7 +208,7 @@ namespace AgEitilt.CardCatalog {
 			var fieldType = typeof(T);
 
 			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
-				throw new NotSupportedException("Metadata tag field types must extend TagField");
+				throw new NotSupportedException(Strings.Base.Exception_ExtendFieldType);
 
 			IEnumerable<string> formatAttrs = Array.Empty<string>();
 			if (format == null) {
@@ -221,8 +221,7 @@ namespace AgEitilt.CardCatalog {
 				}
 
 				if (formatAttrs.Count() == 0)
-					throw new MissingFieldException("If a TagFieldAttribute does not declare a Format,"
-						+ " at least one enclosing type must have an attached MetadataFormatAttribute");
+					throw new MissingFieldException(Strings.Base.Exception_NoFieldEnclosingFormatName);
 
 			} else {
 				formatAttrs = new string[1] { format };
@@ -272,20 +271,20 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="method">The validation function to check.</param>
 		private static void MethodSanityChecks<T>(MethodInfo method) {
 			if (method.IsPrivate)
-				throw new NotSupportedException("Metadata header-parsing functions must not be private");
+				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionPrivate);
 			if (method.IsAbstract)
-				throw new NotSupportedException("Metadata header-parsing functions must not be abstract");
+				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionAbstract);
 			if (method.IsStatic == false)
-				throw new NotSupportedException("Metadata header-parsing functions must be static");
+				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionNonstatic);
 
 			var parameters = method.GetParameters();
 			if ((parameters.Length == 0)
 				|| (typeof(IEnumerable<byte>).IsAssignableFrom(parameters[0].ParameterType) == false)
 				|| ((parameters.Length > 1) && (parameters[1].IsOptional == false)))
-				throw new NotSupportedException("Metadata header-parsing functions must be able to take only an IEnumerable<byte>");
+				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionParameters);
 
 			if (typeof(T).IsAssignableFrom(method.ReturnType) == false)
-				throw new NotSupportedException("Metadata header-parsing functions must return an empty instance of their type");
+				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionReturn);
 		}
 
 		/// <summary>

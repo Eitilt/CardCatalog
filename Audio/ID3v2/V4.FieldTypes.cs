@@ -24,6 +24,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// This needs to be located between <see cref="TagField"/> and the
 		/// field classes in the inheritance hierarchy in order for the type
 		/// registration to recognize the <see cref="HeaderParserAttribute"/>.
+		/// <para/>
+		/// TODO: Migrate the lookup-in-resx Name implementations to here.
 		/// </remarks>
 		public abstract class V4Field : TagField {
 			/// <summary>
@@ -191,6 +193,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			 * http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/ID3.html
 			 * http://wiki.hydrogenaud.io/index.php?title=Tag_Mapping
 			 * http://wiki.hydrogenaud.io/index.php?title=Foobar2000:ID3_Tag_Mapping
+			 * Still need to check:
+			 * http://musoware.com/wiki/index.php?title=Attribute_Mapping
+			 * http://musicbee.wikia.com/wiki/Tag?useskin=monobook
 			 */
 
 			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVA2, EQU2, RVRB, APIC,
@@ -236,7 +241,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The human-readable name of the field.
 				/// </summary>
-				public override string Name => "Unique ID" + (owner == null ? " (" + owner + ")" : "");
+				public override string Name {
+					get {
+						if (owner == null)
+							return Strings.ID3v24.Field_UFID_NullOwner;
+						else
+							return Strings.ID3v24.Field_UFID;
+					}
+				}
+						
 
 				/// <summary>
 				/// The raw identifier.
@@ -365,47 +378,23 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Name {
 					get {
-						switch (ISO88591.GetString(header)) {
-							case "TALB": return "Album";
-							case "TBPM": return "Beats per minute";
-							case "TCAT": return "Category";                 // Unofficial (podcasts)
-							case "TCOM": return "Composer";
-							case "TDES": return "Description";              // Unofficial (podcasts)
-							case "TENC": return "Encoder";
-							case "TEXT": return "Author";
-							case "TGID": return "Album ID";                 // Unofficial (podcasts): "Podcast ID"
-							case "TIT1": return "Work";                     // Official title: "Grouping"
-							case "TIT2": return "Title";
-							case "TIT3": return "Subtitle";
-							case "TKWD": return "Keywords";                 // Unofficial (podcasts)
-							case "TMOO": return "Mood";
-							case "TOAL": return "Original album";           // Picard: "Work title"
-							case "TOFN": return "Original filename";
-							case "TOLY": return "Original author";
-							case "TOPE": return "Original artist";
-							case "TOWN": return "Owner";
-							case "TPE1": return "Artist";
-							case "TPE2": return "Album artist";
-							case "TPE3": return "Conductor";
-							case "TPE4": return "Remixer";
-							case "TPUB": return "Publisher";                // Picard: "Record label"
-							case "TRSN": return "Station name";
-							case "TRSO": return "Station owner";
-							case "TSO2": return "Album artist sort order";  // Unofficial
-							case "TSOA": return "Album sort order";
-							case "TSOC": return "Composer sort order";      // Unofficial
-							case "TSOP": return "Artist sort order";
-							case "TSOT": return "Title sort order";
-							case "TSSE": return "Encoding settings";
-							case "TSST": return "Disk title";
-							default: return DefaultName;
-						}
+						// TCAT: Unofficial (podcasts)
+						// TDES: Unofficial (podcasts)
+						// TGID: Unofficial (podcasts): "Podcast ID"
+						// TIT1: Official title: "Grouping"
+						// TKWD: Unofficial (podcasts)
+						// TOAL: "Work title" (Picard)
+						// TPUB: "Record label" (Picard)
+						// TSO2: Unofficial
+						// TSOC: Unofficial
+						return Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(header))
+							?? DefaultName;
 					}
 				}
 				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected virtual string DefaultName { get; } = "Unknown text";
+				protected virtual string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Text;
 
 				/// <summary>
 				/// Extra human-readable information describing the field, such as the
@@ -582,31 +571,22 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public OfNumberFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// The default case should never occur, but is provided for
-				/// future-proofing purposes.
-				/// </remarks>
-				public override string Name {
-					get {
-						switch (ISO88591.GetString(header)) {
-							case "TPOS": return "Disk number";
-							case "TRCK": return "Track number";
-							default: return DefaultName;
-						}
-					}
-				}
-				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected override string DefaultName { get; } = "Unknown number";
+				protected override string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Number;
 
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => s.Replace("/", " of "));
+				public override IEnumerable<string> Values => values.Select(s => {
+					var split = s?.Split(new char[1] { '/' }) ?? Array.Empty<string>();
+					if (split.Length == 0)
+						return null;
+					else if (split.Length == 1)
+						return split[0];
+					else
+						return String.Format(Strings.ID3v24.Field_ValueFormat_Number, split[0], split[1]);
+				});
 			}
 			/// <summary>
 			/// A frame containing the track number.
@@ -626,11 +606,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public IsrcFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Recording ISRC";
 
 				/// <summary>
 				/// All values contained within this field.
@@ -668,26 +643,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public ListMappingFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// The default case should never occur, but is provided for
-				/// future-proofing purposes.
-				/// </remarks>
-				public override string Name {
-					get {
-						switch (ISO88591.GetString(header)) {
-							case "TIPL": return "Production credits";
-							case "TMCL": return "Performer credits";
-							default: return DefaultName;
-						}
-					}
-				}
-				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected override string DefaultName { get; } = "Other credits";
+				protected override string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Credits;
 
 				/// <summary>
 				/// All values contained within this field.
@@ -697,9 +655,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						var valArray = values.ToArray();
 						for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
 							if (j == valArray.Length)
-								yield return String.Format("{{ {0} }}", valArray[i]);
+								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
+							else if (valArray[i].Length == 0)
+								yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
 							else
-								yield return (valArray[i] + (valArray[i].Length > 0 ? ": " : "") + valArray[j]);
+								yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[j]);
 						}
 					}
 				}
@@ -725,26 +685,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public MsFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// The default case should never occur, but is provided for
-				/// future-proofing purposes.
-				/// </remarks>
-				public override string Name {
-					get {
-						switch (ISO88591.GetString(header)) {
-							case "TDLY": return "Playlist delay";
-							case "TLEN": return "Length";
-							default: return DefaultName;
-						}
-					}
-				}
-				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected override string DefaultName { get; } = "Unknown length";
+				protected override string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Length;
 
 				/// <summary>
 				/// All values contained within this field.
@@ -752,11 +695,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override IEnumerable<string> Values {
 					get {
 						foreach (var s in values) {
-							if (int.TryParse(s, out int ms)) {
+							if (int.TryParse(s, out int ms))
 								yield return TimeSpan.FromMilliseconds(ms).ToString();
-							} else {
-								yield return String.Format("{{ {0} }}", s);
-							}
+							else
+								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 						}
 					}
 				}
@@ -781,11 +723,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public KeyFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Key";
-
-				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<string> Values {
@@ -798,7 +735,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 									&& ((s.Length < 3) || ('m' == cs[2])))
 								yield return s.Replace('b', '\u266D').Replace('#', '\u266F');
 							else
-								yield return String.Format("{{ {0} }}", s);
+								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 						}
 					}
 				}
@@ -821,11 +758,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public LanguageFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Language";
 
 				/// <summary>
 				/// All values contained within this field.
@@ -859,11 +791,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public GenreFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Genre";
-
-				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
 				/// 
@@ -875,9 +802,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						foreach (var s in values) {
 							if (s.Equals("RX"))
-								yield return "Remix";
+								yield return Strings.ID3v24.Field_TCON_RX;
 							else if (s.Equals("CR"))
-								yield return "Cover";
+								yield return Strings.ID3v24.Field_TCON_CR;
 							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
 								/* Between everything being a digit and the
 								 * length being capped, Parse is guaranteed to
@@ -896,81 +823,22 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 			}
 			/// <summary>
-			/// A frame containing the genre.
+			/// A frame containing codes to look up from the resource files.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// If no matching string is found, the code/string will be
+			/// displayed according to the standard "Unrecognized" format.
+			/// <para/>
+			/// The resource key must fit the pattern <c>Field_HEADER_CODE</c>
+			/// where <c>HEADER</c> is the unique header of the field and
+			/// <c>CODE</c> is the string value. In both, the characters
+			/// <c>/</c> and <c>.</c> will be replaced with <c>_</c>
+			/// </remarks>
+			[TagField("TCMP")]
 			[TagField("TFLT")]
-			public class FiletypeFrame : TextFrame {
-				/// <summary>
-				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
-				/// </summary>
-				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TextFrame.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public FiletypeFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Audio encoding";
-
-				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// TODO: Split "Remix" and "Cover" into separately-displayed
-				/// field; likely same fix as <see cref="ListMappingFrame"/>.
-				/// </remarks>
-				public override IEnumerable<string> Values {
-					get {
-						foreach (var s in values) {
-							switch (s) {
-								case "MIME":
-									yield return "MIME type as follows";
-									break;
-								case "MPG":
-									yield return "MPEG audio";
-									break;
-								case "MPG/1":
-									yield return "MPEG 1/2 layer I";
-									break;
-								case "MPG/2":
-									yield return "MPEG 1/2 layer II";
-									break;
-								case "MPG/2.5":
-									yield return "MPEG 2.5";
-									break;
-								case "MPG/3":
-									yield return "MPEG 1/2 layer III";
-									break;
-								case "MPG/AAC":
-									yield return "Advanced audio compression (MPEG)";
-									break;
-								case "VQF":
-									yield return "Transform-domain weighted interleave vector quantisation";
-									break;
-								case "PCM":
-									yield return "Pulse code modulated audio";
-									break;
-								default:
-									yield return s;
-									break;
-							}
-						}
-					}
-				}
-			}
-			/// <summary>
-			/// A frame containing the genre.
-			/// </summary>
 			[TagField("TMED")]
-			public class MediumFrame : TextFrame {
+			public class ResourceFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
@@ -983,12 +851,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="length">
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
-				public MediumFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Original medium";
+				public ResourceFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1001,209 +864,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override IEnumerable<string> Values {
 					get {
 						foreach (var s in values) {
-							switch (s) {
-								case "DIG":
-									yield return "Unknown digital source";
-									break;
-								case "DIG/A":
-									yield return "Analog transfer from digital";
-									break;
-								case "ANA":
-									yield return "Unknown analog source";
-									break;
-								case "ANA/WAC":
-									yield return "Wax cylinder";
-									break;
-								case "ANA/8CA":
-									yield return "8-track tape cassette";
-									break;
-								case "CD":
-									yield return "Compact disk";
-									break;
-								case "CD/A":
-									yield return "Analog transfer from CD";
-									break;
-								case "CD/DDD":
-									yield return "Compact disk (SPARS DDD)";
-									break;
-								case "CD/ADD":
-									yield return "Compact disk (SPARS ADD)";
-									break;
-								case "CD/AAD":
-									yield return "Compact disk (SPARS AAD)";
-									break;
-								case "LD":
-									yield return "Laserdisk";
-									break;
-								case "TT":
-									yield return "Turntable record";
-									break;
-								case "TT/33":
-									yield return "33.33 rpm record";
-									break;
-								case "TT/45":
-									yield return "45 rpm record";
-									break;
-								case "TT/71":
-									yield return "71.29 rpm record";
-									break;
-								case "TT/76":
-									yield return "76.59 rpm record";
-									break;
-								case "TT/78":
-									yield return "78.26 rpm record";
-									break;
-								case "TT/80":
-									yield return "80 rpm record";
-									break;
-								case "MD":
-									yield return "MiniDisc";
-									break;
-								case "MD/A":
-									yield return "Analog transfer from MiniDisc";
-									break;
-								case "DAT":
-									yield return "DAT cassette";
-									break;
-								case "DAT/A":
-									yield return "Analog transfer from DAT cassette";
-									break;
-								case "DAT/1":
-									yield return "DAT standard: 48 kHz/16 bits, linear";
-									break;
-								case "DAT/2":
-									yield return "DAT mode 2: 32 kHz/16 bits, linear";
-									break;
-								case "DAT/3":
-									yield return "DAT mode 3: 32 kHz/12 bits, non-linear, low speed";
-									break;
-								case "DAT/4":
-									yield return "DAT mode 4: 32 kHz/12 bits, 4 channels";
-									break;
-								case "DAT/5":
-									yield return "DAT mode 5: 44.1 kHz/16 bits, linear";
-									break;
-								case "DAT/6":
-									yield return "DAT mode 6: 44.1 kHz/16 bits, 'wide track' play";
-									break;
-								case "DCC":
-									yield return "DCC cassette";
-									break;
-								case "DCC/A":
-									yield return "Analog transfer from DCC cassette";
-									break;
-								case "DVD":
-									yield return "DVD";
-									break;
-								case "DVD/A":
-									yield return "Analog transfer from DVD";
-									break;
-								case "TV":
-									yield return "Television";
-									break;
-								case "TV/PAL":
-									yield return "Television (PAL)";
-									break;
-								case "TV/NTSC":
-									yield return "Television (NTSC)";
-									break;
-								case "TV/SECAM":
-									yield return "Television (SECAM)";
-									break;
-								case "VID":
-									yield return "Video";
-									break;
-								case "VID/PAL":
-									yield return "Video (PAL)";
-									break;
-								case "VID/NTSC":
-									yield return "Video (NTSC)";
-									break;
-								case "VID/SECAM":
-									yield return "Video (SECAM)";
-									break;
-								case "VID/VHS":
-									yield return "VHS tape";
-									break;
-								case "VID/SVHS":
-									yield return "S-VHS tape";
-									break;
-								case "VID/BETA":
-									yield return "BETAMAX tape";
-									break;
-								case "RAD":
-									yield return "Radio";
-									break;
-								case "RAD/FM":
-									yield return "FM radio";
-									break;
-								case "RAD/AM":
-									yield return "AM radio";
-									break;
-								case "RAD/LW":
-									yield return "Longwave radio";
-									break;
-								case "RAD/MW":
-									yield return "Medium wave radio";
-									break;
-								case "TEL":
-									yield return "Telephone";
-									break;
-								case "TEL/I":
-									yield return "ISDN telephone";
-									break;
-								case "MC":
-									yield return "Tape cassette";
-									break;
-								case "MC/4":
-									yield return "4.75 cm/s cassette";
-									break;
-								case "MC/9":
-									yield return "9.5 cm/s cassette";
-									break;
-								case "MC/I":
-									yield return "Type I (ferric) cassette";
-									break;
-								case "MC/II":
-									yield return "Type II (chrome) cassette";
-									break;
-								case "MC/III":
-									yield return "Type III (ferric chrome) cassette";
-									break;
-								case "MC/IV":
-									yield return "Type IV (metal) cassette";
-									break;
-								case "REE":
-									yield return "Tape cassette";
-									break;
-								case "REE/9":
-									yield return "9.5 cm/s cassette";
-									break;
-								case "REE/19":
-									yield return "19 cm/s cassette";
-									break;
-								case "REE/38":
-									yield return "38 cm/s cassette";
-									break;
-								case "REE/76":
-									yield return "76 cm/s cassette";
-									break;
-								case "REE/I":
-									yield return "Type I (ferric) cassette";
-									break;
-								case "REE/II":
-									yield return "Type II (chrome) cassette";
-									break;
-								case "REE/III":
-									yield return "Type III (ferric chrome) cassette";
-									break;
-								case "REE/IV":
-									yield return "Type IV (metal) cassette";
-									break;
-								default:
-									yield return s;
-									break;
-							}
+							yield return Strings.ID3v24.ResourceManager.GetString(
+								"Field_" + ISO88591.GetString(header) + "_"
+								+ s.Replace('/', '_').Replace('.', '_')
+							) ?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 						}
 					}
 				}
@@ -1228,14 +892,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public CopyrightFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Copyright";
-
-				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => "\u00A9 " + s);
+				public override IEnumerable<string> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TCOP_Value, s));
 			}
 			/// <summary>
 			/// A frame containing copyright information.
@@ -1257,14 +916,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public PCopyrightFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Production copyright";
-
-				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => "\u2117 " + s);
+				public override IEnumerable<string> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TCOP_Value, s));
 			}
 			/// <summary>
 			/// A frame containing a timestamp.
@@ -1290,29 +944,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public TimeFrame(byte[] name, int length) : base(name, length) { }
 
 				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// The default case should never occur, but is provided for
-				/// future-proofing purposes.
-				/// </remarks>
-				public override string Name {
-					get {
-						switch (ISO88591.GetString(header)) {
-							case "TDEN": return "Encoding date";
-							case "TDOR": return "Original release date";
-							case "TDRC": return "Recording date";
-							case "TDRL": return "Release date";
-							case "TDTG": return "Tagging date";
-							default: return DefaultName;
-						}
-					}
-				}
-				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected override string DefaultName { get; } = "Unknown time";
+				protected override string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Time;
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1349,58 +983,16 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								continue;
 							}
 
-							string ret;
 							if ((times[0] == null) || (times[0] == DateTime.MinValue))
-								ret = "Unknown";
+								yield return Strings.ID3v24.Field_Time_Unknown;
+							else if ((times[1] != null) && (times[1] != DateTime.MinValue))
+								yield return String.Format(Strings.ID3v24.Field_Time_Range, times[0], times[1]);
 							else
 								//TODO: Only return the given values
-								ret = times[0].ToString();
-
-							if ((times[1] != null) && (times[1] != DateTime.MinValue)) {
-								//TODO: Localize separator
-								ret += "\u2013";
-
-								//TODO: Only return the given values
-								ret += times[1].ToString();
-							}
-							yield return ret;
+								yield return times[0].ToString();
 						}
 					}
 				}
-			}
-			/// <summary>
-			/// A frame containing the "Compilation" flag defined by iTunes.
-			/// </summary>
-			[TagField("TCMP")]
-			public class ITunesCompilationFrame : TextFrame {
-				/// <summary>
-				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
-				/// </summary>
-				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TextFrame.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public ITunesCompilationFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Compilation (iTunes)";
-
-				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				public override IEnumerable<string> Values => from cmp in values
-															  select (cmp.Equals("0")
-																		 ? "Not part of a compilation"
-																		 : (cmp.Equals("1")
-																			   ? "From a compilation album"
-																			   : String.Format("{{ {0} }}", cmp)));
 			}
 			/// <summary>
 			/// A frame containing encoder-defined text.
@@ -1420,11 +1012,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public UserTextFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Other text";
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1486,24 +1073,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Name {
 					get {
-						switch (ISO88591.GetString(header)) {
-							case "WCOM": return "Purchasing information";
-							case "WCOP": return "Copyright information";
-							case "WFED": return "Feed";                    // Unofficial: MP3Tag/iTunes "Podcast URL"
-							case "WOAF": return "Official website";
-							case "WOAR": return "Artist homepage";
-							case "WOAS": return "Source website";
-							case "WORS": return "Radio station homepage";
-							case "WPAY": return "Payment website";
-							case "WPUB": return "Publisher homepage";
-							default: return DefaultName;
-						}
+						// WFED: Unofficial (podcast)
+						return Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(header))
+							?? DefaultName;
 					}
 				}
 				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				protected override string DefaultName { get; } = "Unknown URL";
+				protected override string DefaultName { get; } = Strings.ID3v24.Field_DefaultName_Url;
 
 				/// <summary>
 				/// Read a sequence of bytes in the manner appropriate to the
@@ -1540,11 +1118,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public UserUrlFrame(byte[] name, int length) : base(name, length) { }
-
-				/// <summary>
-				/// The human-readable name of the field.
-				/// </summary>
-				public override string Name => "Other URL";
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1597,11 +1170,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Name {
 					get {
-						switch (ISO88591.GetString(SystemName)) {
-							case "COMM": return "Comment";
-							case "USLT": return "Lyrics";
-							default: return DefaultName;
-						}
+						return Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(header))
+							?? DefaultName;
 					}
 				}
 
@@ -1614,7 +1184,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						if ((description == null) || (language == null))
 							return null;
 						else
-							return String.Format("{0} ({1})", description, language);
+							return String.Format(Strings.ID3v24.Field_Subtitle_Language, description, language);
 					}
 				}
 
@@ -1650,7 +1220,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 					var split = SplitStrings(content, TryGetEncoding(bytes[0]));
 					description = split.First();
-					// Unlike the text tags, this says nothing about nulls
+					// Unlike the text tags, this says nothing about nulls,
+					// and so they should be restored
 					values = new string[1] { String.Join("\0", split.Skip(1)) };
 				}
 			}
@@ -1686,7 +1257,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The human-readable name of the field.
 				/// </summary>
-				public override string Name => "Play count";
+				public override string Name => Strings.ID3v24.Field_PCNT;
 
 				/// <summary>
 				/// The value contained by this field.

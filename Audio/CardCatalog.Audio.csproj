@@ -38,8 +38,44 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Strings\ID3v1.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ID3v1.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v2.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ID3v2.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v23.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ID3v23.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v24.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ID3v24.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Strings\ID3v1.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ID3v1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v2.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ID3v2.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v23.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ID3v23.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v24.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ID3v24.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
