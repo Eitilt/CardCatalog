@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFrameworks>netstandard1.3;net46</TargetFrameworks>
+    <AssemblyName>AgEitilt.CardCatalog.Audio</AssemblyName>
+    <RootNamespace>AgEitilt.CardCatalog.Audio</RootNamespace>
     <Authors>Sam May</Authors>
     <Company>Ag Eitilt</Company>
     <Product>CardCatalog</Product>
@@ -11,8 +13,8 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
     <PackageLicenseUrl>https://www.mozilla.org/en-US/MPL/2.0/</PackageLicenseUrl>
     <DocumentationFile>CardCatalogAudio.xml</DocumentationFile>
     <Version>0.1.0</Version>
-    <AssemblyVersion>0.1.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
+    <AssemblyVersion>0.1.1</AssemblyVersion>
+    <FileVersion>0.1.1.0</FileVersion>
     <RepositoryUrl>https://github.com/Eitilt/CardCatalog</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>cardcatalog metadata parse file music audio mp3 id3 id3v2</PackageTags>
@@ -22,22 +24,17 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'And'$(NUGET_DIR)'!=''">
-    <!--<PostBuildEvent>copy /Y $(TargetDir)\..\$(TargetName).*.nupkg $(NUGET_DIR)</PostBuildEvent>-->
-  </PropertyGroup>
+  <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'And'$(NUGET_DIR)'!=''">
+    <Copy SourceFiles="$(OutputPath)\$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(NUGET_DIR)" />
+  </Target>
 
   <ItemGroup>
+    <PackageReference Include="AgEitilt.Stream" Version="0.2.0" />
     <PackageReference Include="Crc32.NET" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\CardCatalog.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Stream">
-      <HintPath>..\..\CommonHelpers\Stream\bin\Release\netstandard1.0\Stream.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

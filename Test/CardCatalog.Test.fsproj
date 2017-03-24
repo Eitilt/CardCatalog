@@ -63,6 +63,21 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="AgEitilt.CardCatalog.Audio">
+      <HintPath>..\packages\AgEitilt.CardCatalog.Audio.0.1.0\lib\net46\AgEitilt.CardCatalog.Audio.dll</HintPath>
+    </Reference>
+    <Reference Include="AgEitilt.CardCatalog.Core">
+      <HintPath>..\packages\AgEitilt.CardCatalog.Core.0.1.0\lib\net46\AgEitilt.CardCatalog.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AgEitilt.Dictionary">
+      <HintPath>..\packages\AgEitilt.Dictionary.0.2.0\lib\net45\AgEitilt.Dictionary.dll</HintPath>
+    </Reference>
+    <Reference Include="AgEitilt.Stream">
+      <HintPath>..\packages\AgEitilt.Stream.0.2.0\lib\net45\AgEitilt.Stream.dll</HintPath>
+    </Reference>
+    <Reference Include="Crc32.NET">
+      <HintPath>..\packages\Crc32.NET.1.0.2\lib\net20\Crc32.NET.dll</HintPath>
+    </Reference>
     <Reference Include="FsCheck">
       <HintPath>..\packages\FsCheck.2.7.1\lib\net45\FsCheck.dll</HintPath>
     </Reference>
@@ -71,8 +86,24 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
+    <Reference Include="System.AppDomain">
+      <HintPath>..\packages\System.AppDomain.2.0.11\lib\netstandard1.3\System.AppDomain.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reflection.TypeExtensions">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.1.0\lib\net462\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ValueTuple">
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>

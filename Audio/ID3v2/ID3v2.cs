@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CardCatalog.Audio.ID3v2 {
+namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	/// <summary>
 	/// Shared code for all versions of the ID3v2 standard.
 	/// </summary>

@@ -13,7 +13,7 @@ using System.Text;
 
 using AgEitilt.Common.Stream;
 
-namespace CardCatalog.Audio.ID3v2 {
+namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	partial class V4 {
 		/// <summary>
 		/// Encapsulate parsing ID3v2.4 headers to reduce the functions each

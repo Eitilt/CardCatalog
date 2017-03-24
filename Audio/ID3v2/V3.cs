@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace CardCatalog.Audio.ID3v2 {
+namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	/// <summary>
 	/// An implementation of the ID3v2.3 standard as described at
 	/// <see href="http://id3.org/d3v2.3.0"/>

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 using AgEitilt.Common.Stream;
 
-namespace CardCatalog {
+namespace AgEitilt.CardCatalog {
 	internal interface IParsable {
 		int Length { get; }
 		void Parse(Stream stream);

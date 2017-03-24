@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using AgEitilt.Common.Dictionary;
 
-namespace CardCatalog {
+namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// A data-free class providing a common means to work with multiple
 	/// metadata formats.

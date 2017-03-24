@@ -6,7 +6,7 @@
 using System;
 using System.Text;
 
-namespace CardCatalog {
+namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// Indicate that the assembly should be scanned for classes marked with
 	/// <see cref="MetadataFormatAttribute"/> to automatically register.

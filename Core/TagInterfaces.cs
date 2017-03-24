@@ -10,7 +10,7 @@ using System.Linq;
 
 using AgEitilt.Common.Stream;
 
-namespace CardCatalog {
+namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// Common format-agnostic attributes mapping to different fields
 	/// depending on how each is expressed in the particular format.

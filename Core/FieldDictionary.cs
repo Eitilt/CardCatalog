@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 using AgEitilt.Common.Dictionary;
 
-namespace CardCatalog {
+namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
 	/// proper equality of keys to <see cref="TagField"/> objects.
