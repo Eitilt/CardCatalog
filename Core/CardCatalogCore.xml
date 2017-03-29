@@ -509,13 +509,6 @@
             sets it to 0, the incoming stream will be read according to
             </remarks>
         </member>
-        <member name="P:AgEitilt.CardCatalog.MetadataTag.FieldBase">
-            <summary>
-            An editable redirect for the low-level data.
-            </summary>
-            
-            <seealso cref="P:AgEitilt.CardCatalog.MetadataTag.Fields"/>
-        </member>
         <member name="P:AgEitilt.CardCatalog.MetadataTag.Fields">
             <summary>
             The low-level representations of the tag data.

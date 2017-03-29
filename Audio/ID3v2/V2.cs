@@ -43,20 +43,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		}
 
 		/// <summary>
-		/// The underlying low-level tag data.
-		/// </summary>
-		/// 
-		/// <seealso cref="FieldBase"/>
-		private FieldDictionary fields = new FieldDictionary();
-		/// <summary>
-		/// An editable redirect for the low-level data.
-		/// </summary>
-		protected override FieldDictionary FieldBase {
-			get => fields;
-			set => fields = value;
-		}
-
-		/// <summary>
 		/// Implement the audio field attribute mappings for ID3v2.2 tags.
 		/// </summary>
 		class AttributeStruct : AudioTagAttributes {
