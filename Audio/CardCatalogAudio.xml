@@ -438,18 +438,6 @@
             format, `null` otherwise.
             </returns>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V2.fields">
-            <summary>
-            The underlying low-level tag data.
-            </summary>
-            
-            <seealso cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V2.FieldBase"/>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V2.FieldBase">
-            <summary>
-            An editable redirect for the low-level data.
-            </summary>
-        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V2.AttributeStruct">
             <summary>
             Implement the audio field attribute mappings for ID3v2.2 tags.
@@ -520,18 +508,6 @@
             An empty <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V2"/> object if the header is in the proper
             format, `null` otherwise.
             </returns>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V3.fields">
-            <summary>
-            The underlying low-level tag data.
-            </summary>
-            
-            <seealso cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FieldBase"/>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FieldBase">
-            <summary>
-            An editable redirect for the low-level data.
-            </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V3.AttributeStruct">
             <summary>
@@ -620,18 +596,6 @@
             An empty <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V2"/> object if the header is in the proper
             format, `null` otherwise.
             </returns>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.fields">
-            <summary>
-            The underlying low-level tag data.
-            </summary>
-            
-            <seealso cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FieldBase"/>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FieldBase">
-            <summary>
-            An editable redirect for the low-level data.
-            </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.AttributeStruct">
             <summary>

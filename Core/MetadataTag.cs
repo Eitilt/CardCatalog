@@ -30,16 +30,9 @@ namespace AgEitilt.CardCatalog {
 		public int Length { get; protected set; }
 
 		/// <summary>
-		/// An editable redirect for the low-level data.
-		/// </summary>
-		/// 
-		/// <seealso cref="Fields"/>
-		protected abstract FieldDictionary FieldBase { get; set; }
-
-		/// <summary>
 		/// The low-level representations of the tag data.
 		/// </summary>
-		public IReadOnlyFieldDictionary Fields => FieldBase;
+		public IEnumerable<TagField> Fields { get; private set; }
 
 		/// <summary>
 		/// The proper standardized field redirects for the enclosing
@@ -59,13 +52,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="stream">The stream to read.</param>
 		public void Parse(Stream stream) {
-			var fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.tagFormats[Format].fields.Values).Result;
-
-			FieldBase = new FieldDictionary(fields.GroupBy(f => f.SystemName, FieldDictionary.KeyComparer)
-				.ToDictionary(
-					g => g.Key,
-					g => g.ToList() as IEnumerable<TagField>
-			));
+			Fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.tagFormats[Format].fields.Values).Result;
 		}
 	}
 }
