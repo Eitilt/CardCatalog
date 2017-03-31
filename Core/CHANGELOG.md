@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Field values are now boxed to `object` to allow a better range of
   types, rather than forcing `string` representations
+- Support for fields containing images
 
 ## 0.1.1
 ### Changed

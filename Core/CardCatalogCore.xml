@@ -99,6 +99,23 @@
             proper format for keys to <see cref="T:AgEitilt.CardCatalog.TagField"/> objects.
             </summary>
         </member>
+        <member name="T:AgEitilt.CardCatalog.ImageData">
+            <summary>
+            A wrapper around raw image data to distinguish it as such.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.ImageData.#ctor(System.Byte[])">
+            <summary>
+            Wrap the given data as an image.
+            </summary>
+            
+            <param name="data">The raw, binary data.</param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.ImageData.Data">
+            <summary>
+            The raw binary data describing the image.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.ScanAssemblyAttribute">
             <summary>
             Indicate that the assembly should be scanned for classes marked with
@@ -631,12 +648,76 @@
             <summary>
             The display names of the enclosing file.
             </summary>
+            
+            TODO: This should only be a single value, not a list.
         </member>
         <member name="T:AgEitilt.CardCatalog.TagField">
             <summary>
             A single point of data saved in the tag, with default helper
             implementations.
             </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Length">
+            <summary>
+            The length in bytes of the data contained in the field (excluding
+            the header).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Name">
+            <summary>
+            The human-readable name of the field if available, or a
+            representation of <see cref="P:AgEitilt.CardCatalog.TagField.SystemName"/> if not.
+            </summary>
+            
+            <remarks>
+            The default implementation is to read the <see cref="P:AgEitilt.CardCatalog.TagField.SystemName"/>
+            as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
+            not suitable, the method should be overridden.
+            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Subtitle">
+            <summary>
+            Extra human-readable information describing the field, such as the
+            "category" of a header with multiple realizations.
+            </summary>
+            
+            <remarks>
+            The default implementation is to return `null`; if this is not
+            suitable, the method should be overridden.
+            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Values">
+            <summary>
+            All data contained by this field, in a human-readable format.
+            </summary>
+            
+            <remarks>
+            A <c>null</c> value should be treated the same as an empty
+            enumerable.
+            <para/>
+            These will typically be <see cref="T:System.Byte"/> array or
+            <see cref="T:System.String"/> instances, but some fields may return other
+            types, such as <see cref="T:System.Double"/>. Using C#'s <c>as</c> or
+            <c>is</c> keywords is intended for handling.
+            <para/>
+            Images will be returned as an <see cref="T:AgEitilt.CardCatalog.ImageData"/> wrapper
+            around the raw data; the render and display should be handled by
+            the including program depending on platform requirements and
+            capabilities.
+            </remarks>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.TagField.Parse(System.IO.Stream)">
+            <summary>
+            Read a sequence of bytes in the manner appropriate to the specific
+            type of field.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.TagField.Empty">
             <summary>
@@ -681,53 +762,6 @@
             <summary>
             Read a sequence of bytes in the manner appropriate to the
             specific type of field.
-            </summary>
-            
-            <param name="stream">The data to read.</param>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.SystemName">
-            <summary>
-            The byte header used to internally identify the field.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.Length">
-            <summary>
-            The length in bytes of the data contained in the field (excluding
-            the header).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.Name">
-            <summary>
-            The human-readable name of the field if available, or a
-            representation of <see cref="P:AgEitilt.CardCatalog.TagField.SystemName"/> if not.
-            </summary>
-            
-            <remarks>
-            The default implementation is to read the <see cref="P:AgEitilt.CardCatalog.TagField.SystemName"/>
-            as a UTF-8 encoded string enclosed in "{ " and " }"; if this is
-            not suitable, the method should be overridden.
-            </remarks>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.Subtitle">
-            <summary>
-            Extra human-readable information describing the field, such as the
-            "category" of a header with multiple realizations.
-            </summary>
-            
-            <remarks>
-            The default implementation is to return `null`; if this is not
-            suitable, the method should be overridden.
-            </remarks>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.Values">
-            <summary>
-            All data contained by this field, in a human-readable format.
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.TagField.Parse(System.IO.Stream)">
-            <summary>
-            Read a sequence of bytes in the manner appropriate to the specific
-            type of field.
             </summary>
             
             <param name="stream">The data to read.</param>

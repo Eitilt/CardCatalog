@@ -638,4 +638,92 @@ Parameter 0 will be replaced by the name of the person</comment>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the time/date (as a DateTimeOffset)</comment>
   </data>
+  <data name="Image_Artist"
+        xml:space="preserve">
+    <value>Artist portrait</value>
+  </data>
+  <data name="Image_ArtistMain"
+        xml:space="preserve">
+    <value>Lead artist portrait</value>
+  </data>
+  <data name="Image_Band"
+        xml:space="preserve">
+    <value>Group picture</value>
+  </data>
+  <data name="Image_Booklet"
+        xml:space="preserve">
+    <value>Booklet page</value>
+  </data>
+  <data name="Image_BrightFish"
+        xml:space="preserve">
+    <value>A brightly-colored fish</value>
+  </data>
+  <data name="Image_Composer"
+        xml:space="preserve">
+    <value>Composer portrait</value>
+  </data>
+  <data name="Image_Conductor"
+        xml:space="preserve">
+    <value>Conductor portrait</value>
+  </data>
+  <data name="Image_CoverBack"
+        xml:space="preserve">
+    <value>Back cover</value>
+  </data>
+  <data name="Image_CoverFront"
+        xml:space="preserve">
+    <value>Front cover</value>
+  </data>
+  <data name="Image_FileIcon"
+        xml:space="preserve">
+    <value>File icon</value>
+  </data>
+  <data name="Image_Illustration"
+        xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="Image_Location"
+        xml:space="preserve">
+    <value>Location image</value>
+  </data>
+  <data name="Image_LogoArtist"
+        xml:space="preserve">
+    <value>Artist logo</value>
+  </data>
+  <data name="Image_LogoPublisher"
+        xml:space="preserve">
+    <value>Publisher logo</value>
+  </data>
+  <data name="Image_Medium"
+        xml:space="preserve">
+    <value>Medium image</value>
+  </data>
+  <data name="Image_Other"
+        xml:space="preserve">
+    <value>Other image</value>
+  </data>
+  <data name="Image_OtherIcon"
+        xml:space="preserve">
+    <value>Other icon</value>
+  </data>
+  <data name="Image_Performance"
+        xml:space="preserve">
+    <value>Performance image</value>
+  </data>
+  <data name="Image_ScreenCapture"
+        xml:space="preserve">
+    <value>Screen capture</value>
+  </data>
+  <data name="Image_Session"
+        xml:space="preserve">
+    <value>Production image</value>
+  </data>
+  <data name="Image_Unknown"
+        xml:space="preserve">
+    <value>Unknown image</value>
+  </data>
+  <data name="Image_Writer"
+        xml:space="preserve">
+    <value>Author or lyricist portrait</value>
+  </data>
 </root>

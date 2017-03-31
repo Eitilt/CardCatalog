@@ -198,13 +198,244 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			 * http://musicbee.wikia.com/wiki/Tag?useskin=monobook
 			 */
 
-			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVA2, EQU2, RVRB, APIC,
+			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVA2, EQU2, RVRB,
 			 * GEOB, POPM, RBUF, AENC, LINK, POSS, USER, OWNE, COMR, ENCR,
 			 * GRID, PRIV, SIGN, SEEK, ASPI
 			 * 
 			 * Unofficial (most may never have a need for inclusion):
 			 * GRP1, MVNM, MVIN, PCST, TSIZ, MCDI, ITNU, XDOR, XOLY
 			 */
+
+			/// <summary>
+			/// An embedded image.
+			/// </summary>
+			[TagField(header)]
+			public class PictureField : V4Field {
+				/// <summary>
+				/// The different roles an image may play relative to the file.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// These are taken from ID3v2 image categories, and the order should
+				/// reflect that.
+				/// </remarks>
+				public enum ImageCategory : byte {
+					/// <summary>
+					/// Catchall for otherwise-undefined image types.
+					/// </summary>
+					Other = 0x00,
+					/// <summary>
+					/// A 32-pixel square icon to represent the file.
+					/// </summary>
+					/// 
+					/// <remarks>
+					/// Canonically (for the ID3v2 specification), this must be a PNG.
+					/// </remarks>
+					FileIcon = 0x01,
+					/// <summary>
+					/// An icon without the restrictions of <see cref="OtherIcon"/>.
+					/// </summary>
+					OtherIcon = 0x02,
+					/// <summary>
+					/// Front cover of, for example, the including album.
+					/// </summary>
+					/// 
+					/// <seealso cref="CoverBack"/>
+					CoverFront = 0x03,
+					/// <summary>
+					/// Back cover of, for example, the including album.
+					/// </summary>
+					CoverBack = 0x04,
+					/// <summary>
+					/// A page from the booklet included with the file source.
+					/// </summary>
+					Booklet = 0x05,
+					/// <summary>
+					/// The physical medium of the file source.
+					/// </summary>
+					Medium = 0x06,
+					/// <summary>
+					/// The primary artist or performer, or a soloist.
+					/// </summary>
+					/// 
+					/// <seealso cref="Artist"/>
+					ArtistMain = 0x07,
+					/// <summary>
+					/// Any single artist or performer.
+					/// </summary>
+					/// 
+					/// <seealso cref="ArtistMain"/>
+					/// <seealso cref="Band"/>
+					Artist = 0x08,
+					/// <summary>
+					/// The orchestra or choir conductor.
+					/// </summary>
+					Conductor = 0x09,
+					/// <summary>
+					/// An image of the band or orchestra as a whole, rather than an
+					/// individual performer.
+					/// </summary>
+					/// 
+					/// <seealso cref="Artist"/>
+					Band = 0x0A,
+					/// <summary>
+					/// The composer of the music.
+					/// </summary>
+					Composer = 0x0B,
+					/// <summary>
+					/// The lyrics or prose writer.
+					/// </summary>
+					Writer = 0x0C,
+					/// <summary>
+					/// The location where the work was recorded or written.
+					/// </summary>
+					Location = 0x0D,
+					/// <summary>
+					/// An image taken during (and of) the creation of the work, such
+					/// as a recording session.
+					/// </summary>
+					/// 
+					/// <seealso cref="Performance"/>
+					Session = 0x0E,
+					/// <summary>
+					/// An image taken during a live performance of the work, but not
+					/// necessarily the one this file is a recording of.
+					/// </summary>
+					Performance = 0x0F,
+					/// <summary>
+					/// A screen capture from a video or computer related to the file.
+					/// </summary>
+					ScreenCapture = 0x10,
+					/// <summary>
+					/// A brightly-colored fish, or other fun easter egg.
+					/// </summary>
+					BrightFish = 0x11,
+					/// <summary>
+					/// An illustration related to the work.
+					/// </summary>
+					Illustration = 0x12,
+					/// <summary>
+					/// The logo of the artist or band.
+					/// </summary>
+					LogoArtist = 0x13,
+					/// <summary>
+					/// The logo of the publisher or studio.
+					/// </summary>
+					LogoPublisher = 0x14
+				}
+
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
+				/// should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public PictureField(byte[] name, int length) => Length = length;
+
+				/// <summary>
+				/// The easy representation of the field header.
+				/// </summary>
+				const string header = "APIC";
+				/// <summary>
+				/// The byte header used to internally identify the field.
+				/// </summary>
+				public override byte[] SystemName => ISO88591.GetBytes(header);
+
+				/// <summary>
+				/// What is depicted by the image.
+				/// </summary>
+				ImageCategory category;
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Name => category.PrintableName();
+
+				/// <summary>
+				/// The uniquely identifying description of the image.
+				/// </summary>
+				string description;
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Subtitle => base.Subtitle;
+
+				/// <summary>
+				/// The raw image data.
+				/// </summary>
+				ImageData image;
+				/// <summary>
+				/// The MIME type of the image.
+				/// </summary>
+				string mime;
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<object> Values =>
+					new object[2] { image, mime };
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				/// 
+				/// <param name="stream">The data to read.</param>
+				protected override void ParseData(Stream stream) {
+					Encoding encoding;
+					var enc = stream.ReadByte();
+					if (enc < 0)
+						encoding = null;
+					else
+						encoding = TextFrame.TryGetEncoding((byte)enc);
+
+					var read = new List<byte>();
+					var next = stream.ReadByte();
+					while (next > 0) {
+						read.Add((byte)next);
+						next = stream.ReadByte();
+					}
+					mime = ISO88591.GetString(read.ToArray());
+
+					next = stream.ReadByte();
+					if (next < 0)
+						category = ImageCategory.Other;
+					else
+						category = (ImageCategory)next;
+
+					read.Clear();
+					next = stream.ReadByte();
+					var prevZero = false;
+					while (next >= 0) {
+						if (next == 0) {
+							if (encoding == ISO88591)
+								break;
+							else
+								prevZero = true;
+						} else {
+							if (prevZero) {
+								read.Add(0x00);
+								prevZero = false;
+							}
+							read.Add((byte)next);
+						}
+					}
+					if (encoding == null)
+						description = TextFrame.ReadFromByteOrderMark(read.ToArray());
+					else
+						description = encoding.GetString(read.ToArray());
+
+					var data = new byte[Length];
+					int readCount = stream.ReadAll(data, 0, Length);
+
+					image = new ImageData(data.Take(readCount).ToArray());
+				}
+			}
 
 			/// <summary>
 			/// An identifier unique to a particular database.
@@ -371,15 +602,17 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Name {
 					get {
-						// TCAT: Unofficial (podcasts)
-						// TDES: Unofficial (podcasts)
-						// TGID: Unofficial (podcasts): "Podcast ID"
-						// TIT1: Official title: "Grouping"
-						// TKWD: Unofficial (podcasts)
-						// TOAL: "Work title" (Picard)
-						// TPUB: "Record label" (Picard)
-						// TSO2: Unofficial
-						// TSOC: Unofficial
+						/* Recognized nonstandard fields:
+						 * TCAT: Unofficial (podcasts)
+						 * TDES: Unofficial (podcasts)
+						 * TGID: Unofficial (podcasts): "Podcast ID"
+						 * TIT1: Official title: "Grouping"
+						 * TKWD: Unofficial (podcasts)
+						 * TOAL: "Work title" (Picard)
+						 * TPUB: "Record label" (Picard)
+						 * TSO2: Unofficial
+						 * TSOC: Unofficial
+						 */
 						return Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(header))
 							?? DefaultName;
 					}
@@ -511,7 +744,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </param>
 				/// 
 				/// <returns>The separated and parsed strings.</returns>
-				protected IEnumerable<string> SplitStrings(byte[] data, Encoding encoding) {
+				protected static IEnumerable<string> SplitStrings(byte[] data, Encoding encoding) {
 					var raw = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
 					var split = raw.Split(new char[1] { '\0' }, StringSplitOptions.None);
 
@@ -1232,8 +1465,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 					var split = SplitStrings(content, TryGetEncoding(bytes[0]));
 					description = split.First();
-					// Unlike the text tags, this says nothing about nulls,
-					// and so they should be restored
+					// Unlike the standard text tags, this says nothing about
+					// nulls, and so they should be restored
 					values = new string[1] { String.Join("\0", split.Skip(1)) };
 				}
 			}
@@ -1306,6 +1539,34 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					count = ParseUnsignedInteger(bytes);
 				}
 			}
+		}
+	}
+
+	/// <summary>
+	/// Extension methods for the <see cref="ImageData"/> class.
+	/// </summary>
+	public static class ImageCategoryExtension {
+		/// <summary>
+		/// Convert a <see cref="V4.FormatFields.PictureField.ImageCategory"/>
+		/// value to a human-readable string for the current locale.
+		/// </summary>
+		/// 
+		/// <param name="value">
+		/// The <see cref="V4.FormatFields.PictureField.ImageCategory"/> to
+		/// format.
+		/// </param>
+		/// 
+		/// <returns>The formatted name.</returns>
+		public static string PrintableName(this V4.FormatFields.PictureField.ImageCategory value) {
+			var str = value.ToString();
+
+			// If `str` is purely digits, the lookup has failed
+			if (str.All(char.IsDigit) == false) {
+				var genre = Strings.ID3v24.ResourceManager.GetString("Image_" + str);
+				if (genre != null)
+					return genre;
+			}
+			return String.Format(Strings.ID3v24.Image_Unknown, str);
 		}
 	}
 }

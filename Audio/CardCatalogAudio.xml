@@ -751,6 +751,211 @@
             Fields specific to the ID3v2.4 standard.
             </summary>
         </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField">
+            <summary>
+            An embedded image.
+            </summary>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory">
+            <summary>
+            The different roles an image may play relative to the file.
+            </summary>
+            
+            <remarks>
+            These are taken from ID3v2 image categories, and the order should
+            reflect that.
+            </remarks>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Other">
+            <summary>
+            Catchall for otherwise-undefined image types.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.FileIcon">
+            <summary>
+            A 32-pixel square icon to represent the file.
+            </summary>
+            
+            <remarks>
+            Canonically (for the ID3v2 specification), this must be a PNG.
+            </remarks>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.OtherIcon">
+            <summary>
+            An icon without the restrictions of <see cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.OtherIcon"/>.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.CoverFront">
+            <summary>
+            Front cover of, for example, the including album.
+            </summary>
+            
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.CoverBack"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.CoverBack">
+            <summary>
+            Back cover of, for example, the including album.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Booklet">
+            <summary>
+            A page from the booklet included with the file source.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Medium">
+            <summary>
+            The physical medium of the file source.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.ArtistMain">
+            <summary>
+            The primary artist or performer, or a soloist.
+            </summary>
+            
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Artist"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Artist">
+            <summary>
+            Any single artist or performer.
+            </summary>
+            
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.ArtistMain"/>
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Band"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Conductor">
+            <summary>
+            The orchestra or choir conductor.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Band">
+            <summary>
+            An image of the band or orchestra as a whole, rather than an
+            individual performer.
+            </summary>
+            
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Artist"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Composer">
+            <summary>
+            The composer of the music.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Writer">
+            <summary>
+            The lyrics or prose writer.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Location">
+            <summary>
+            The location where the work was recorded or written.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Session">
+            <summary>
+            An image taken during (and of) the creation of the work, such
+            as a recording session.
+            </summary>
+            
+            <seealso cref="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Performance"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Performance">
+            <summary>
+            An image taken during a live performance of the work, but not
+            necessarily the one this file is a recording of.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.ScreenCapture">
+            <summary>
+            A screen capture from a video or computer related to the file.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.BrightFish">
+            <summary>
+            A brightly-colored fish, or other fun easter egg.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.Illustration">
+            <summary>
+            An illustration related to the work.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.LogoArtist">
+            <summary>
+            The logo of the artist or band.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory.LogoPublisher">
+            <summary>
+            The logo of the publisher or studio.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
+            should not be called manually.
+            </summary>
+            
+            <param name="name">
+            The value to save to <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.header">
+            <summary>
+            The easy representation of the field header.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.category">
+            <summary>
+            What is depicted by the image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.Name">
+            <summary>
+            The description of the contained values.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.description">
+            <summary>
+            The uniquely identifying description of the image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.Subtitle">
+            <summary>
+            The description of the contained values.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.image">
+            <summary>
+            The raw image data.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.mime">
+            <summary>
+            The MIME type of the image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ParseData(System.IO.Stream)">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
+            
+            <param name="stream">The data to read.</param>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId">
             <summary>
             An identifier unique to a particular database.
@@ -785,9 +990,9 @@
             The database with which this ID is associated.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Name">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.Subtitle">
             <summary>
-            The human-readable name of the field.
+            The description of the contained values.
             </summary>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.id">
@@ -1484,6 +1689,24 @@
             </summary>
             
             <param name="stream">The data to read.</param>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ImageCategoryExtension">
+            <summary>
+            Extension methods for the <see cref="T:AgEitilt.CardCatalog.ImageData"/> class.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ImageCategoryExtension.PrintableName(AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory)">
+            <summary>
+            Convert a <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory"/>
+            value to a human-readable string for the current locale.
+            </summary>
+            
+            <param name="value">
+            The <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.ImageCategory"/> to
+            format.
+            </param>
+            
+            <returns>The formatted name.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v1">
             <summary>
@@ -2774,6 +2997,11 @@
               Looks up a localized string similar to {0}\u2013{1}.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Single">
+            <summary>
+              Looks up a localized string similar to {0}.
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Unknown">
             <summary>
               Looks up a localized string similar to Unknown.
@@ -3291,11 +3519,6 @@
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_UFID">
             <summary>
-              Looks up a localized string similar to Unique ID ({0}).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_UFID_NullOwner">
-            <summary>
               Looks up a localized string similar to Unique ID.
             </summary>
         </member>
@@ -3367,6 +3590,116 @@
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WXXX">
             <summary>
               Looks up a localized string similar to Other URL.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Artist">
+            <summary>
+              Looks up a localized string similar to Artist portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_ArtistMain">
+            <summary>
+              Looks up a localized string similar to Lead artist portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Band">
+            <summary>
+              Looks up a localized string similar to Group picture.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Booklet">
+            <summary>
+              Looks up a localized string similar to Booklet page.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_BrightFish">
+            <summary>
+              Looks up a localized string similar to A brightly-colored fish.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Composer">
+            <summary>
+              Looks up a localized string similar to Composer portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Conductor">
+            <summary>
+              Looks up a localized string similar to Conductor portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_CoverBack">
+            <summary>
+              Looks up a localized string similar to Back cover.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_CoverFront">
+            <summary>
+              Looks up a localized string similar to Front cover.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_FileIcon">
+            <summary>
+              Looks up a localized string similar to File icon.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Illustration">
+            <summary>
+              Looks up a localized string similar to Illustration.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Location">
+            <summary>
+              Looks up a localized string similar to Location image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_LogoArtist">
+            <summary>
+              Looks up a localized string similar to Artist logo.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_LogoPublisher">
+            <summary>
+              Looks up a localized string similar to Publisher logo.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Medium">
+            <summary>
+              Looks up a localized string similar to Medium image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Other">
+            <summary>
+              Looks up a localized string similar to Other image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_OtherIcon">
+            <summary>
+              Looks up a localized string similar to Other icon.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Performance">
+            <summary>
+              Looks up a localized string similar to Performance image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_ScreenCapture">
+            <summary>
+              Looks up a localized string similar to Screen capture.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Session">
+            <summary>
+              Looks up a localized string similar to Production image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Unknown">
+            <summary>
+              Looks up a localized string similar to Unknown image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Writer">
+            <summary>
+              Looks up a localized string similar to Author or lyricist portrait.
             </summary>
         </member>
     </members>
