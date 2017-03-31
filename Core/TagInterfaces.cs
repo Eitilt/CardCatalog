@@ -19,6 +19,8 @@ namespace AgEitilt.CardCatalog {
 		/// <summary>
 		/// The display names of the enclosing file.
 		/// </summary>
+		/// 
+		/// TODO: This should only be a single value, not a list.
 		IEnumerable<string> Name { get; }
 	}
 
@@ -27,64 +29,6 @@ namespace AgEitilt.CardCatalog {
 	/// implementations.
 	/// </summary>
 	public abstract class TagField : IParsable {
-		/// <summary>
-		/// A default implementation of <see cref="TagField"/>, not providing
-		/// any data formatting.
-		/// </summary>
-		public class Empty : TagField {
-			/// <summary>
-			/// The minimal constructor for creating a skeleton instance.
-			/// </summary>
-			/// 
-			/// <param name="name">
-			/// The value to save to <see cref="SystemName"/>.
-			/// </param>
-			/// <param name="length">
-			/// The value to save to <see cref="TagField.Length"/>.
-			/// </param>
-			public Empty(byte[] name, int length) {
-				this.name = name;
-				
-				Length = length;
-				data = new byte[length];
-			}
-
-			/// <summary>
-			/// Underlying field ID to work around the lack of a
-			/// <see cref="SystemName"/>.set.
-			/// </summary>
-			private byte[] name;
-			/// <summary>
-			/// The byte header used to internally identify the field.
-			/// </summary>
-			public override byte[] SystemName => name;
-
-			/// <summary>
-			/// The container to hold the raw data of this field.
-			/// </summary>
-			private byte[] data;
-			/// <summary>
-			/// All data contained by this field, in a human-readable format.
-			/// </summary>
-			public override IEnumerable<string> Values => new string[1] {
-				String.Format(Strings.Base.Field_DefaultValue, BitConverter.ToString(data).Replace('-', ' '))
-			};
-
-			/// <summary>
-			/// Read a sequence of bytes in the manner appropriate to the
-			/// specific type of field.
-			/// </summary>
-			/// 
-			/// <param name="stream">The data to read.</param>
-			public override void Parse(Stream stream) {
-				var read = stream.ReadAll(data, 0, Length);
-				if (read < Length) {
-					Length = read;
-					data = data.Take(read).ToArray();
-				}
-			}
-		}
-
 		/// <summary>
 		/// The byte header used to internally identify the field.
 		/// </summary>
@@ -123,7 +67,22 @@ namespace AgEitilt.CardCatalog {
 		/// <summary>
 		/// All data contained by this field, in a human-readable format.
 		/// </summary>
-		public abstract IEnumerable<string> Values { get; }
+		/// 
+		/// <remarks>
+		/// A <c>null</c> value should be treated the same as an empty
+		/// enumerable.
+		/// <para/>
+		/// These will typically be <see cref="byte"/> array or
+		/// <see cref="string"/> instances, but some fields may return other
+		/// types, such as <see cref="double"/>. Using C#'s <c>as</c> or
+		/// <c>is</c> keywords is intended for handling.
+		/// <para/>
+		/// Images will be returned as an <see cref="ImageData"/> wrapper
+		/// around the raw data; the render and display should be handled by
+		/// the including program depending on platform requirements and
+		/// capabilities.
+		/// </remarks>
+		public abstract IEnumerable<object> Values { get; }
 
 		/// <summary>
 		/// Read a sequence of bytes in the manner appropriate to the specific
@@ -132,5 +91,61 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="stream">The data to read.</param>
 		public abstract void Parse(Stream stream);
+
+		/// <summary>
+		/// A default implementation of <see cref="TagField"/>, not providing
+		/// any data formatting.
+		/// </summary>
+		public class Empty : TagField {
+			/// <summary>
+			/// The minimal constructor for creating a skeleton instance.
+			/// </summary>
+			/// 
+			/// <param name="name">
+			/// The value to save to <see cref="SystemName"/>.
+			/// </param>
+			/// <param name="length">
+			/// The value to save to <see cref="TagField.Length"/>.
+			/// </param>
+			public Empty(byte[] name, int length) {
+				this.name = name;
+
+				Length = length;
+				data = new byte[length];
+			}
+
+			/// <summary>
+			/// Underlying field ID to work around the lack of a
+			/// <see cref="SystemName"/>.set.
+			/// </summary>
+			private byte[] name;
+			/// <summary>
+			/// The byte header used to internally identify the field.
+			/// </summary>
+			public override byte[] SystemName => name;
+
+			/// <summary>
+			/// The container to hold the raw data of this field.
+			/// </summary>
+			private byte[] data;
+			/// <summary>
+			/// All data contained by this field, in a human-readable format.
+			/// </summary>
+			public override IEnumerable<object> Values => (data.Length >= 0 ? new object[1] { data } : null);
+
+			/// <summary>
+			/// Read a sequence of bytes in the manner appropriate to the
+			/// specific type of field.
+			/// </summary>
+			/// 
+			/// <param name="stream">The data to read.</param>
+			public override void Parse(Stream stream) {
+				var read = stream.ReadAll(data, 0, Length);
+				if (read < Length) {
+					Length = read;
+					data = data.Take(read).ToArray();
+				}
+			}
+		}
 	}
 }

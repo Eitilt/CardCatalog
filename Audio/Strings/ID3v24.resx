@@ -266,8 +266,8 @@ Parameter 0 will be replaced by the copyright string</comment>
   <data name="Field_Time_Range" xml:space="preserve">
     <value>{0}\u2013{1}</value>
     <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the start of the time/date range
-Parameter 1 will be replaced by the end of the time/date range</comment>
+Parameter 0 will be replaced by the start of the time/date range (as a DateTimeOffset)
+Parameter 1 will be replaced by the end of the time/date range (as a DateTimeOffset)</comment>
   </data>
   <data name="Field_Time_Unknown" xml:space="preserve">
     <value>Unknown</value>
@@ -581,11 +581,6 @@ Parameter 0 will be replaced by the production copyright string</comment>
     <value>Other text</value>
   </data>
   <data name="Field_UFID" xml:space="preserve">
-    <value>Unique ID ({0})</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by a string identfying the entity that assigned the ID</comment>
-  </data>
-  <data name="Field_UFID_NullOwner" xml:space="preserve">
     <value>Unique ID</value>
   </data>
   <data name="Field_USLT" xml:space="preserve">
@@ -594,8 +589,8 @@ Parameter 0 will be replaced by a string identfying the entity that assigned the
   <data name="Field_ValueFormat_Number" xml:space="preserve">
     <value>{0} of {1}</value>
     <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the number of the file
-Parameter 1 will be replaced by the total number in the album</comment>
+Parameter 0 will be replaced by the number of the file (as an int)
+Parameter 1 will be replaced by the total number in the album (as an int)</comment>
   </data>
   <data name="Field_Value_Credits" xml:space="preserve">
     <value>{0}: {1}</value>
@@ -637,5 +632,10 @@ Parameter 0 will be replaced by the name of the person</comment>
   </data>
   <data name="Field_WXXX" xml:space="preserve">
     <value>Other URL</value>
+  </data>
+  <data name="Field_Time_Single" xml:space="preserve">
+    <value>{0}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the time/date (as a DateTimeOffset)</comment>
   </data>
 </root>

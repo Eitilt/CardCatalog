@@ -31,7 +31,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Reduce the lookups of field types by caching the return.
 			/// </summary>
-			private static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
+			static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
 
 			/// <summary>
 			/// Valid ID3v2 field identification characters.
@@ -42,12 +42,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// A byte sequence indicating that the "header" read is actually
 			/// padding rather than data.
 			/// </summary>
-			private static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
+			static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
 
 			/// <summary>
 			/// The flags set on the field.
 			/// </summary>
-			private BitArray flags;
+			BitArray flags;
 			/// <summary>
 			/// Indicates that this field should be removed if the tag is
 			/// edited in any way, and the program doesn't know how to
@@ -82,7 +82,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// The group identifier for associating multiple fields, or
 			/// `null` if this field isn't part of any group.
 			/// </summary>
-			private byte? group = null;
+			byte? group = null;
 
 			/// <summary>
 			/// Check whether the stream begins with a valid field header.
@@ -228,7 +228,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The easy representation of the field header.
 				/// </summary>
-				private const string header = "UFID";
+				const string header = "UFID";
 				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
@@ -239,17 +239,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				string owner = null;
 				/// <summary>
-				/// The human-readable name of the field.
+				/// The description of the contained values.
 				/// </summary>
-				public override string Name {
-					get {
-						if (owner == null)
-							return Strings.ID3v24.Field_UFID_NullOwner;
-						else
-							return Strings.ID3v24.Field_UFID;
-					}
-				}
-						
+				public override string Subtitle => owner;
+
 
 				/// <summary>
 				/// The raw identifier.
@@ -258,12 +251,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
 						if ((id == null) || (id.Length == 0))
-							return Array.Empty<string>();
+							return null;
 						else
-							return new[] { BitConverter.ToString(id).Replace('-', ' ') };
+							return new object[] { id };
 					}
 				}
 
@@ -422,7 +415,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values;
+				public override IEnumerable<object> Values => values;
 
 				/// <summary>
 				/// Read a sequence of bytes according to the encoding implied
@@ -440,7 +433,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The decoded string, or `null` if <paramref name="data"/>
 				/// isn't headed by a recognized byte-order-mark.
 				/// </returns>
-				private string ReadFromByteOrderMark(byte[] data) {
+				internal static string ReadFromByteOrderMark(byte[] data) {
 					if ((data?.Length ?? 0) == 0)
 						return null;
 					switch (data[0]) {
@@ -519,15 +512,17 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// 
 				/// <returns>The separated and parsed strings.</returns>
 				protected IEnumerable<string> SplitStrings(byte[] data, Encoding encoding) {
-					var strings = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
-					var split = strings.Split(new char[1] { '\0' }, StringSplitOptions.None);
+					var raw = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
+					var split = raw.Split(new char[1] { '\0' }, StringSplitOptions.None);
 
 					var last = split.Length - 1;
 					// Empty array shouldn't happen, but handle it just in case
 					if (last < 0)
-						return split;
+						return new string[1] { raw };
 
-					if ((split[last] == null) || (split[last].Length == 0))
+					// If the last string in the list is empty or null, remove
+					// it, as the actual last string is typically terminated
+					if ((split[last]?.Length ?? 0) == 0)
 						return split.Take(last);
 					else
 						return split;
@@ -578,15 +573,22 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => {
+				public override IEnumerable<object> Values => values.Select<string, object>(s => {
 					var split = s?.Split(new char[1] { '/' }) ?? Array.Empty<string>();
-					if (split.Length == 0)
+					if (split.Length == 0) {
 						return null;
-					else if (split.Length == 1)
-						return split[0];
-					else
-						return String.Format(Strings.ID3v24.Field_ValueFormat_Number, split[0], split[1]);
-				});
+					} else if (split.Length == 1) {
+						if (int.TryParse(split[0], out var parsed))
+							return parsed;
+						else
+							return s;
+					} else {
+						if (int.TryParse(split[0], out var parsed0) && int.TryParse(split[1], out var parsed1))
+							return String.Format(Strings.ID3v24.Field_ValueFormat_Number, parsed0, parsed1);
+						else
+							return s;
+					}
+				}).Where(s => s != null);
 			}
 			/// <summary>
 			/// A frame containing the track number.
@@ -610,7 +612,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => from isrc in values
+				public override IEnumerable<object> Values => from isrc in values
 															  where isrc.Contains('-') == false
 															  where isrc.Length == 12
 															  select isrc.Insert(2, "-")
@@ -650,16 +652,27 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
-						var valArray = values.ToArray();
-						for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
-							if (j == valArray.Length)
-								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
-							else if (valArray[i].Length == 0)
-								yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
-							else
-								yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[j]);
+						// Need easy "random" access for loop
+						var valArray = values?.ToArray();
+
+						if (valArray?.Length == 0) {
+							yield return null;
+
+						// Easiest way to iterate over pairs of successive values
+						} else {
+							for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
+								// Singleton element without corresponding title/value
+								if (j == valArray.Length)
+									yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
+								// Credit title is empty
+								else if (valArray[i].Length == 0)
+									yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
+								// Proper credit title/value pair
+								else
+									yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
+							}
 						}
 					}
 				}
@@ -692,11 +705,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
 						foreach (var s in values) {
-							if (int.TryParse(s, out int ms))
-								yield return TimeSpan.FromMilliseconds(ms).ToString();
+							if (DateTime.TryParse(s, out var time))
+								yield return time;
 							else
 								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 						}
@@ -725,10 +738,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
 						foreach (var s in values) {
 							var cs = s.ToCharArray();
+							// Validate that the value is a properly-formatted key
 							if (((s.Length >= 1) && (s.Length <= 3))
 									&& "ABCDEFG".Contains(cs[0])
 									&& ((s.Length < 2) || "b#m".Contains(cs[1]))
@@ -769,7 +783,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Might also be nice to add e.g. ISO 639-3 support in the
 				/// same package ("CultureExtensions").
 				/// </remarks>
-				public override IEnumerable<string> Values => base.Values;
+				public override IEnumerable<object> Values => base.Values;
 			}
 			/// <summary>
 			/// A frame containing the genre.
@@ -798,7 +812,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// TODO: Split "Remix" and "Cover" into separately-displayed
 				/// field; likely same fix as <see cref="ListMappingFrame"/>.
 				/// </remarks>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
 						foreach (var s in values) {
 							if (s.Equals("RX"))
@@ -806,8 +820,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 							else if (s.Equals("CR"))
 								yield return Strings.ID3v24.Field_TCON_CR;
 							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
-								/* Between everything being a digit and the
-								 * length being capped, Parse is guaranteed to
+								/* Given that everything is a digit and the
+								 * length is capped, Parse is guaranteed to
 								 * not throw an exception with the larger
 								 * datatype.
 								 */
@@ -861,16 +875,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// TODO: Split "Remix" and "Cover" into separately-displayed
 				/// field; likely same fix as <see cref="ListMappingFrame"/>.
 				/// </remarks>
-				public override IEnumerable<string> Values {
-					get {
-						foreach (var s in values) {
-							yield return Strings.ID3v24.ResourceManager.GetString(
-								"Field_" + ISO88591.GetString(header) + "_"
-								+ s.Replace('/', '_').Replace('.', '_')
-							) ?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
-						}
-					}
-				}
+				public override IEnumerable<object> Values =>
+					from keyBase in values
+					// Replace non-key-safe characters
+					select (keyBase, keyBase.Replace('/', '_').Replace('.', '_')) into keyValues
+					// Compose the value into the proper format for lookup
+					select Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(header) + "_" + keyValues.Item2)
+					// Fallback if key not found
+						?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, keyValues.Item1);
 			}
 			/// <summary>
 			/// A frame containing copyright information.
@@ -894,7 +906,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TCOP_Value, s));
+				public override IEnumerable<object> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TCOP_Value, s));
 			}
 			/// <summary>
 			/// A frame containing copyright information.
@@ -918,7 +930,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TCOP_Value, s));
+				public override IEnumerable<object> Values => values.Select(s => String.Format(Strings.ID3v24.Field_TPRO_Value, s));
 			}
 			/// <summary>
 			/// A frame containing a timestamp.
@@ -951,10 +963,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values {
+				public override IEnumerable<object> Values {
 					get {
 						foreach (var s in values) {
-							var times = new DateTime[2];
+							var times = new DateTimeOffset[2];
 							/*TODO: ID3v2 describes timestamps as a "subset"
 							 * of ISO 8601, but may still want to support
 							 * interval notation for additional robustness
@@ -966,10 +978,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								 * timestamps are included, but that violates
 								 * ISO 8601 anyway
 								 */
-								if (DateTime.TryParse(
+								if (DateTimeOffset.TryParse(
 										time,
 										CultureInfo.InvariantCulture,
-										DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+										DateTimeStyles.AdjustToUniversal,
 										out times[first ? 0 : 1]
 										) == false) {
 									times = null;
@@ -983,13 +995,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								continue;
 							}
 
-							if ((times[0] == null) || (times[0] == DateTime.MinValue))
+							if ((times[0] == null) || (times[0] == DateTimeOffset.MinValue))
 								yield return Strings.ID3v24.Field_Time_Unknown;
-							else if ((times[1] != null) && (times[1] != DateTime.MinValue))
+							else if ((times[1] != null) && (times[1] != DateTimeOffset.MinValue))
 								yield return String.Format(Strings.ID3v24.Field_Time_Range, times[0], times[1]);
 							else
 								//TODO: Only return the given values
-								yield return times[0].ToString();
+								yield return String.Format(Strings.ID3v24.Field_Time_Single, times[0]);
 						}
 					}
 				}
@@ -1021,7 +1033,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Skip(1);
+				public override IEnumerable<object> Values => values.Skip(1);
 			}
 
 			/// <summary>
@@ -1127,7 +1139,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => values.Skip(1);
+				public override IEnumerable<object> Values => values.Skip(1);
 			}
 
 			/// <summary>
@@ -1154,7 +1166,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The description of the lyrics instance.
 				/// </summary>
-				private string description = null;
+				string description = null;
 				/// <summary>
 				/// The language in which the lyrics are
 				/// transcribed/translated.
@@ -1163,7 +1175,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <remarks>
 				/// TODO: Replace with <see cref="CultureInfo"/> object.
 				/// </remarks>
-				private string language = null;
+				string language = null;
 
 				/// <summary>
 				/// The human-readable name of the field.
@@ -1198,7 +1210,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Might also be nice to add e.g. ISO 639-3 support in the
 				/// same package ("CultureExtensions").
 				/// </remarks>
-				public override IEnumerable<string> Values => base.Values;
+				public override IEnumerable<object> Values => base.Values;
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
@@ -1248,7 +1260,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The easy representation of the field header.
 				/// </summary>
-				private const string header = "PCNT";
+				const string header = "PCNT";
 				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
@@ -1272,11 +1284,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// TODO: Probably should allow that
 				/// 18,446,744,073,709,551,616th play anyway.
 				/// </remarks>
-				private ulong count = 0;
+				ulong count = 0;
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<string> Values => new string[1] { count.ToString() };
+				public override IEnumerable<object> Values => new object[1] { count };
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common

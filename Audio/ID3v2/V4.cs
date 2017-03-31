@@ -73,7 +73,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					var values = from value in parent.Fields
 								 where value.SystemName == name
 								 select value.Values;
-					return values.SelectMany(vs => vs);
+					return values.SelectMany(vs => from v in vs
+												   select v as string into n
+												   where n != null
+												   select n);
 				}
 			}
 		}

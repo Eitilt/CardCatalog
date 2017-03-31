@@ -476,6 +476,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}.
+        /// </summary>
+        public static string Field_Time_Single {
+            get {
+                return ResourceManager.GetString("Field_Time_Single", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown.
         /// </summary>
         public static string Field_Time_Unknown {
@@ -1403,20 +1412,11 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unique ID ({0}).
+        ///   Looks up a localized string similar to Unique ID.
         /// </summary>
         public static string Field_UFID {
             get {
                 return ResourceManager.GetString("Field_UFID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unique ID.
-        /// </summary>
-        public static string Field_UFID_NullOwner {
-            get {
-                return ResourceManager.GetString("Field_UFID_NullOwner", resourceCulture);
             }
         }
         
