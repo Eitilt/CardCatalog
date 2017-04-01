@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.2.1
+### Fixed
+- Forgot `ReadByte()` call in `APIC` parsing, leading to happily eating
+  over five gigabytes of memory in adding the same byte over and over
+
 ## 0.2.0
 ### Changed
 - Field values are now boxed to `object` to allow a better range of

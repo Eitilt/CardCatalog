@@ -395,24 +395,20 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						encoding = TextFrame.TryGetEncoding((byte)enc);
 
 					var read = new List<byte>();
-					var next = stream.ReadByte();
-					while (next > 0) {
-						read.Add((byte)next);
-						next = stream.ReadByte();
-					}
+					for (int b = stream.ReadByte(); b > 0x00; b = stream.ReadByte())
+						read.Add((byte)b);
 					mime = ISO88591.GetString(read.ToArray());
 
-					next = stream.ReadByte();
+					var next = stream.ReadByte();
 					if (next < 0)
 						category = ImageCategory.Other;
 					else
 						category = (ImageCategory)next;
 
 					read.Clear();
-					next = stream.ReadByte();
 					var prevZero = false;
-					while (next >= 0) {
-						if (next == 0) {
+					for (int b = stream.ReadByte(); b >= 0x00; b = stream.ReadByte()) {
+						if (b == 0x00) {
 							if (encoding == ISO88591)
 								break;
 							else
@@ -422,16 +418,18 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								read.Add(0x00);
 								prevZero = false;
 							}
-							read.Add((byte)next);
+							read.Add((byte)b);
 						}
 					}
+					var descriptionArray = read.ToArray();
 					if (encoding == null)
-						description = TextFrame.ReadFromByteOrderMark(read.ToArray());
+						description = TextFrame.ReadFromByteOrderMark(descriptionArray);
 					else
-						description = encoding.GetString(read.ToArray());
+						description = encoding.GetString(descriptionArray);
 
+					var dataLength = Length - 3 - mime.Length - descriptionArray.Length - (encoding == ISO88591 ? 1 : 2);
 					var data = new byte[Length];
-					int readCount = stream.ReadAll(data, 0, Length);
+					int readCount = stream.ReadAll(data, 0, dataLength);
 
 					image = new ImageData(data.Take(readCount).ToArray());
 				}
