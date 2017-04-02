@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Added
+- `ImageData` includes field to identify type of file encoding
+
 ## 0.2.0
 ### Changed
 - Field values are now boxed to `object` to allow a better range of

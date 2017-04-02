@@ -104,12 +104,18 @@
             A wrapper around raw image data to distinguish it as such.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.ImageData.#ctor(System.Byte[])">
+        <member name="M:AgEitilt.CardCatalog.ImageData.#ctor(System.Byte[],System.String)">
             <summary>
             Wrap the given data as an image.
             </summary>
             
             <param name="data">The raw, binary data.</param>
+            <param name="mime">The MIME type of the image.</param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.ImageData.Type">
+            <summary>
+            The encoding of this image, as a standard MIME type string.
+            </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.ImageData.Data">
             <summary>

@@ -566,7 +566,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Performer credits.
+        ///   Looks up a localized string similar to Artist credits.
         /// </summary>
         public static string Field_TMCL {
             get {

@@ -369,16 +369,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The raw image data.
 				/// </summary>
 				ImageData image;
-				/// <summary>
-				/// The MIME type of the image.
-				/// </summary>
-				string mime;
 
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<object> Values =>
-					new object[2] { image, mime };
+					new object[1] { image };
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
@@ -397,7 +393,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					var read = new List<byte>();
 					for (int b = stream.ReadByte(); b > 0x00; b = stream.ReadByte())
 						read.Add((byte)b);
-					mime = ISO88591.GetString(read.ToArray());
+					var mime = ISO88591.GetString(read.ToArray());
 
 					var next = stream.ReadByte();
 					if (next < 0)
@@ -431,7 +427,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					var data = new byte[Length];
 					int readCount = stream.ReadAll(data, 0, dataLength);
 
-					image = new ImageData(data.Take(readCount).ToArray());
+					image = new ImageData(data.Take(readCount).ToArray(), mime);
 				}
 			}
 

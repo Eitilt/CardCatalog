@@ -11,13 +11,20 @@ namespace AgEitilt.CardCatalog {
 		/// </summary>
 		/// 
 		/// <param name="data">The raw, binary data.</param>
-		public ImageData(byte[] data) : this() {
+		/// <param name="mime">The MIME type of the image.</param>
+		public ImageData(byte[] data, string mime) : this() {
 			Data = data;
+			Type = mime;
 		}
+
+		/// <summary>
+		/// The encoding of this image, as a standard MIME type string.
+		/// </summary>
+		public string Type { get; }
 
 		/// <summary>
 		/// The raw binary data describing the image.
 		/// </summary>
-		public byte[] Data { get; private set; }
+		public byte[] Data { get; }
 	}
 }
