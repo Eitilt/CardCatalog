@@ -408,6 +408,113 @@
             data, false if they differ.
             </returns>
         </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.VersionInfo">
+            <summary>
+            Behaviours required for field initialization, specific to a
+            particular version of the ID3v2 standard.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.VersionInfo.FormatName">
+            <summary>
+            The unique identifier for this version.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.VersionInfo.FieldSizeBits">
+            <summary>
+            The number of data bits used in the header field size bytes.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.VersionInfo.Initialize(System.Object,System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Version-specific code for parsing field headers.
+            </summary>
+            
+            <param name="fieldObj">
+            The new, boxed instance of the field.
+            </param>
+            <param name="header">The header top parse.</param>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1">
+            <summary>
+            Provide a base for fields sharing a common body between ID3v2.3
+            and v2.4, to avoid defining them twice.
+            </summary>
+            
+            <typeparam name="TVersion">
+            The ID3v2 version-specific code.
+            </typeparam>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.fields">
+            <summary>
+            Reduce the lookups of field types by caching the return.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.HeaderChars">
+            <summary>
+            Valid ID3v2 field identification characters.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.padding">
+            <summary>
+            A byte sequence indicating that the "header" read is actually
+            padding rather than data.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Check whether the stream begins with a valid field header.
+            </summary>
+            
+            <param name="header">The sequence of bytes to check.</param>
+            
+            <returns>
+            An empty <see cref="T:AgEitilt.CardCatalog.TagField"/> object if the header is in the
+            proper format, `null` otherwise.
+            </returns>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.DiscardUnknownOnTagEdit">
+            <summary>
+            Indicates that this field should be removed if the tag is
+            edited in any way, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.DiscardUnknownOnFileEdit">
+            <summary>
+            Indicates that this field should be removed if the file
+            external to the tag is edited in any way EXCEPT if the audio
+            is completely replaced, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.IsReadOnlyIfUnknown">
+            <summary>
+            Indicates that this field should not be changed without direct
+            knowledge of its contents and structure.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.IsFieldCompressed">
+            <summary>
+            Indicates that the data in the field is compressed using the
+            zlib compression scheme.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.IsFieldEncrypted">
+            <summary>
+            Indicates that the data in the field is encrypted according to
+            a specified method.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.IsFieldGrouped">
+            <summary>
+            Indicates what group, if any, of fields this one belongs to.
+            </summary>
+            
+            <value>
+            The number of the group, or <c>null</c> if the field is
+            ungrouped.
+            </value>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V2">
             <summary>
             An implementation of the ID3v2.2 standard as described at
@@ -659,21 +766,31 @@
             TODO: Migrate the lookup-in-resx Name implementations to here.
             </remarks>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.fields">
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.V4VersionInfo">
             <summary>
-            Reduce the lookups of field types by caching the return.
+            Behaviours required for field initialization, specific to a
+            particular version of the ID3v2 standard.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.HeaderChars">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.V4VersionInfo.FormatName">
             <summary>
-            Valid ID3v2 field identification characters.
+            The unique identifier for this version.
             </summary>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.padding">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.V4VersionInfo.FieldSizeBits">
             <summary>
-            A byte sequence indicating that the "header" read is actually
-            padding rather than data.
+            The number of data bits used in the header field size bytes.
             </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.V4VersionInfo.Initialize(System.Object,System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Version-specific code for parsing field headers.
+            </summary>
+            
+            <param name="fieldObj">
+            The new, boxed instance of the field.
+            </param>
+            <param name="header">The header top parse.</param>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.flags">
             <summary>
@@ -695,22 +812,23 @@
             compensate.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.ReadOnlyIfUnknown">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.IsReadOnlyIfUnknown">
             <summary>
             Indicates that this field should not be changed without direct
             knowledge of its contents and structure.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.FlagUnknown">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.IsFieldCompressed">
             <summary>
-            Whether the header includes a non-standard tag, which may result
-            in unrecognizable data.
+            Indicates that the data in the field is compressed using the
+            zlib compression scheme.
             </summary>
-            
-            <remarks>
-            TODO: Store data about the unknown flags rather than simply
-            indicating their presence.
-            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.IsFieldEncrypted">
+            <summary>
+            Indicates that the data in the field is encrypted according to
+            a specified method.
+            </summary>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.group">
             <summary>
@@ -718,17 +836,21 @@
             `null` if this field isn't part of any group.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.IsFieldGrouped">
             <summary>
-            Check whether the stream begins with a valid field header.
+            Indicates what group, if any, of fields this one belongs to.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.FlagUnknown">
+            <summary>
+            Whether the header includes a non-standard flag, which may
+            result in unrecognizable data.
             </summary>
             
-            <param name="header">The sequence of bytes to check.</param>
-            
-            <returns>
-            An empty <see cref="T:AgEitilt.CardCatalog.TagField"/> object if the header is in the
-            proper format, `null` otherwise.
-            </returns>
+            <remarks>
+            TODO: Store data about the unknown flags rather than simply
+            indicating their presence.
+            </remarks>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Parse(System.IO.Stream)">
             <summary>
@@ -740,7 +862,7 @@
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.ParseData(System.IO.Stream)">
             <summary>
-            Preform field-specific parsing after the required common
+            Perform field-specific parsing after the required common
             parsing has been handled.
             </summary>
             
@@ -892,8 +1014,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -938,11 +1060,6 @@
             The raw image data.
             </summary>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.mime">
-            <summary>
-            The MIME type of the image.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField.Values">
             <summary>
             All values contained within this field.
@@ -964,8 +1081,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UniqueFileId.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1031,8 +1148,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1147,8 +1264,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.OfNumberFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1176,8 +1293,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.IsrcFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1205,8 +1322,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1234,8 +1351,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.MsFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1263,8 +1380,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.KeyFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1287,8 +1404,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.LanguageFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1318,8 +1435,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1357,8 +1474,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.ResourceFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1386,8 +1503,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.CopyrightFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1410,8 +1527,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PCopyrightFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1434,8 +1551,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1463,8 +1580,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1504,8 +1621,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UrlFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1541,8 +1658,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UserUrlFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1571,8 +1688,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.LongTextFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -1636,8 +1753,8 @@
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.CountFrame.#ctor(System.Byte[],System.Int32)">
             <summary>
             The constructor required by
-            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>. This
-            should not be called manually.
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
             </summary>
             
             <param name="name">
@@ -3049,7 +3166,7 @@
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMCL">
             <summary>
-              Looks up a localized string similar to Performer credits.
+              Looks up a localized string similar to Artist credits.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED">

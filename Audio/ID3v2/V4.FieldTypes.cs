@@ -27,22 +27,41 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// <para/>
 		/// TODO: Migrate the lookup-in-resx Name implementations to here.
 		/// </remarks>
-		public abstract class V4Field : TagField {
+		public abstract class V4Field : V3PlusField<V4Field.V4VersionInfo> {
 			/// <summary>
-			/// Reduce the lookups of field types by caching the return.
+			/// Behaviours required for field initialization, specific to a
+			/// particular version of the ID3v2 standard.
 			/// </summary>
-			static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(format);
+			public class V4VersionInfo : VersionInfo {
+				/// <summary>
+				/// The unique identifier for this version.
+				/// </summary>
+				public override string FormatName => format;
 
-			/// <summary>
-			/// Valid ID3v2 field identification characters.
-			/// </summary>
-			protected static char[] HeaderChars => "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+				/// <summary>
+				/// The number of data bits used in the header field size bytes.
+				/// </summary>
+				public override uint FieldSizeBits => 7;
 
-			/// <summary>
-			/// A byte sequence indicating that the "header" read is actually
-			/// padding rather than data.
-			/// </summary>
-			static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
+				/// <summary>
+				/// Version-specific code for parsing field headers.
+				/// </summary>
+				/// 
+				/// <param name="fieldObj">
+				/// The new, boxed instance of the field.
+				/// </param>
+				/// <param name="header">The header top parse.</param>
+				public override void Initialize(object fieldObj, IEnumerable<byte> header) {
+					var field = fieldObj as V4Field;
+					if (field == null)
+						return;
+
+					// Store this now, but it needs to be parsed when we get the
+					// rest of the data
+					field.flags = new BitArray(header.Skip(8).ToArray());
+					field.FlagUnknown = field.flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
+				}
+			}
 
 			/// <summary>
 			/// The flags set on the field.
@@ -53,23 +72,45 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// edited in any way, and the program doesn't know how to
 			/// compensate.
 			/// </summary>
-			public bool DiscardUnknownOnTagEdit => flags[1];
+			public override bool DiscardUnknownOnTagEdit => flags[1];
 			/// <summary>
 			/// Indicates that this field should be removed if the file
 			/// external to the tag is edited in any way EXCEPT if the audio
 			/// is completely replaced, and the program doesn't know how to
 			/// compensate.
 			/// </summary>
-			public bool DiscardUnknownOnFileEdit => flags[2];
+			public override bool DiscardUnknownOnFileEdit => flags[2];
 			/// <summary>
 			/// Indicates that this field should not be changed without direct
 			/// knowledge of its contents and structure.
 			/// </summary>
-			public bool ReadOnlyIfUnknown => flags[3];
+			public override bool IsReadOnlyIfUnknown => flags[3];
 
 			/// <summary>
-			/// Whether the header includes a non-standard tag, which may result
-			/// in unrecognizable data.
+			/// Indicates that the data in the field is compressed using the
+			/// zlib compression scheme.
+			/// </summary>
+			public override bool IsFieldCompressed => flags[12];
+
+			/// <summary>
+			/// Indicates that the data in the field is encrypted according to
+			/// a specified method.
+			/// </summary>
+			public override bool IsFieldEncrypted => flags[13];
+
+			/// <summary>
+			/// The group identifier for associating multiple fields, or
+			/// `null` if this field isn't part of any group.
+			/// </summary>
+			byte? group = null;
+			/// <summary>
+			/// Indicates what group, if any, of fields this one belongs to.
+			/// </summary>
+			public override byte? IsFieldGrouped => group;
+
+			/// <summary>
+			/// Whether the header includes a non-standard flag, which may
+			/// result in unrecognizable data.
 			/// </summary>
 			/// 
 			/// <remarks>
@@ -77,44 +118,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// indicating their presence.
 			/// </remarks>
 			protected bool FlagUnknown { get; private set; }
-
-			/// <summary>
-			/// The group identifier for associating multiple fields, or
-			/// `null` if this field isn't part of any group.
-			/// </summary>
-			byte? group = null;
-
-			/// <summary>
-			/// Check whether the stream begins with a valid field header.
-			/// </summary>
-			/// 
-			/// <param name="header">The sequence of bytes to check.</param>
-			/// 
-			/// <returns>
-			/// An empty <see cref="TagField"/> object if the header is in the
-			/// proper format, `null` otherwise.
-			/// </returns>
-			[HeaderParser(10)]
-			public static TagField Initialize(IEnumerable<byte> header) {
-				var bytes = header.Take(4).ToArray();
-				int length = (int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), 7);
-
-				V4Field field;
-				if (bytes.SequenceEqual(padding)) {
-					return null;
-				} else if (fields.ContainsKey(bytes) == false) {
-					return new TagField.Empty(bytes, length);
-				}
-
-				field = Activator.CreateInstance(fields[bytes], new object[2] { bytes, length }) as V4Field;
-
-				// Store this now, but it needs to be parsed when we get the
-				// rest of the data
-				field.flags = new BitArray(header.Skip(8).ToArray());
-				field.FlagUnknown = field.flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
-
-				return field;
-			}
 
 			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
@@ -140,6 +143,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				// Grouping
+				/* Need to check the flag directly, as the property looks at
+				 * `group` instead.
+				 */
 				if (flags[9]) {
 					int b = stream.ReadByte();
 					--Length;
@@ -149,12 +155,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				// Compression
-				bool zlib = flags[12];
+				bool zlib = IsFieldCompressed;
 
 				// Encryption
 				//TODO: Parse according to the ENCR frame
 				byte? encryption = null;
-				if (flags[13]) {
+				if (IsFieldEncrypted) {
 					int b = stream.ReadByte();
 					--Length;
 
@@ -164,7 +170,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				// Data length; this may come into play in decompression and
 				// decryption, but we currently have no use for it
-				if (flags[14]) {
+				if (flags[15]) {
 					var bytes = new byte[4];
 					if (stream.ReadAll(bytes, 0, 4) == 4)
 						Length = (int)ParseUnsignedInteger(bytes);
@@ -174,7 +180,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
-			/// Preform field-specific parsing after the required common
+			/// Perform field-specific parsing after the required common
 			/// parsing has been handled.
 			/// </summary>
 			/// 
@@ -326,8 +332,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -438,8 +444,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class UniqueFileId : V4Field {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -556,8 +562,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -780,8 +786,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class OfNumberFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -824,8 +830,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class IsrcFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -859,8 +865,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class ListMappingFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -912,8 +918,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class MsFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -950,8 +956,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class KeyFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -988,8 +994,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class LanguageFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1019,8 +1025,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class GenreFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1082,8 +1088,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class ResourceFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1118,8 +1124,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class CopyrightFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1142,8 +1148,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class PCopyrightFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1170,8 +1176,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class TimeFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1240,8 +1246,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class UserTextFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1295,8 +1301,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1346,8 +1352,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class UserUrlFrame : UrlFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1378,8 +1384,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class LongTextFrame : TextFrame {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">
@@ -1472,8 +1478,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public class CountFrame : V4Field {
 				/// <summary>
 				/// The constructor required by
-				/// <see cref="V4Field.Initialize(IEnumerable{byte})"/>. This
-				/// should not be called manually.
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
 				/// <param name="name">

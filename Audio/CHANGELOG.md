@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 0.2.2 (Unreleased)
+### Added
+#### In progress
+- Transparently moved fields shared by ID3v2.3 and v2.4 to parent class
+  in preparation for supporting the former
 ### Changed
 - `APIC` uses new `ImageData` structure rather than wrapping raw data
   and MIME type into tuple
