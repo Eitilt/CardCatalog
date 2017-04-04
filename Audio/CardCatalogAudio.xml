@@ -1936,6 +1936,28 @@
             The field headers using default text formatting.
             </returns>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32)">
+            <summary>
+            The constructor required by
+            <see cref="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})"/>.
+            This should not be called manually.
+            </summary>
+            
+            <remarks>
+            In order to properly use reflection, cannot solely use
+            the version with a default parameter, as that can only be
+            found with <see cref="T:System.Reflection.BindingFlags"/>
+            introduced in .NETStandard 1.5, which is higher than I
+            want to target.
+            </remarks>
+            
+            <param name="name">
+            The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.SystemName"/>.
+            </param>
+            <param name="length">
+            The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Length"/>.
+            </param>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32,System.String)">
             <summary>
             The constructor required to properly initialize the inner

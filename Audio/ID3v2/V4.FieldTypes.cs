@@ -398,6 +398,28 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// In order to properly use reflection, cannot solely use
+				/// the version with a default parameter, as that can only be
+				/// found with <see cref="System.Reflection.BindingFlags"/>
+				/// introduced in .NETStandard 1.5, which is higher than I
+				/// want to target.
+				/// </remarks>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TagField.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public TextFrame(byte[] name, int length)
+					: this(name, length, null) { }
+				/// <summary>
 				/// The constructor required to properly initialize the inner
 				/// implementation of the <see cref="V4FieldWrapper"/>.
 				/// <para/>
@@ -415,7 +437,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public TextFrame(byte[] name, int length, string defaultName = null)
+				public TextFrame(byte[] name, int length, string defaultName)
 					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName)) { }
 
 				/// <summary>
