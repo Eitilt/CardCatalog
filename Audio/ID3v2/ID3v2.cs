@@ -418,6 +418,119 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 			return ret;
 		}
+
+		/// <summary>
+		/// The different roles an image may play relative to the file.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// These are taken from ID3v2 image categories, and the order should
+		/// reflect that.
+		/// </remarks>
+		public enum ImageCategory : byte {
+			/// <summary>
+			/// Catchall for otherwise-undefined image types.
+			/// </summary>
+			Other = 0x00,
+			/// <summary>
+			/// A 32-pixel square icon to represent the file.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Canonically (for the ID3v2 specification), this must be a PNG.
+			/// </remarks>
+			FileIcon = 0x01,
+			/// <summary>
+			/// An icon without the restrictions of <see cref="OtherIcon"/>.
+			/// </summary>
+			OtherIcon = 0x02,
+			/// <summary>
+			/// Front cover of, for example, the including album.
+			/// </summary>
+			/// 
+			/// <seealso cref="CoverBack"/>
+			CoverFront = 0x03,
+			/// <summary>
+			/// Back cover of, for example, the including album.
+			/// </summary>
+			CoverBack = 0x04,
+			/// <summary>
+			/// A page from the booklet included with the file source.
+			/// </summary>
+			Booklet = 0x05,
+			/// <summary>
+			/// The physical medium of the file source.
+			/// </summary>
+			Medium = 0x06,
+			/// <summary>
+			/// The primary artist or performer, or a soloist.
+			/// </summary>
+			/// 
+			/// <seealso cref="Artist"/>
+			ArtistMain = 0x07,
+			/// <summary>
+			/// Any single artist or performer.
+			/// </summary>
+			/// 
+			/// <seealso cref="ArtistMain"/>
+			/// <seealso cref="Band"/>
+			Artist = 0x08,
+			/// <summary>
+			/// The orchestra or choir conductor.
+			/// </summary>
+			Conductor = 0x09,
+			/// <summary>
+			/// An image of the band or orchestra as a whole, rather than an
+			/// individual performer.
+			/// </summary>
+			/// 
+			/// <seealso cref="Artist"/>
+			Band = 0x0A,
+			/// <summary>
+			/// The composer of the music.
+			/// </summary>
+			Composer = 0x0B,
+			/// <summary>
+			/// The lyrics or prose writer.
+			/// </summary>
+			Writer = 0x0C,
+			/// <summary>
+			/// The location where the work was recorded or written.
+			/// </summary>
+			Location = 0x0D,
+			/// <summary>
+			/// An image taken during (and of) the creation of the work, such
+			/// as a recording session.
+			/// </summary>
+			/// 
+			/// <seealso cref="Performance"/>
+			Session = 0x0E,
+			/// <summary>
+			/// An image taken during a live performance of the work, but not
+			/// necessarily the one this file is a recording of.
+			/// </summary>
+			Performance = 0x0F,
+			/// <summary>
+			/// A screen capture from a video or computer related to the file.
+			/// </summary>
+			ScreenCapture = 0x10,
+			/// <summary>
+			/// A brightly-colored fish, or other fun easter egg.
+			/// </summary>
+			BrightFish = 0x11,
+			/// <summary>
+			/// An illustration related to the work.
+			/// </summary>
+			Illustration = 0x12,
+			/// <summary>
+			/// The logo of the artist or band.
+			/// </summary>
+			LogoArtist = 0x13,
+			/// <summary>
+			/// The logo of the publisher or studio.
+			/// </summary>
+			LogoPublisher = 0x14
+		}
 	}
 
 
@@ -549,6 +662,33 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				return (TagCRC.Value == Force.Crc32.Crc32Algorithm.Compute(tag));
 			else
 				return true;
+		}
+	}
+
+	/// <summary>
+	/// Extension methods for the <see cref="ImageData"/> class.
+	/// </summary>
+	public static class ImageCategoryExtension {
+		/// <summary>
+		/// Convert a <see cref="ID3v2.ImageCategory"/> value to a
+		/// human-readable string for the current locale.
+		/// </summary>
+		/// 
+		/// <param name="value">
+		/// The <see cref="ID3v2.ImageCategory"/> to format.
+		/// </param>
+		/// 
+		/// <returns>The formatted name.</returns>
+		public static string PrintableName(this ID3v2.ImageCategory value) {
+			var str = value.ToString();
+
+			// If `str` is purely digits, the lookup has failed
+			if (str.All(char.IsDigit) == false) {
+				var genre = Strings.ID3v24.ResourceManager.GetString("Image_" + str);
+				if (genre != null)
+					return genre;
+			}
+			return String.Format(Strings.ID3v24.Image_Unknown, str);
 		}
 	}
 }

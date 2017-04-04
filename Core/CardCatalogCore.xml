@@ -758,6 +758,11 @@
             <summary>
             The container to hold the raw data of this field.
             </summary>
+            
+            <remarks>
+            TODO: Expose this publicly on the parent, and ensure it is populated by
+            not only the field content but also the header.
+            </remarks>
         </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Empty.Values">
             <summary>

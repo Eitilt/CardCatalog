@@ -539,6 +539,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Off key.
+        /// </summary>
+        public static string Field_TKEY_OffKey {
+            get {
+                return ResourceManager.GetString("Field_TKEY_OffKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keywords.
         /// </summary>
         public static string Field_TKWD {

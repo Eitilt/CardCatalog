@@ -65,7 +65,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// Indicates whether the data in the tag has been compressed; the
 		/// ID3v2.2 spec recommends ignoring the tag if so.
 		/// </summary>
-		public bool Compressed { get; private set; }
+		public bool Compressed { get; }
 
 		/// <summary>
 		/// Parse a stream according the proper version of the ID3v2

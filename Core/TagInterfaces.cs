@@ -127,11 +127,17 @@ namespace AgEitilt.CardCatalog {
 			/// <summary>
 			/// The container to hold the raw data of this field.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Expose this publicly on the parent, and ensure it is populated by
+			/// not only the field content but also the header.
+			/// </remarks>
 			private byte[] data;
 			/// <summary>
 			/// All data contained by this field, in a human-readable format.
 			/// </summary>
-			public override IEnumerable<object> Values => (data.Length >= 0 ? new object[1] { data } : null);
+			public override IEnumerable<object> Values =>
+				(data.Length >= 0 ? new object[1] { data } : null);
 
 			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the

@@ -36,7 +36,7 @@ namespace AgEitilt.CardCatalog {
 		/// <summary>
 		/// The unique short name representing this format.
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the
@@ -81,7 +81,7 @@ namespace AgEitilt.CardCatalog {
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// New value for `set` is less than one.
 		/// </exception>
-		public uint HeaderLength { get; private set; }
+		public uint HeaderLength { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the
@@ -143,7 +143,7 @@ namespace AgEitilt.CardCatalog {
 		/// identifier, the <see cref="TagFieldAttribute"/> may be added to a
 		/// common class once for each such tag.
 		/// </remarks>
-		public byte[] Header { get; private set; }
+		public byte[] Header { get; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TagFieldAttribute"/>

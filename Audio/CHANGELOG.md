@@ -4,14 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.2.2 (Unreleased)
+## 0.2.2
 ### Added
-#### In progress
 - Transparently moved fields shared by ID3v2.3 and v2.4 to parent class
   in preparation for supporting the former
 ### Changed
 - `APIC` uses new `ImageData` structure rather than wrapping raw data
   and MIME type into tuple
+- `ImageCategory` enum is now contained within the base `ID3v2` class
+  rather than any particular field
 
 ## 0.2.1
 ### Fixed

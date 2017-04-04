@@ -704,4 +704,7 @@ Parameter 0 will be replaced by the time/date (as a DateTimeOffset)</comment>
   <data name="Image_Writer" xml:space="preserve">
     <value>Author or lyricist portrait</value>
   </data>
+  <data name="Field_TKEY_OffKey" xml:space="preserve">
+    <value>Off key</value>
+  </data>
 </root>
