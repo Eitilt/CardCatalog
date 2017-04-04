@@ -12,7 +12,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="data">The raw, binary data.</param>
 		/// <param name="mime">The MIME type of the image.</param>
-		public ImageData(byte[] data, string mime) : this() {
+		public ImageData(byte[] data, string mime) {
 			Data = data;
 			Type = mime;
 		}
