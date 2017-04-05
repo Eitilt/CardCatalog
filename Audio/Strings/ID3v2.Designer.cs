@@ -87,5 +87,203 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
                 return ResourceManager.GetString("Exception_StreamEnded", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist portrait.
+        /// </summary>
+        public static string Image_Artist {
+            get {
+                return ResourceManager.GetString("Image_Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lead artist portrait.
+        /// </summary>
+        public static string Image_ArtistMain {
+            get {
+                return ResourceManager.GetString("Image_ArtistMain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group picture.
+        /// </summary>
+        public static string Image_Band {
+            get {
+                return ResourceManager.GetString("Image_Band", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Booklet page.
+        /// </summary>
+        public static string Image_Booklet {
+            get {
+                return ResourceManager.GetString("Image_Booklet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A brightly-colored fish.
+        /// </summary>
+        public static string Image_BrightFish {
+            get {
+                return ResourceManager.GetString("Image_BrightFish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composer portrait.
+        /// </summary>
+        public static string Image_Composer {
+            get {
+                return ResourceManager.GetString("Image_Composer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conductor portrait.
+        /// </summary>
+        public static string Image_Conductor {
+            get {
+                return ResourceManager.GetString("Image_Conductor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back cover.
+        /// </summary>
+        public static string Image_CoverBack {
+            get {
+                return ResourceManager.GetString("Image_CoverBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Front cover.
+        /// </summary>
+        public static string Image_CoverFront {
+            get {
+                return ResourceManager.GetString("Image_CoverFront", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File icon.
+        /// </summary>
+        public static string Image_FileIcon {
+            get {
+                return ResourceManager.GetString("Image_FileIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Illustration.
+        /// </summary>
+        public static string Image_Illustration {
+            get {
+                return ResourceManager.GetString("Image_Illustration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location image.
+        /// </summary>
+        public static string Image_Location {
+            get {
+                return ResourceManager.GetString("Image_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist logo.
+        /// </summary>
+        public static string Image_LogoArtist {
+            get {
+                return ResourceManager.GetString("Image_LogoArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publisher logo.
+        /// </summary>
+        public static string Image_LogoPublisher {
+            get {
+                return ResourceManager.GetString("Image_LogoPublisher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medium image.
+        /// </summary>
+        public static string Image_Medium {
+            get {
+                return ResourceManager.GetString("Image_Medium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other image.
+        /// </summary>
+        public static string Image_Other {
+            get {
+                return ResourceManager.GetString("Image_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other icon.
+        /// </summary>
+        public static string Image_OtherIcon {
+            get {
+                return ResourceManager.GetString("Image_OtherIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Performance image.
+        /// </summary>
+        public static string Image_Performance {
+            get {
+                return ResourceManager.GetString("Image_Performance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screen capture.
+        /// </summary>
+        public static string Image_ScreenCapture {
+            get {
+                return ResourceManager.GetString("Image_ScreenCapture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Production image.
+        /// </summary>
+        public static string Image_Session {
+            get {
+                return ResourceManager.GetString("Image_Session", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown image.
+        /// </summary>
+        public static string Image_Unknown {
+            get {
+                return ResourceManager.GetString("Image_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Author or lyricist portrait.
+        /// </summary>
+        public static string Image_Writer {
+            get {
+                return ResourceManager.GetString("Image_Writer", resourceCulture);
+            }
+        }
     }
 }

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Changed
+- Moved shared strings out of ID3v2.4-specific resources
+
 ## 0.2.2
 ### Added
 - Transparently moved fields shared by ID3v2.3 and v2.4 to parent class

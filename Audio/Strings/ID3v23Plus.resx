@@ -1,0 +1,724 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+  <data name="Field_DefaultName_Length"
+        xml:space="preserve">
+    <value>Unknown length</value>
+  </data>
+  <data name="Field_DefaultName_Number"
+        xml:space="preserve">
+    <value>Unknown number</value>
+  </data>
+  <data name="Field_DefaultName_Text"
+        xml:space="preserve">
+    <value>Unknown text</value>
+  </data>
+  <data name="Field_DefaultName_Time"
+        xml:space="preserve">
+    <value>Unknown time</value>
+  </data>
+  <data name="Field_DefaultName_Url"
+        xml:space="preserve">
+    <value>Unknown URL</value>
+  </data>
+  <data name="Field_Subtitle_Language"
+        xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the description of the text
+Parameter 1 will be replaced by the language in which it is written</comment>
+  </data>
+  <data name="Field_ValueFormat_Number"
+        xml:space="preserve">
+    <value>{0} of {1}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the number of the file (as an int)
+Parameter 1 will be replaced by the total number in the album (as an int)</comment>
+  </data>
+  <data name="Field_TKEY_OffKey"
+        xml:space="preserve">
+    <value>Off key</value>
+  </data>
+  <data name="Field_Time_Range"
+        xml:space="preserve">
+    <value>{0}\u2013{1}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the start of the time/date range (as a DateTimeOffset)
+Parameter 1 will be replaced by the end of the time/date range (as a DateTimeOffset)</comment>
+  </data>
+  <data name="Field_Time_Unknown"
+        xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Field_Time_Single"
+        xml:space="preserve">
+    <value>{0}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the time/date (as a DateTimeOffset)</comment>
+  </data>
+  <data name="Field_COMM"
+        xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Field_PCNT"
+        xml:space="preserve">
+    <value>Play count</value>
+  </data>
+  <data name="Field_TALB"
+        xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Field_TBPM"
+        xml:space="preserve">
+    <value>Beats per minute</value>
+  </data>
+  <data name="Field_TCAT"
+        xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Field_TCMP"
+        xml:space="preserve">
+    <value>Compilation (iTunes)</value>
+  </data>
+  <data name="Field_TCMP_0"
+        xml:space="preserve">
+    <value>Not part of a compilation</value>
+  </data>
+  <data name="Field_TCMP_1"
+        xml:space="preserve">
+    <value>From a compilation album</value>
+  </data>
+  <data name="Field_TCOM"
+        xml:space="preserve">
+    <value>Composer</value>
+  </data>
+  <data name="Field_TCON"
+        xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="Field_TCON_CR"
+        xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="Field_TCON_RX"
+        xml:space="preserve">
+    <value>Remix</value>
+  </data>
+  <data name="Field_TCOP"
+        xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="Field_TCOP_Value"
+        xml:space="preserve">
+    <value>\u00A9 {0}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the copyright string</comment>
+  </data>
+  <data name="Field_TDES"
+        xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Field_TDLY"
+        xml:space="preserve">
+    <value>Playlist delay</value>
+  </data>
+  <data name="Field_TENC"
+        xml:space="preserve">
+    <value>Encoder</value>
+  </data>
+  <data name="Field_TEXT"
+        xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Field_TFLT"
+        xml:space="preserve">
+    <value>Audio encoding</value>
+  </data>
+  <data name="Field_TFLT_MIME"
+        xml:space="preserve">
+    <value>MIME type as follows</value>
+  </data>
+  <data name="Field_TFLT_MPG"
+        xml:space="preserve">
+    <value>MPEG audio</value>
+  </data>
+  <data name="Field_TFLT_MPG_1"
+        xml:space="preserve">
+    <value>MPEG 1/2 layer I</value>
+  </data>
+  <data name="Field_TFLT_MPG_2"
+        xml:space="preserve">
+    <value>MPEG 1/2 layer II</value>
+  </data>
+  <data name="Field_TFLT_MPG_2_5"
+        xml:space="preserve">
+    <value>MPEG 2.5</value>
+  </data>
+  <data name="Field_TFLT_MPG_3"
+        xml:space="preserve">
+    <value>MPEG 1/2 layer III</value>
+  </data>
+  <data name="Field_TFLT_MPG_AAC"
+        xml:space="preserve">
+    <value>Advanced audio compression (MPEG)</value>
+  </data>
+  <data name="Field_TFLT_PCM"
+        xml:space="preserve">
+    <value>Pulse code modulated audio</value>
+  </data>
+  <data name="Field_TFLT_VQF"
+        xml:space="preserve">
+    <value>Transform-domain weighted interleave vector quantisation</value>
+  </data>
+  <data name="Field_TGID"
+        xml:space="preserve">
+    <value>Album ID</value>
+  </data>
+  <data name="Field_TIT1"
+        xml:space="preserve">
+    <value>Work</value>
+  </data>
+  <data name="Field_TIT2"
+        xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Field_TIT3"
+        xml:space="preserve">
+    <value>Subtitle</value>
+  </data>
+  <data name="Field_TKEY"
+        xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="Field_TKWD"
+        xml:space="preserve">
+    <value>Keywords</value>
+  </data>
+  <data name="Field_TLAN"
+        xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Field_TLEN"
+        xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Field_TMED"
+        xml:space="preserve">
+    <value>Original medium</value>
+  </data>
+  <data name="Field_TMED_ANA"
+        xml:space="preserve">
+    <value>Unknown analog source</value>
+  </data>
+  <data name="Field_TMED_ANA_8CA"
+        xml:space="preserve">
+    <value>8-track tape cassette</value>
+  </data>
+  <data name="Field_TMED_ANA_WAC"
+        xml:space="preserve">
+    <value>Wax cylinder</value>
+  </data>
+  <data name="Field_TMED_CD"
+        xml:space="preserve">
+    <value>Compact disk</value>
+  </data>
+  <data name="Field_TMED_CD_A"
+        xml:space="preserve">
+    <value>Analog transfer from CD</value>
+  </data>
+  <data name="Field_TMED_CD_AAD"
+        xml:space="preserve">
+    <value>Compact disk (SPARS AAD)</value>
+  </data>
+  <data name="Field_TMED_CD_ADD"
+        xml:space="preserve">
+    <value>Compact disk (SPARS ADD)</value>
+  </data>
+  <data name="Field_TMED_CD_DDD"
+        xml:space="preserve">
+    <value>Compact disk (SPARS DDD)</value>
+  </data>
+  <data name="Field_TMED_DAT"
+        xml:space="preserve">
+    <value>DAT cassette</value>
+  </data>
+  <data name="Field_TMED_DAT_1"
+        xml:space="preserve">
+    <value>DAT standard: 48 kHz/16 bits, linear</value>
+  </data>
+  <data name="Field_TMED_DAT_2"
+        xml:space="preserve">
+    <value>DAT mode 2: 32 kHz/16 bits, linear</value>
+  </data>
+  <data name="Field_TMED_DAT_3"
+        xml:space="preserve">
+    <value>DAT mode 3: 32 kHz/12 bits, non-linear, low speed</value>
+  </data>
+  <data name="Field_TMED_DAT_4"
+        xml:space="preserve">
+    <value>DAT mode 4: 32 kHz/12 bits, 4 channels</value>
+  </data>
+  <data name="Field_TMED_DAT_5"
+        xml:space="preserve">
+    <value>DAT mode 5: 44.1 kHz/16 bits, linear</value>
+  </data>
+  <data name="Field_TMED_DAT_6"
+        xml:space="preserve">
+    <value>DAT mode 6: 44.1 kHz/16 bits, 'wide track' play</value>
+  </data>
+  <data name="Field_TMED_DAT_A"
+        xml:space="preserve">
+    <value>Analog transfer from DAT cassette</value>
+  </data>
+  <data name="Field_TMED_DCC"
+        xml:space="preserve">
+    <value>DCC cassette</value>
+  </data>
+  <data name="Field_TMED_DCC_A"
+        xml:space="preserve">
+    <value>Analog transfer from DCC cassette</value>
+  </data>
+  <data name="Field_TMED_DIG"
+        xml:space="preserve">
+    <value>Unknown digital source</value>
+  </data>
+  <data name="Field_TMED_DIG_A"
+        xml:space="preserve">
+    <value>Analog transfer from digital</value>
+  </data>
+  <data name="Field_TMED_DVD"
+        xml:space="preserve">
+    <value>DVD</value>
+  </data>
+  <data name="Field_TMED_DVD_A"
+        xml:space="preserve">
+    <value>Analog transfer from DVD</value>
+  </data>
+  <data name="Field_TMED_I"
+        xml:space="preserve">
+    <value>ISDN telephone</value>
+  </data>
+  <data name="Field_TMED_LD"
+        xml:space="preserve">
+    <value>Laserdisk</value>
+  </data>
+  <data name="Field_TMED_MC"
+        xml:space="preserve">
+    <value>Tape cassette</value>
+  </data>
+  <data name="Field_TMED_MC_4"
+        xml:space="preserve">
+    <value>4.75 cm/s cassette</value>
+  </data>
+  <data name="Field_TMED_MC_9"
+        xml:space="preserve">
+    <value>9.5 cm/s cassette</value>
+  </data>
+  <data name="Field_TMED_MC_I"
+        xml:space="preserve">
+    <value>Type I (ferric) cassette</value>
+  </data>
+  <data name="Field_TMED_MC_II"
+        xml:space="preserve">
+    <value>Type II (chrome) cassette</value>
+  </data>
+  <data name="Field_TMED_MC_III"
+        xml:space="preserve">
+    <value>Type III (ferric chrome) cassette</value>
+  </data>
+  <data name="Field_TMED_MC_IV"
+        xml:space="preserve">
+    <value>Type IV (metal) cassette</value>
+  </data>
+  <data name="Field_TMED_MD"
+        xml:space="preserve">
+    <value>MiniDisc</value>
+  </data>
+  <data name="Field_TMED_MD_A"
+        xml:space="preserve">
+    <value>Analog transfer from MiniDisc</value>
+  </data>
+  <data name="Field_TMED_RAD"
+        xml:space="preserve">
+    <value>Radio</value>
+  </data>
+  <data name="Field_TMED_RAD_AM"
+        xml:space="preserve">
+    <value>AM radio</value>
+  </data>
+  <data name="Field_TMED_RAD_FM"
+        xml:space="preserve">
+    <value>FM radio</value>
+  </data>
+  <data name="Field_TMED_RAD_LW"
+        xml:space="preserve">
+    <value>Longwave radio</value>
+  </data>
+  <data name="Field_TMED_RAD_MW"
+        xml:space="preserve">
+    <value>Medium wave radio</value>
+  </data>
+  <data name="Field_TMED_REE"
+        xml:space="preserve">
+    <value>Tape cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_19"
+        xml:space="preserve">
+    <value>19 cm/s cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_38"
+        xml:space="preserve">
+    <value>38 cm/s cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_76"
+        xml:space="preserve">
+    <value>76 cm/s cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_9"
+        xml:space="preserve">
+    <value>9.5 cm/s cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_I"
+        xml:space="preserve">
+    <value>Type I (ferric) cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_II"
+        xml:space="preserve">
+    <value>Type II (chrome) cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_III"
+        xml:space="preserve">
+    <value>Type III (ferric chrome) cassette reel</value>
+  </data>
+  <data name="Field_TMED_REE_IV"
+        xml:space="preserve">
+    <value>Type IV (metal) cassette reel</value>
+  </data>
+  <data name="Field_TMED_TEL"
+        xml:space="preserve">
+    <value>Telephone</value>
+  </data>
+  <data name="Field_TMED_TT"
+        xml:space="preserve">
+    <value>Turntable record</value>
+  </data>
+  <data name="Field_TMED_TT_33"
+        xml:space="preserve">
+    <value>33.33 rpm record</value>
+  </data>
+  <data name="Field_TMED_TT_45"
+        xml:space="preserve">
+    <value>45 rpm record</value>
+  </data>
+  <data name="Field_TMED_TT_71"
+        xml:space="preserve">
+    <value>71.29 rpm record</value>
+  </data>
+  <data name="Field_TMED_TT_76"
+        xml:space="preserve">
+    <value>76.59 rpm record</value>
+  </data>
+  <data name="Field_TMED_TT_78"
+        xml:space="preserve">
+    <value>78.26 rpm record</value>
+  </data>
+  <data name="Field_TMED_TT_80"
+        xml:space="preserve">
+    <value>80 rpm record</value>
+  </data>
+  <data name="Field_TMED_TV"
+        xml:space="preserve">
+    <value>Television</value>
+  </data>
+  <data name="Field_TMED_TV_NTSC"
+        xml:space="preserve">
+    <value>Television (NTSC)</value>
+  </data>
+  <data name="Field_TMED_TV_PAL"
+        xml:space="preserve">
+    <value>Television (PAL)</value>
+  </data>
+  <data name="Field_TMED_TV_SECAM"
+        xml:space="preserve">
+    <value>Television (SECAM)</value>
+  </data>
+  <data name="Field_TMED_VID"
+        xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="Field_TMED_VID_BETA"
+        xml:space="preserve">
+    <value>BETAMAX tape</value>
+  </data>
+  <data name="Field_TMED_VID_NTSC"
+        xml:space="preserve">
+    <value>Video (NTSC)</value>
+  </data>
+  <data name="Field_TMED_VID_PAL"
+        xml:space="preserve">
+    <value>Video (PAL)</value>
+  </data>
+  <data name="Field_TMED_VID_SECAM"
+        xml:space="preserve">
+    <value>Video (SECAM)</value>
+  </data>
+  <data name="Field_TMED_VID_SVHS"
+        xml:space="preserve">
+    <value>S-VHS tape</value>
+  </data>
+  <data name="Field_TMED_VID_VHS"
+        xml:space="preserve">
+    <value>VHS tape</value>
+  </data>
+  <data name="Field_TMOO"
+        xml:space="preserve">
+    <value>Mood</value>
+  </data>
+  <data name="Field_TOAL"
+        xml:space="preserve">
+    <value>Original album</value>
+  </data>
+  <data name="Field_TOFN"
+        xml:space="preserve">
+    <value>Original filename</value>
+  </data>
+  <data name="Field_TOLY"
+        xml:space="preserve">
+    <value>Original author</value>
+  </data>
+  <data name="Field_TOPE"
+        xml:space="preserve">
+    <value>Original artist</value>
+  </data>
+  <data name="Field_TOWN"
+        xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="Field_TPE1"
+        xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="Field_TPE2"
+        xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="Field_TPE3"
+        xml:space="preserve">
+    <value>Conductor</value>
+  </data>
+  <data name="Field_TPE4"
+        xml:space="preserve">
+    <value>Remixer</value>
+  </data>
+  <data name="Field_TPOS"
+        xml:space="preserve">
+    <value>Disk number</value>
+  </data>
+  <data name="Field_TPRO"
+        xml:space="preserve">
+    <value>Production copyright</value>
+  </data>
+  <data name="Field_TPRO_Value"
+        xml:space="preserve">
+    <value>\u2117 {0}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the production copyright string</comment>
+  </data>
+  <data name="Field_TPUB"
+        xml:space="preserve">
+    <value>Publisher</value>
+  </data>
+  <data name="Field_TRCK"
+        xml:space="preserve">
+    <value>Track number</value>
+  </data>
+  <data name="Field_TRSN"
+        xml:space="preserve">
+    <value>Station name</value>
+  </data>
+  <data name="Field_TRSO"
+        xml:space="preserve">
+    <value>Station owner</value>
+  </data>
+  <data name="Field_TSO2"
+        xml:space="preserve">
+    <value>Album artist sort order</value>
+  </data>
+  <data name="Field_TSOA"
+        xml:space="preserve">
+    <value>Album sort order</value>
+  </data>
+  <data name="Field_TSOC"
+        xml:space="preserve">
+    <value>Composer sort order</value>
+  </data>
+  <data name="Field_TSOP"
+        xml:space="preserve">
+    <value>Artist sort order</value>
+  </data>
+  <data name="Field_TSOT"
+        xml:space="preserve">
+    <value>Title sort order</value>
+  </data>
+  <data name="Field_TSRC"
+        xml:space="preserve">
+    <value>Recording ISRC</value>
+  </data>
+  <data name="Field_TSSE"
+        xml:space="preserve">
+    <value>Encoding settings</value>
+  </data>
+  <data name="Field_TSST"
+        xml:space="preserve">
+    <value>Disk title</value>
+  </data>
+  <data name="Field_TXXX"
+        xml:space="preserve">
+    <value>Other text</value>
+  </data>
+  <data name="Field_UFID"
+        xml:space="preserve">
+    <value>Unique ID</value>
+  </data>
+  <data name="Field_USLT"
+        xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="Field_WCOM"
+        xml:space="preserve">
+    <value>Purchasing information</value>
+  </data>
+  <data name="Field_WCOP"
+        xml:space="preserve">
+    <value>Copyright information</value>
+  </data>
+  <data name="Field_WFED"
+        xml:space="preserve">
+    <value>Feed</value>
+  </data>
+  <data name="Field_WOAF"
+        xml:space="preserve">
+    <value>Official website</value>
+  </data>
+  <data name="Field_WOAR"
+        xml:space="preserve">
+    <value>Artist homepage</value>
+  </data>
+  <data name="Field_WOAS"
+        xml:space="preserve">
+    <value>Source website</value>
+  </data>
+  <data name="Field_WORS"
+        xml:space="preserve">
+    <value>Radio station homepage</value>
+  </data>
+  <data name="Field_WPAY"
+        xml:space="preserve">
+    <value>Payment website</value>
+  </data>
+  <data name="Field_WPUB"
+        xml:space="preserve">
+    <value>Publisher homepage</value>
+  </data>
+  <data name="Field_WXXX"
+        xml:space="preserve">
+    <value>Other URL</value>
+  </data>
+</root>

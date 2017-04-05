@@ -659,7 +659,7 @@
             An abstract base for handling common field processing tasks.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -678,10 +678,20 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the fallback <see cref="P:AgEitilt.CardCatalog.TagField.Name"/>.
             </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
+            </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.SystemName">
             <summary>
             The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.Resources">
+            <summary>
+            The resources to use for string lookups.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.Name">
@@ -719,7 +729,7 @@
             An identifier unique to a particular database.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -738,6 +748,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase.category">
@@ -783,7 +798,7 @@
             An identifier unique to a particular database.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase.#ctor(System.Byte[],System.Int32,System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -798,6 +813,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase.owner">
@@ -833,7 +853,7 @@
             Any of the many tags containing purely textual data.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -852,6 +872,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase.Values">
@@ -915,7 +940,7 @@
             a total count (eg. "Track 5 of 13").
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -934,6 +959,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase.Values">
@@ -946,7 +976,7 @@
             A frame containing the ISRC of the recording.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -965,6 +995,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase.Values">
@@ -977,7 +1012,7 @@
             A frame containing a length of time, in milliseconds.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -996,6 +1031,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase.Values">
@@ -1008,7 +1048,7 @@
             A frame containing the musical key.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1027,6 +1067,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase.Values">
@@ -1039,7 +1084,7 @@
             A frame containing the language(s) sung/spoken.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1058,6 +1103,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase.Values">
@@ -1088,7 +1138,7 @@
             <c>/</c> and <c>.</c> will be replaced with <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1107,6 +1157,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase.Values">
@@ -1129,7 +1184,7 @@
             replaced by <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1148,6 +1203,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase.Values">
@@ -1160,7 +1220,7 @@
             A frame containing a timestamp.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1179,6 +1239,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase.Values">
@@ -1191,7 +1256,7 @@
             A frame containing a timestamp.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1210,6 +1275,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase.Subtitle">
@@ -1227,7 +1297,7 @@
             Any frame containing a URL.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase.#ctor(System.Byte[],System.Int32,System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1242,6 +1312,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase.Values">
@@ -1267,7 +1342,7 @@
             A frame containing an encoder-defined URL.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1286,6 +1361,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase.Subtitle">
@@ -1322,7 +1402,7 @@
             non-null-separated text.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1341,6 +1421,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase.Subtitle">
@@ -1391,7 +1476,7 @@
             A frame containing a single binary counter.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase.#ctor(System.Byte[],System.Int32,System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1406,6 +1491,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase.count">
@@ -1882,6 +1972,27 @@
             order marker."
             </returns>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.V4FieldWrapper.IsNewTitle(System.Byte[])">
+            <summary>
+            Determines whether a field has a new title as of ID3v2.4.
+            </summary>
+            
+            <remarks>
+            While more tags than below were only added in v2.4, the
+            flexible field headers allow many to be backported to v2.3
+            and so only fields relying on data formats entirely not
+            present in the earlier version (such as the complex date
+            fields) should be pulled out of <c>ID3v23Plus.resx</c>.
+            </remarks>
+            
+            <param name="name">
+            The unique header of the field to check.
+            </param>
+            
+            <returns>
+            Whether the field title is defined in <c>ID3v24.resx</c>.
+            </returns>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.PictureField">
             <summary>
             An embedded image.
@@ -1958,7 +2069,7 @@
             The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32,System.String)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
             <summary>
             The constructor required to properly initialize the inner
             implementation of the <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.V4FieldWrapper"/>.
@@ -1976,6 +2087,11 @@
             The name to use if no more specific one is found, or
             <c>null</c> to use the default name as specified in the
             resources.
+            </param>
+            <param name="resources">
+            The resources to use when looking up dynamic strings, or
+            <c>null</c> to use the default
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase)">
@@ -2129,7 +2245,8 @@
             
             <remarks>
             While similar to the ID3v2.3 tag, the syntax is sufficiently
-            different to make it not worth sharing code.
+            different to make it not worth sharing code. The resources,
+            however, may still be shared.
             </remarks>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.#ctor(System.Byte[],System.Int32)">
@@ -3356,6 +3473,116 @@
               Looks up a localized string similar to Reached end of ID3v2 stream while trying to read {0} unsynchronized bytes.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Artist">
+            <summary>
+              Looks up a localized string similar to Artist portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_ArtistMain">
+            <summary>
+              Looks up a localized string similar to Lead artist portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Band">
+            <summary>
+              Looks up a localized string similar to Group picture.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Booklet">
+            <summary>
+              Looks up a localized string similar to Booklet page.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_BrightFish">
+            <summary>
+              Looks up a localized string similar to A brightly-colored fish.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Composer">
+            <summary>
+              Looks up a localized string similar to Composer portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Conductor">
+            <summary>
+              Looks up a localized string similar to Conductor portrait.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_CoverBack">
+            <summary>
+              Looks up a localized string similar to Back cover.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_CoverFront">
+            <summary>
+              Looks up a localized string similar to Front cover.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_FileIcon">
+            <summary>
+              Looks up a localized string similar to File icon.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Illustration">
+            <summary>
+              Looks up a localized string similar to Illustration.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Location">
+            <summary>
+              Looks up a localized string similar to Location image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_LogoArtist">
+            <summary>
+              Looks up a localized string similar to Artist logo.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_LogoPublisher">
+            <summary>
+              Looks up a localized string similar to Publisher logo.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Medium">
+            <summary>
+              Looks up a localized string similar to Medium image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Other">
+            <summary>
+              Looks up a localized string similar to Other image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_OtherIcon">
+            <summary>
+              Looks up a localized string similar to Other icon.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Performance">
+            <summary>
+              Looks up a localized string similar to Performance image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_ScreenCapture">
+            <summary>
+              Looks up a localized string similar to Screen capture.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Session">
+            <summary>
+              Looks up a localized string similar to Production image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Unknown">
+            <summary>
+              Looks up a localized string similar to Unknown image.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Image_Writer">
+            <summary>
+              Looks up a localized string similar to Author or lyricist portrait.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v23">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -3380,6 +3607,782 @@
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23.Exception_HeaderTooShortCRC">
             <summary>
               Looks up a localized string similar to Extended header too short to contain a valid ID3v2.3 CRC.
+            </summary>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_COMM">
+            <summary>
+              Looks up a localized string similar to Comment.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_DefaultName_Length">
+            <summary>
+              Looks up a localized string similar to Unknown length.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_DefaultName_Number">
+            <summary>
+              Looks up a localized string similar to Unknown number.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_DefaultName_Text">
+            <summary>
+              Looks up a localized string similar to Unknown text.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_DefaultName_Time">
+            <summary>
+              Looks up a localized string similar to Unknown time.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_DefaultName_Url">
+            <summary>
+              Looks up a localized string similar to Unknown URL.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_PCNT">
+            <summary>
+              Looks up a localized string similar to Play count.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_Subtitle_Language">
+            <summary>
+              Looks up a localized string similar to {0} ({1}).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TALB">
+            <summary>
+              Looks up a localized string similar to Album.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TBPM">
+            <summary>
+              Looks up a localized string similar to Beats per minute.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCAT">
+            <summary>
+              Looks up a localized string similar to Category.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCMP">
+            <summary>
+              Looks up a localized string similar to Compilation (iTunes).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCMP_0">
+            <summary>
+              Looks up a localized string similar to Not part of a compilation.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCMP_1">
+            <summary>
+              Looks up a localized string similar to From a compilation album.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCOM">
+            <summary>
+              Looks up a localized string similar to Composer.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCON">
+            <summary>
+              Looks up a localized string similar to Genre.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCON_CR">
+            <summary>
+              Looks up a localized string similar to Cover.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCON_RX">
+            <summary>
+              Looks up a localized string similar to Remix.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCOP">
+            <summary>
+              Looks up a localized string similar to Copyright.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TCOP_Value">
+            <summary>
+              Looks up a localized string similar to \u00A9 {0}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TDES">
+            <summary>
+              Looks up a localized string similar to Description.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TDLY">
+            <summary>
+              Looks up a localized string similar to Playlist delay.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TENC">
+            <summary>
+              Looks up a localized string similar to Encoder.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TEXT">
+            <summary>
+              Looks up a localized string similar to Author.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT">
+            <summary>
+              Looks up a localized string similar to Audio encoding.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MIME">
+            <summary>
+              Looks up a localized string similar to MIME type as follows.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG">
+            <summary>
+              Looks up a localized string similar to MPEG audio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG_1">
+            <summary>
+              Looks up a localized string similar to MPEG 1/2 layer I.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG_2">
+            <summary>
+              Looks up a localized string similar to MPEG 1/2 layer II.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG_2_5">
+            <summary>
+              Looks up a localized string similar to MPEG 2.5.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG_3">
+            <summary>
+              Looks up a localized string similar to MPEG 1/2 layer III.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_MPG_AAC">
+            <summary>
+              Looks up a localized string similar to Advanced audio compression (MPEG).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_PCM">
+            <summary>
+              Looks up a localized string similar to Pulse code modulated audio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TFLT_VQF">
+            <summary>
+              Looks up a localized string similar to Transform-domain weighted interleave vector quantisation.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TGID">
+            <summary>
+              Looks up a localized string similar to Album ID.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_Time_Range">
+            <summary>
+              Looks up a localized string similar to {0}\u2013{1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_Time_Single">
+            <summary>
+              Looks up a localized string similar to {0}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_Time_Unknown">
+            <summary>
+              Looks up a localized string similar to Unknown.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TIT1">
+            <summary>
+              Looks up a localized string similar to Work.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TIT2">
+            <summary>
+              Looks up a localized string similar to Title.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TIT3">
+            <summary>
+              Looks up a localized string similar to Subtitle.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TKEY">
+            <summary>
+              Looks up a localized string similar to Key.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TKEY_OffKey">
+            <summary>
+              Looks up a localized string similar to Off key.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TKWD">
+            <summary>
+              Looks up a localized string similar to Keywords.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TLAN">
+            <summary>
+              Looks up a localized string similar to Language.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TLEN">
+            <summary>
+              Looks up a localized string similar to Length.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED">
+            <summary>
+              Looks up a localized string similar to Original medium.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_ANA">
+            <summary>
+              Looks up a localized string similar to Unknown analog source.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_ANA_8CA">
+            <summary>
+              Looks up a localized string similar to 8-track tape cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_ANA_WAC">
+            <summary>
+              Looks up a localized string similar to Wax cylinder.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_CD">
+            <summary>
+              Looks up a localized string similar to Compact disk.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_CD_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from CD.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_CD_AAD">
+            <summary>
+              Looks up a localized string similar to Compact disk (SPARS AAD).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_CD_ADD">
+            <summary>
+              Looks up a localized string similar to Compact disk (SPARS ADD).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_CD_DDD">
+            <summary>
+              Looks up a localized string similar to Compact disk (SPARS DDD).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT">
+            <summary>
+              Looks up a localized string similar to DAT cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_1">
+            <summary>
+              Looks up a localized string similar to DAT standard: 48 kHz/16 bits, linear.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_2">
+            <summary>
+              Looks up a localized string similar to DAT mode 2: 32 kHz/16 bits, linear.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_3">
+            <summary>
+              Looks up a localized string similar to DAT mode 3: 32 kHz/12 bits, non-linear, low speed.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_4">
+            <summary>
+              Looks up a localized string similar to DAT mode 4: 32 kHz/12 bits, 4 channels.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_5">
+            <summary>
+              Looks up a localized string similar to DAT mode 5: 44.1 kHz/16 bits, linear.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_6">
+            <summary>
+              Looks up a localized string similar to DAT mode 6: 44.1 kHz/16 bits, &apos;wide track&apos; play.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DAT_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from DAT cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DCC">
+            <summary>
+              Looks up a localized string similar to DCC cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DCC_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from DCC cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DIG">
+            <summary>
+              Looks up a localized string similar to Unknown digital source.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DIG_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from digital.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DVD">
+            <summary>
+              Looks up a localized string similar to DVD.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_DVD_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from DVD.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_I">
+            <summary>
+              Looks up a localized string similar to ISDN telephone.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_LD">
+            <summary>
+              Looks up a localized string similar to Laserdisk.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC">
+            <summary>
+              Looks up a localized string similar to Tape cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_4">
+            <summary>
+              Looks up a localized string similar to 4.75 cm/s cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_9">
+            <summary>
+              Looks up a localized string similar to 9.5 cm/s cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_I">
+            <summary>
+              Looks up a localized string similar to Type I (ferric) cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_II">
+            <summary>
+              Looks up a localized string similar to Type II (chrome) cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_III">
+            <summary>
+              Looks up a localized string similar to Type III (ferric chrome) cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MC_IV">
+            <summary>
+              Looks up a localized string similar to Type IV (metal) cassette.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MD">
+            <summary>
+              Looks up a localized string similar to MiniDisc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_MD_A">
+            <summary>
+              Looks up a localized string similar to Analog transfer from MiniDisc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_RAD">
+            <summary>
+              Looks up a localized string similar to Radio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_RAD_AM">
+            <summary>
+              Looks up a localized string similar to AM radio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_RAD_FM">
+            <summary>
+              Looks up a localized string similar to FM radio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_RAD_LW">
+            <summary>
+              Looks up a localized string similar to Longwave radio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_RAD_MW">
+            <summary>
+              Looks up a localized string similar to Medium wave radio.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE">
+            <summary>
+              Looks up a localized string similar to Tape cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_19">
+            <summary>
+              Looks up a localized string similar to 19 cm/s cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_38">
+            <summary>
+              Looks up a localized string similar to 38 cm/s cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_76">
+            <summary>
+              Looks up a localized string similar to 76 cm/s cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_9">
+            <summary>
+              Looks up a localized string similar to 9.5 cm/s cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_I">
+            <summary>
+              Looks up a localized string similar to Type I (ferric) cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_II">
+            <summary>
+              Looks up a localized string similar to Type II (chrome) cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_III">
+            <summary>
+              Looks up a localized string similar to Type III (ferric chrome) cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_REE_IV">
+            <summary>
+              Looks up a localized string similar to Type IV (metal) cassette reel.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TEL">
+            <summary>
+              Looks up a localized string similar to Telephone.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT">
+            <summary>
+              Looks up a localized string similar to Turntable record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_33">
+            <summary>
+              Looks up a localized string similar to 33.33 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_45">
+            <summary>
+              Looks up a localized string similar to 45 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_71">
+            <summary>
+              Looks up a localized string similar to 71.29 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_76">
+            <summary>
+              Looks up a localized string similar to 76.59 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_78">
+            <summary>
+              Looks up a localized string similar to 78.26 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TT_80">
+            <summary>
+              Looks up a localized string similar to 80 rpm record.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TV">
+            <summary>
+              Looks up a localized string similar to Television.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TV_NTSC">
+            <summary>
+              Looks up a localized string similar to Television (NTSC).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TV_PAL">
+            <summary>
+              Looks up a localized string similar to Television (PAL).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_TV_SECAM">
+            <summary>
+              Looks up a localized string similar to Television (SECAM).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID">
+            <summary>
+              Looks up a localized string similar to Video.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_BETA">
+            <summary>
+              Looks up a localized string similar to BETAMAX tape.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_NTSC">
+            <summary>
+              Looks up a localized string similar to Video (NTSC).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_PAL">
+            <summary>
+              Looks up a localized string similar to Video (PAL).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_SECAM">
+            <summary>
+              Looks up a localized string similar to Video (SECAM).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_SVHS">
+            <summary>
+              Looks up a localized string similar to S-VHS tape.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMED_VID_VHS">
+            <summary>
+              Looks up a localized string similar to VHS tape.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TMOO">
+            <summary>
+              Looks up a localized string similar to Mood.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TOAL">
+            <summary>
+              Looks up a localized string similar to Original album.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TOFN">
+            <summary>
+              Looks up a localized string similar to Original filename.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TOLY">
+            <summary>
+              Looks up a localized string similar to Original author.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TOPE">
+            <summary>
+              Looks up a localized string similar to Original artist.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TOWN">
+            <summary>
+              Looks up a localized string similar to Owner.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPE1">
+            <summary>
+              Looks up a localized string similar to Artist.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPE2">
+            <summary>
+              Looks up a localized string similar to Album artist.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPE3">
+            <summary>
+              Looks up a localized string similar to Conductor.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPE4">
+            <summary>
+              Looks up a localized string similar to Remixer.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPOS">
+            <summary>
+              Looks up a localized string similar to Disk number.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPRO">
+            <summary>
+              Looks up a localized string similar to Production copyright.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPRO_Value">
+            <summary>
+              Looks up a localized string similar to \u2117 {0}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TPUB">
+            <summary>
+              Looks up a localized string similar to Publisher.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TRCK">
+            <summary>
+              Looks up a localized string similar to Track number.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TRSN">
+            <summary>
+              Looks up a localized string similar to Station name.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TRSO">
+            <summary>
+              Looks up a localized string similar to Station owner.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSO2">
+            <summary>
+              Looks up a localized string similar to Album artist sort order.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSOA">
+            <summary>
+              Looks up a localized string similar to Album sort order.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSOC">
+            <summary>
+              Looks up a localized string similar to Composer sort order.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSOP">
+            <summary>
+              Looks up a localized string similar to Artist sort order.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSOT">
+            <summary>
+              Looks up a localized string similar to Title sort order.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSRC">
+            <summary>
+              Looks up a localized string similar to Recording ISRC.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSSE">
+            <summary>
+              Looks up a localized string similar to Encoding settings.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TSST">
+            <summary>
+              Looks up a localized string similar to Disk title.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_TXXX">
+            <summary>
+              Looks up a localized string similar to Other text.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_UFID">
+            <summary>
+              Looks up a localized string similar to Unique ID.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_USLT">
+            <summary>
+              Looks up a localized string similar to Lyrics.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_ValueFormat_Number">
+            <summary>
+              Looks up a localized string similar to {0} of {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WCOM">
+            <summary>
+              Looks up a localized string similar to Purchasing information.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WCOP">
+            <summary>
+              Looks up a localized string similar to Copyright information.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WFED">
+            <summary>
+              Looks up a localized string similar to Feed.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WOAF">
+            <summary>
+              Looks up a localized string similar to Official website.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WOAR">
+            <summary>
+              Looks up a localized string similar to Artist homepage.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WOAS">
+            <summary>
+              Looks up a localized string similar to Source website.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WORS">
+            <summary>
+              Looks up a localized string similar to Radio station homepage.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WPAY">
+            <summary>
+              Looks up a localized string similar to Payment website.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WPUB">
+            <summary>
+              Looks up a localized string similar to Publisher homepage.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_WXXX">
+            <summary>
+              Looks up a localized string similar to Other URL.
             </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v24">
@@ -3418,124 +4421,14 @@
               Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag is an update&apos; data (must be 0).
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_COMM">
-            <summary>
-              Looks up a localized string similar to Comment.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Credits">
             <summary>
               Looks up a localized string similar to Other credits.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Length">
-            <summary>
-              Looks up a localized string similar to Unknown length.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Number">
-            <summary>
-              Looks up a localized string similar to Unknown number.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Text">
-            <summary>
-              Looks up a localized string similar to Unknown text.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Time">
-            <summary>
-              Looks up a localized string similar to Unknown time.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Url">
-            <summary>
-              Looks up a localized string similar to Unknown URL.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_PCNT">
-            <summary>
-              Looks up a localized string similar to Play count.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Subtitle_Language">
-            <summary>
-              Looks up a localized string similar to {0} ({1}).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TALB">
-            <summary>
-              Looks up a localized string similar to Album.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TBPM">
-            <summary>
-              Looks up a localized string similar to Beats per minute.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCAT">
-            <summary>
-              Looks up a localized string similar to Category.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCMP">
-            <summary>
-              Looks up a localized string similar to Compilation (iTunes).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCMP_0">
-            <summary>
-              Looks up a localized string similar to Not part of a compilation.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCMP_1">
-            <summary>
-              Looks up a localized string similar to From a compilation album.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCOM">
-            <summary>
-              Looks up a localized string similar to Composer.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCON">
-            <summary>
-              Looks up a localized string similar to Genre.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCON_CR">
-            <summary>
-              Looks up a localized string similar to Cover.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCON_RX">
-            <summary>
-              Looks up a localized string similar to Remix.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCOP">
-            <summary>
-              Looks up a localized string similar to Copyright.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TCOP_Value">
-            <summary>
-              Looks up a localized string similar to \u00A9 {0}.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDEN">
             <summary>
               Looks up a localized string similar to Encoding date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDES">
-            <summary>
-              Looks up a localized string similar to Description.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDLY">
-            <summary>
-              Looks up a localized string similar to Playlist delay.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDOR">
@@ -3558,609 +4451,14 @@
               Looks up a localized string similar to Tagging date.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TENC">
-            <summary>
-              Looks up a localized string similar to Encoder.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TEXT">
-            <summary>
-              Looks up a localized string similar to Author.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT">
-            <summary>
-              Looks up a localized string similar to Audio encoding.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MIME">
-            <summary>
-              Looks up a localized string similar to MIME type as follows.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG">
-            <summary>
-              Looks up a localized string similar to MPEG audio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG_1">
-            <summary>
-              Looks up a localized string similar to MPEG 1/2 layer I.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG_2">
-            <summary>
-              Looks up a localized string similar to MPEG 1/2 layer II.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG_2_5">
-            <summary>
-              Looks up a localized string similar to MPEG 2.5.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG_3">
-            <summary>
-              Looks up a localized string similar to MPEG 1/2 layer III.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MPG_AAC">
-            <summary>
-              Looks up a localized string similar to Advanced audio compression (MPEG).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_PCM">
-            <summary>
-              Looks up a localized string similar to Pulse code modulated audio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_VQF">
-            <summary>
-              Looks up a localized string similar to Transform-domain weighted interleave vector quantisation.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TGID">
-            <summary>
-              Looks up a localized string similar to Album ID.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Range">
-            <summary>
-              Looks up a localized string similar to {0}\u2013{1}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Single">
-            <summary>
-              Looks up a localized string similar to {0}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Unknown">
-            <summary>
-              Looks up a localized string similar to Unknown.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIPL">
             <summary>
               Looks up a localized string similar to Production credits.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIT1">
-            <summary>
-              Looks up a localized string similar to Work.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIT2">
-            <summary>
-              Looks up a localized string similar to Title.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIT3">
-            <summary>
-              Looks up a localized string similar to Subtitle.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TKEY">
-            <summary>
-              Looks up a localized string similar to Key.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TKEY_OffKey">
-            <summary>
-              Looks up a localized string similar to Off key.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TKWD">
-            <summary>
-              Looks up a localized string similar to Keywords.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TLAN">
-            <summary>
-              Looks up a localized string similar to Language.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TLEN">
-            <summary>
-              Looks up a localized string similar to Length.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMCL">
             <summary>
               Looks up a localized string similar to Artist credits.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED">
-            <summary>
-              Looks up a localized string similar to Original medium.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_ANA">
-            <summary>
-              Looks up a localized string similar to Unknown analog source.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_ANA_8CA">
-            <summary>
-              Looks up a localized string similar to 8-track tape cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_ANA_WAC">
-            <summary>
-              Looks up a localized string similar to Wax cylinder.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_CD">
-            <summary>
-              Looks up a localized string similar to Compact disk.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_CD_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from CD.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_CD_AAD">
-            <summary>
-              Looks up a localized string similar to Compact disk (SPARS AAD).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_CD_ADD">
-            <summary>
-              Looks up a localized string similar to Compact disk (SPARS ADD).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_CD_DDD">
-            <summary>
-              Looks up a localized string similar to Compact disk (SPARS DDD).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT">
-            <summary>
-              Looks up a localized string similar to DAT cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_1">
-            <summary>
-              Looks up a localized string similar to DAT standard: 48 kHz/16 bits, linear.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_2">
-            <summary>
-              Looks up a localized string similar to DAT mode 2: 32 kHz/16 bits, linear.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_3">
-            <summary>
-              Looks up a localized string similar to DAT mode 3: 32 kHz/12 bits, non-linear, low speed.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_4">
-            <summary>
-              Looks up a localized string similar to DAT mode 4: 32 kHz/12 bits, 4 channels.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_5">
-            <summary>
-              Looks up a localized string similar to DAT mode 5: 44.1 kHz/16 bits, linear.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_6">
-            <summary>
-              Looks up a localized string similar to DAT mode 6: 44.1 kHz/16 bits, &apos;wide track&apos; play.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DAT_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from DAT cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DCC">
-            <summary>
-              Looks up a localized string similar to DCC cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DCC_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from DCC cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DIG">
-            <summary>
-              Looks up a localized string similar to Unknown digital source.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DIG_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from digital.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DVD">
-            <summary>
-              Looks up a localized string similar to DVD.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_DVD_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from DVD.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_I">
-            <summary>
-              Looks up a localized string similar to ISDN telephone.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_LD">
-            <summary>
-              Looks up a localized string similar to Laserdisk.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC">
-            <summary>
-              Looks up a localized string similar to Tape cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_4">
-            <summary>
-              Looks up a localized string similar to 4.75 cm/s cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_9">
-            <summary>
-              Looks up a localized string similar to 9.5 cm/s cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_I">
-            <summary>
-              Looks up a localized string similar to Type I (ferric) cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_II">
-            <summary>
-              Looks up a localized string similar to Type II (chrome) cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_III">
-            <summary>
-              Looks up a localized string similar to Type III (ferric chrome) cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MC_IV">
-            <summary>
-              Looks up a localized string similar to Type IV (metal) cassette.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MD">
-            <summary>
-              Looks up a localized string similar to MiniDisc.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_MD_A">
-            <summary>
-              Looks up a localized string similar to Analog transfer from MiniDisc.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_RAD">
-            <summary>
-              Looks up a localized string similar to Radio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_RAD_AM">
-            <summary>
-              Looks up a localized string similar to AM radio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_RAD_FM">
-            <summary>
-              Looks up a localized string similar to FM radio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_RAD_LW">
-            <summary>
-              Looks up a localized string similar to Longwave radio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_RAD_MW">
-            <summary>
-              Looks up a localized string similar to Medium wave radio.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE">
-            <summary>
-              Looks up a localized string similar to Tape cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_19">
-            <summary>
-              Looks up a localized string similar to 19 cm/s cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_38">
-            <summary>
-              Looks up a localized string similar to 38 cm/s cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_76">
-            <summary>
-              Looks up a localized string similar to 76 cm/s cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_9">
-            <summary>
-              Looks up a localized string similar to 9.5 cm/s cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_I">
-            <summary>
-              Looks up a localized string similar to Type I (ferric) cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_II">
-            <summary>
-              Looks up a localized string similar to Type II (chrome) cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_III">
-            <summary>
-              Looks up a localized string similar to Type III (ferric chrome) cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_REE_IV">
-            <summary>
-              Looks up a localized string similar to Type IV (metal) cassette reel.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TEL">
-            <summary>
-              Looks up a localized string similar to Telephone.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT">
-            <summary>
-              Looks up a localized string similar to Turntable record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_33">
-            <summary>
-              Looks up a localized string similar to 33.33 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_45">
-            <summary>
-              Looks up a localized string similar to 45 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_71">
-            <summary>
-              Looks up a localized string similar to 71.29 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_76">
-            <summary>
-              Looks up a localized string similar to 76.59 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_78">
-            <summary>
-              Looks up a localized string similar to 78.26 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TT_80">
-            <summary>
-              Looks up a localized string similar to 80 rpm record.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TV">
-            <summary>
-              Looks up a localized string similar to Television.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TV_NTSC">
-            <summary>
-              Looks up a localized string similar to Television (NTSC).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TV_PAL">
-            <summary>
-              Looks up a localized string similar to Television (PAL).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_TV_SECAM">
-            <summary>
-              Looks up a localized string similar to Television (SECAM).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID">
-            <summary>
-              Looks up a localized string similar to Video.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_BETA">
-            <summary>
-              Looks up a localized string similar to BETAMAX tape.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_NTSC">
-            <summary>
-              Looks up a localized string similar to Video (NTSC).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_PAL">
-            <summary>
-              Looks up a localized string similar to Video (PAL).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_SECAM">
-            <summary>
-              Looks up a localized string similar to Video (SECAM).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_SVHS">
-            <summary>
-              Looks up a localized string similar to S-VHS tape.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMED_VID_VHS">
-            <summary>
-              Looks up a localized string similar to VHS tape.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMOO">
-            <summary>
-              Looks up a localized string similar to Mood.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TOAL">
-            <summary>
-              Looks up a localized string similar to Original album.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TOFN">
-            <summary>
-              Looks up a localized string similar to Original filename.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TOLY">
-            <summary>
-              Looks up a localized string similar to Original author.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TOPE">
-            <summary>
-              Looks up a localized string similar to Original artist.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TOWN">
-            <summary>
-              Looks up a localized string similar to Owner.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPE1">
-            <summary>
-              Looks up a localized string similar to Artist.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPE2">
-            <summary>
-              Looks up a localized string similar to Album artist.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPE3">
-            <summary>
-              Looks up a localized string similar to Conductor.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPE4">
-            <summary>
-              Looks up a localized string similar to Remixer.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPOS">
-            <summary>
-              Looks up a localized string similar to Disk number.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPRO">
-            <summary>
-              Looks up a localized string similar to Production copyright.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPRO_Value">
-            <summary>
-              Looks up a localized string similar to \u2117 {0}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TPUB">
-            <summary>
-              Looks up a localized string similar to Publisher.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TRCK">
-            <summary>
-              Looks up a localized string similar to Track number.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TRSN">
-            <summary>
-              Looks up a localized string similar to Station name.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TRSO">
-            <summary>
-              Looks up a localized string similar to Station owner.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSO2">
-            <summary>
-              Looks up a localized string similar to Album artist sort order.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSOA">
-            <summary>
-              Looks up a localized string similar to Album sort order.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSOC">
-            <summary>
-              Looks up a localized string similar to Composer sort order.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSOP">
-            <summary>
-              Looks up a localized string similar to Artist sort order.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSOT">
-            <summary>
-              Looks up a localized string similar to Title sort order.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSRC">
-            <summary>
-              Looks up a localized string similar to Recording ISRC.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSSE">
-            <summary>
-              Looks up a localized string similar to Encoding settings.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TSST">
-            <summary>
-              Looks up a localized string similar to Disk title.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TXXX">
-            <summary>
-              Looks up a localized string similar to Other text.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_UFID">
-            <summary>
-              Looks up a localized string similar to Unique ID.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_USLT">
-            <summary>
-              Looks up a localized string similar to Lyrics.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Value_Credits">
@@ -4171,171 +4469,6 @@
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Value_Credits_EmptyRole">
             <summary>
               Looks up a localized string similar to {0}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_ValueFormat_Number">
-            <summary>
-              Looks up a localized string similar to {0} of {1}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WCOM">
-            <summary>
-              Looks up a localized string similar to Purchasing information.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WCOP">
-            <summary>
-              Looks up a localized string similar to Copyright information.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WFED">
-            <summary>
-              Looks up a localized string similar to Feed.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WOAF">
-            <summary>
-              Looks up a localized string similar to Official website.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WOAR">
-            <summary>
-              Looks up a localized string similar to Artist homepage.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WOAS">
-            <summary>
-              Looks up a localized string similar to Source website.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WORS">
-            <summary>
-              Looks up a localized string similar to Radio station homepage.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WPAY">
-            <summary>
-              Looks up a localized string similar to Payment website.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WPUB">
-            <summary>
-              Looks up a localized string similar to Publisher homepage.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_WXXX">
-            <summary>
-              Looks up a localized string similar to Other URL.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Artist">
-            <summary>
-              Looks up a localized string similar to Artist portrait.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_ArtistMain">
-            <summary>
-              Looks up a localized string similar to Lead artist portrait.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Band">
-            <summary>
-              Looks up a localized string similar to Group picture.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Booklet">
-            <summary>
-              Looks up a localized string similar to Booklet page.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_BrightFish">
-            <summary>
-              Looks up a localized string similar to A brightly-colored fish.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Composer">
-            <summary>
-              Looks up a localized string similar to Composer portrait.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Conductor">
-            <summary>
-              Looks up a localized string similar to Conductor portrait.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_CoverBack">
-            <summary>
-              Looks up a localized string similar to Back cover.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_CoverFront">
-            <summary>
-              Looks up a localized string similar to Front cover.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_FileIcon">
-            <summary>
-              Looks up a localized string similar to File icon.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Illustration">
-            <summary>
-              Looks up a localized string similar to Illustration.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Location">
-            <summary>
-              Looks up a localized string similar to Location image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_LogoArtist">
-            <summary>
-              Looks up a localized string similar to Artist logo.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_LogoPublisher">
-            <summary>
-              Looks up a localized string similar to Publisher logo.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Medium">
-            <summary>
-              Looks up a localized string similar to Medium image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Other">
-            <summary>
-              Looks up a localized string similar to Other image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_OtherIcon">
-            <summary>
-              Looks up a localized string similar to Other icon.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Performance">
-            <summary>
-              Looks up a localized string similar to Performance image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_ScreenCapture">
-            <summary>
-              Looks up a localized string similar to Screen capture.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Session">
-            <summary>
-              Looks up a localized string similar to Production image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Unknown">
-            <summary>
-              Looks up a localized string similar to Unknown image.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Image_Writer">
-            <summary>
-              Looks up a localized string similar to Author or lyricist portrait.
             </summary>
         </member>
     </members>

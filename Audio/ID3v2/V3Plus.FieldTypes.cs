@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Text;
 
 using AgEitilt.Common.Stream;
@@ -162,17 +163,28 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the fallback <see cref="TagField.Name"/>.
 				/// </param>
-				public FieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding = null, string defaultName = null) {
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public FieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding = null, string defaultName = null, ResourceManager resources = null) {
 					SystemName = name;
 					Length = length;
 					TryGetEncoding = tryGetEncoding;
 					DefaultName = defaultName;
+					Resources = resources ?? Strings.ID3v23Plus.ResourceManager;
 				}
 
 				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
 				public override byte[] SystemName { get; }
+
+				/// <summary>
+				/// The resources to use for string lookups.
+				/// </summary>
+				protected ResourceManager Resources { get; }
 
 				/// <summary>
 				/// The human-readable name of the field.
@@ -190,7 +202,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					 * TSOC: Unofficial
 					 * WFED: Unofficial (podcast)
 					 */
-					Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName))
+					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
 						?? DefaultName
 						?? base.Name;
 
@@ -250,8 +262,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public PictureFieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding , string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public PictureFieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding , string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// What is depicted by the image.
@@ -363,8 +380,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public UniqueFileIdBase(byte[] name, int length, string defaultName = null)
-					: base(name, length, defaultName: defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public UniqueFileIdBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
 				/// The database with which this ID is associated.
@@ -430,8 +452,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public TextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v24.Field_DefaultName_Text)) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public TextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Text), resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -575,8 +602,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public OfNumberFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v24.Field_DefaultName_Number) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public OfNumberFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Number, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -605,7 +637,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								// ...only format if it seems to be "# of total"
 								// (note the max count on the .Split(...) call)...
 								if (int.TryParse(split[0], out var parsed0) && int.TryParse(split[1], out var parsed1))
-									return String.Format(Strings.ID3v24.Field_ValueFormat_Number, parsed0, parsed1);
+									return String.Format(Strings.ID3v23Plus.Field_ValueFormat_Number, parsed0, parsed1);
 								// ...and return the original if it's more complex
 								else
 									return s;
@@ -640,8 +672,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public IsrcFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v24.Field_DefaultName_Length) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public IsrcFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Length, resources) { }
 
 
 				/// <summary>
@@ -679,8 +716,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public MsFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public MsFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -720,8 +762,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public KeyFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public KeyFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -730,7 +777,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						foreach (var s in StringValues) {
 							if (s == "o") {
-								yield return Strings.ID3v24.Field_TKEY_OffKey;
+								yield return Strings.ID3v23Plus.Field_TKEY_OffKey;
 							} else {
 								var cs = s.ToCharArray();
 								// Validate that the value is a properly-formatted key
@@ -770,8 +817,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public LanguageFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public LanguageFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -820,8 +872,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public ResourceFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public ResourceFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -831,7 +888,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						// Replace non-key-safe characters
 					select (keyBase, keyBase.Replace('/', '_').Replace('.', '_')) into keyValues
 					// Compose the value into the proper format for lookup
-					select Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName) + "_" + keyValues.Item2)
+					select Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_" + keyValues.Item2)
 						// Fallback if key not found
 						?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, keyValues.Item1);
 			}
@@ -869,8 +926,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public ResourceValueFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public ResourceValueFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -878,7 +940,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override IEnumerable<object> Values =>
 					from valueBase in StringValues
 						// Try to find the format string for this field
-					let format = Strings.ID3v24.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName) + "_Value")
+					let format = Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_Value")
 						// Fallback if key not found
 						?? CardCatalog.Strings.Base.Field_DefaultValue
 					// Apply the value to the format string
@@ -908,8 +970,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public TimeFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public TimeFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -947,12 +1014,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 							}
 
 							if ((times[0] == null) || (times[0] == DateTimeOffset.MinValue))
-								yield return Strings.ID3v24.Field_Time_Unknown;
+								yield return Strings.ID3v23Plus.Field_Time_Unknown;
 							else if ((times[1] != null) && (times[1] != DateTimeOffset.MinValue))
-								yield return String.Format(Strings.ID3v24.Field_Time_Range, times[0], times[1]);
+								yield return String.Format(Strings.ID3v23Plus.Field_Time_Range, times[0], times[1]);
 							else
 								//TODO: Only return the given values
-								yield return String.Format(Strings.ID3v24.Field_Time_Single, times[0]);
+								yield return String.Format(Strings.ID3v23Plus.Field_Time_Single, times[0]);
 						}
 					}
 				}
@@ -981,8 +1048,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public UserTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public UserTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1016,8 +1088,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public UrlFrameBase(byte[] name, int length, string defaultName = null)
-					: base(name, length, defaultName:(defaultName ?? Strings.ID3v24.Field_DefaultName_Url)) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public UrlFrameBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, defaultName:(defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources:resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1077,8 +1154,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public UserUrlFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v24.Field_DefaultName_Url)) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public UserUrlFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1163,8 +1245,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public LongTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v24.Field_DefaultName_Url)) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public LongTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1175,7 +1262,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						bool lang = ((description != null) && (description.Length > 0));
 
 						if (desc && lang)
-							return String.Format(Strings.ID3v24.Field_Subtitle_Language, description, language);
+							return String.Format(Strings.ID3v23Plus.Field_Subtitle_Language, description, language);
 						else if (desc)
 							return description;
 						else if (lang)
@@ -1265,8 +1352,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public CountFrameBase(byte[] name, int length, string defaultName = null)
-					: base(name, length, defaultName:defaultName) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public CountFrameBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
+					: base(name, length, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
 				/// The value contained by this field.

@@ -684,11 +684,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 			// If `str` is purely digits, the lookup has failed
 			if (str.All(char.IsDigit) == false) {
-				var genre = Strings.ID3v24.ResourceManager.GetString("Image_" + str);
+				var genre = Strings.ID3v2.ResourceManager.GetString("Image_" + str);
 				if (genre != null)
 					return genre;
 			}
-			return String.Format(Strings.ID3v24.Image_Unknown, str);
+			return String.Format(Strings.ID3v2.Image_Unknown, str);
 		}
 	}
 }

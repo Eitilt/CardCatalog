@@ -298,6 +298,40 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 							return null;
 					}
 				}
+
+				/// <summary>
+				/// Determines whether a field has a new title as of ID3v2.4.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// While more tags than below were only added in v2.4, the
+				/// flexible field headers allow many to be backported to v2.3
+				/// and so only fields relying on data formats entirely not
+				/// present in the earlier version (such as the complex date
+				/// fields) should be pulled out of <c>ID3v23Plus.resx</c>.
+				/// </remarks>
+				/// 
+				/// <param name="name">
+				/// The unique header of the field to check.
+				/// </param>
+				/// 
+				/// <returns>
+				/// Whether the field title is defined in <c>ID3v24.resx</c>.
+				/// </returns>
+				protected static bool IsNewTitle(byte[] name) {
+					switch (ISO88591.GetString(name)) {
+						case "TDEN":
+						case "TDOR":
+						case "TDRC":
+						case "TDRL":
+						case "TDTG":
+						case "TIPL":
+						case "TMCL":
+							return true;
+						default:
+							return false;
+					}
+				}
 			}
 
 			/// <summary>
@@ -437,8 +471,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default name as specified in the
 				/// resources.
 				/// </param>
-				public TextFrame(byte[] name, int length, string defaultName)
-					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName)) { }
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public TextFrame(byte[] name, int length, string defaultName, System.Resources.ResourceManager resources = null)
+					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName, (IsNewTitle(name) ? Strings.ID3v24.ResourceManager : resources))) { }
 
 				/// <summary>
 				/// The constructor required to properly initialize the inner
@@ -529,7 +568,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public ListMappingFrame(byte[] name, int length)
-					: base(name, length, Strings.ID3v24.Field_DefaultName_Credits) { }
+					: base(name, length, Strings.ID3v24.Field_DefaultName_Credits, Strings.ID3v24.ResourceManager) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -629,7 +668,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// 
 			/// <remarks>
 			/// While similar to the ID3v2.3 tag, the syntax is sufficiently
-			/// different to make it not worth sharing code.
+			/// different to make it not worth sharing code. The resources,
+			/// however, may still be shared.
 			/// </remarks>
 			[TagField("TCON")]
 			public class GenreFrame : TextFrame {
@@ -660,9 +700,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						foreach (var s in StringValues) {
 							if (s.Equals("RX"))
-								yield return Strings.ID3v24.Field_TCON_RX;
+								yield return Strings.ID3v23Plus.Field_TCON_RX;
 							else if (s.Equals("CR"))
-								yield return Strings.ID3v24.Field_TCON_CR;
+								yield return Strings.ID3v23Plus.Field_TCON_CR;
 							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
 								/* Given that everything is a digit and the
 								 * length is capped, Parse is guaranteed to
@@ -768,7 +808,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public TimeFrame(byte[] name, int length)
-					: base(new TimeFrameBase(name, length, TryGetEncoding, Strings.ID3v24.Field_DefaultName_Time)) { }
+					: base(new TimeFrameBase(name, length, TryGetEncoding, Strings.ID3v23Plus.Field_DefaultName_Time, Strings.ID3v24.ResourceManager)) { }
 			}
 
 			/// <summary>
