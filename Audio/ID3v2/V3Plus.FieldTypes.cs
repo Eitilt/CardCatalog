@@ -168,11 +168,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public FieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding = null, string defaultName = null, ResourceManager resources = null) {
+				public FieldBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding = null, ResourceAccessor defaultName = null, ResourceManager resources = null) {
 					SystemName = name;
 					Length = length;
 					TryGetEncoding = tryGetEncoding;
-					DefaultName = defaultName;
+					// Ensure that the delegate will always be assigned some
+					// callable function
+					DefaultName = defaultName ?? (() => null);
 					Resources = resources ?? Strings.ID3v23Plus.ResourceManager;
 				}
 
@@ -203,13 +206,20 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					 * WFED: Unofficial (podcast)
 					 */
 					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
-						?? DefaultName
+						?? DefaultName()
 						?? base.Name;
 
 				/// <summary>
+				/// Delay a call to the reource files to ensure the correctly
+				/// localized version is used, if locale changes.
+				/// </summary>
+				/// 
+				/// <returns>The localized string resource.</returns>
+				public delegate string ResourceAccessor();
+				/// <summary>
 				/// The name to use if the header was not matched.
 				/// </summary>
-				string DefaultName { get; }
+				ResourceAccessor DefaultName;
 
 				/// <summary>
 				/// Extra human-readable information describing the field, such as the
@@ -217,7 +227,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Subtitle {
 					get {
-						if (Name.Equals(DefaultName))
+						if (Name.Equals(DefaultName()))
 							return null;
 						else
 							return base.Subtitle;
@@ -225,8 +235,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
-				/// Convert a ID3v2 byte representation of an encoding into the
-				/// proper <see cref="Encoding"/> object.
+				/// Convert a ID3v2 byte representation of an encoding into
+				/// the proper <see cref="Encoding"/> object.
 				/// </summary>
 				/// 
 				/// <param>The encoding-identification byte.</param>
@@ -267,7 +277,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public PictureFieldBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding , string defaultName = null, ResourceManager resources = null)
+				public PictureFieldBase(byte[] name, int length,
+					Func<byte, Encoding> tryGetEncoding , ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -385,7 +396,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UniqueFileIdBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
+				public UniqueFileIdBase(byte[] name, int length,
+						ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
@@ -457,8 +469,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Text), resources) { }
+				public TextFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Text)), resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -607,8 +620,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public OfNumberFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Number, resources) { }
+				public OfNumberFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Number)), resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -677,8 +691,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public IsrcFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Length, resources) { }
+				public IsrcFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
 
 
 				/// <summary>
@@ -721,7 +736,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public MsFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public MsFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -767,7 +783,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public KeyFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public KeyFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -822,7 +839,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public LanguageFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public LanguageFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -877,7 +895,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public ResourceFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public ResourceFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -931,7 +950,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public ResourceValueFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public ResourceValueFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -975,7 +995,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TimeFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public TimeFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -1053,7 +1074,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UserTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
+				public UserTextFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, tryGetEncoding, defaultName, resources) { }
 
 				/// <summary>
@@ -1093,8 +1115,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UrlFrameBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, defaultName:(defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources:resources) { }
+				public UrlFrameBase(byte[] name, int length,
+						ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, defaultName:(defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources:resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1159,8 +1182,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UserUrlFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources) { }
+				public UserUrlFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1250,8 +1274,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public LongTextFrameBase(byte[] name, int length, Func<byte, Encoding> tryGetEncoding, string defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? Strings.ID3v23Plus.Field_DefaultName_Url), resources) { }
+				public LongTextFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1357,7 +1382,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public CountFrameBase(byte[] name, int length, string defaultName = null, ResourceManager resources = null)
+				public CountFrameBase(byte[] name, int length,
+						ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(name, length, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>

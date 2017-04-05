@@ -659,7 +659,7 @@
             An abstract base for handling common field processing tasks.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -699,7 +699,15 @@
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.DefaultName">
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor">
+            <summary>
+            Delay a call to the reource files to ensure the correctly
+            localized version is used, if locale changes.
+            </summary>
+            
+            <returns>The localized string resource.</returns>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.DefaultName">
             <summary>
             The name to use if the header was not matched.
             </summary>
@@ -712,8 +720,8 @@
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.TryGetEncoding">
             <summary>
-            Convert a ID3v2 byte representation of an encoding into the
-            proper <see cref="T:System.Text.Encoding"/> object.
+            Convert a ID3v2 byte representation of an encoding into
+            the proper <see cref="T:System.Text.Encoding"/> object.
             </summary>
             
             <param>The encoding-identification byte.</param>
@@ -729,7 +737,7 @@
             An identifier unique to a particular database.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -798,7 +806,7 @@
             An identifier unique to a particular database.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase.#ctor(System.Byte[],System.Int32,AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -853,7 +861,7 @@
             Any of the many tags containing purely textual data.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -940,7 +948,7 @@
             a total count (eg. "Track 5 of 13").
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -976,7 +984,7 @@
             A frame containing the ISRC of the recording.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1012,7 +1020,7 @@
             A frame containing a length of time, in milliseconds.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1048,7 +1056,7 @@
             A frame containing the musical key.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1084,7 +1092,7 @@
             A frame containing the language(s) sung/spoken.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1138,7 +1146,7 @@
             <c>/</c> and <c>.</c> will be replaced with <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1184,7 +1192,7 @@
             replaced by <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1220,7 +1228,7 @@
             A frame containing a timestamp.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1256,7 +1264,7 @@
             A frame containing a timestamp.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1297,7 +1305,7 @@
             Any frame containing a URL.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase.#ctor(System.Byte[],System.Int32,AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1342,7 +1350,7 @@
             A frame containing an encoder-defined URL.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1402,7 +1410,7 @@
             non-null-separated text.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase.#ctor(System.Byte[],System.Int32,System.Func{System.Byte,System.Text.Encoding},AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1476,7 +1484,7 @@
             A frame containing a single binary counter.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase.#ctor(System.Byte[],System.Int32,AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -2069,7 +2077,7 @@
             The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Length"/>.
             </param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32,System.String,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],System.Int32,AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to properly initialize the inner
             implementation of the <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.V4FieldWrapper"/>.

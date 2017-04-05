@@ -476,7 +476,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TextFrame(byte[] name, int length, string defaultName, System.Resources.ResourceManager resources = null)
+				public TextFrame(byte[] name, int length, FieldBase.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
 					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName, (IsNewTitle(name) ? Strings.ID3v24.ResourceManager : resources))) { }
 
 				/// <summary>
@@ -568,7 +568,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public ListMappingFrame(byte[] name, int length)
-					: base(name, length, Strings.ID3v24.Field_DefaultName_Credits, Strings.ID3v24.ResourceManager) { }
+					: base(name, length, (() => Strings.ID3v24.Field_DefaultName_Credits), Strings.ID3v24.ResourceManager) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -808,7 +808,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public TimeFrame(byte[] name, int length)
-					: base(new TimeFrameBase(name, length, TryGetEncoding, Strings.ID3v23Plus.Field_DefaultName_Time, Strings.ID3v24.ResourceManager)) { }
+					: base(new TimeFrameBase(name, length, TryGetEncoding, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager)) { }
 			}
 
 			/// <summary>

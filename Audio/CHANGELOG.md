@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Unreleased
 ### Changed
 - Moved shared strings out of ID3v2.4-specific resources
+### Fixed
+- Default field names will now change if the locale does while the
+  program is running
 
 ## 0.2.2
 ### Added
