@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 2.2.3
 ### Changed
 - Moved shared strings out of ID3v2.4-specific resources
 ### Fixed
 - Default field names will now change if the locale does while the
   program is running
+- Dictionary extension methods in referenced package have been moved to
+  new namespace
 
 ## 0.2.2
 ### Added

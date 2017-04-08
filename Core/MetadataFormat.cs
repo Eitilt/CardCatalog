@@ -311,12 +311,13 @@ namespace AgEitilt.CardCatalog {
 			MethodSanityChecks<MetadataTag>(method);
 
 			try {
-				tagFormats.GetOrAdd(format)
-					.ValidationFunctions.Add(new HeaderValidation<MetadataTag>() {
-						length = (int)headerLength,
-						function = method.CreateDelegate(typeof(HeaderValidation<MetadataTag>.Validator))
+				var validation = new HeaderValidation<MetadataTag>() {
+					length = (int)headerLength,
+					function = method.CreateDelegate(typeof(HeaderValidation<MetadataTag>.Validator))
 							as HeaderValidation<MetadataTag>.Validator
-					});
+				};
+				var functions = tagFormats.GetOrAdd(format).ValidationFunctions;
+				functions.Add(validation);
 			} catch (ArgumentException e) {
 				throw new NotSupportedException(e.Message, e.InnerException);
 			}
@@ -353,12 +354,13 @@ namespace AgEitilt.CardCatalog {
 			MethodSanityChecks<TagField>(method);
 
 			try {
-				tagFormats.GetOrAdd(format).fields.GetOrAdd(field)
-					.ValidationFunctions.Add(new HeaderValidation<TagField>() {
-						length = (int)headerLength,
-						function = method.CreateDelegate(typeof(HeaderValidation<TagField>.Validator))
+				var validation = new HeaderValidation<TagField>() {
+					length = (int)headerLength,
+					function = method.CreateDelegate(typeof(HeaderValidation<TagField>.Validator))
 							as HeaderValidation<TagField>.Validator
-					});
+				};
+				var functions = tagFormats.GetOrAdd(format).fields.GetOrAdd(field).ValidationFunctions;
+				functions.Add(validation);
 			} catch (ArgumentException e) {
 				throw new NotSupportedException(e.Message, e.InnerException);
 			}

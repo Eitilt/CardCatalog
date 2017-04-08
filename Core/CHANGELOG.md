@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 0.2.1
 ### Added
 - `ImageData` includes field to identify type of file encoding
+### Fixed
+- Dictionary extension methods in referenced package have been moved to
+  new namespace
 
 ## 0.2.0
 ### Changed

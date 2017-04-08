@@ -25,7 +25,7 @@ namespace AgEitilt.CardCatalog {
 
 	internal class ReflectionData<T> where T : IParsable {
 		public Type Type { get; set; } = typeof(T);
-		public List<HeaderValidation<T>> ValidationFunctions => new List<HeaderValidation<T>>(1);
+		public List<HeaderValidation<T>> ValidationFunctions { get; } = new List<HeaderValidation<T>>(1);
 
 		/// <summary>
 		/// Check the stream against all registered <see cref="IParsable"/>
