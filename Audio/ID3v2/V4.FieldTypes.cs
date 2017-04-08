@@ -126,6 +126,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// 
 			/// <param name="stream">The data to read.</param>
 			public sealed override void Parse(Stream stream) {
+				bool localStream = false;
+
 				// Unsynchronization
 				/* Implied to affect the flag data bytes, unlike the
 				 * compression and encryption
@@ -139,7 +141,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 					Length -= bytes.Length;
 
+#pragma warning disable DisposableFixer // Disposed in non-system detectable manner
+					localStream = true;
 					stream = new MemoryStream(DeUnsynchronize(bytes));
+#pragma warning restore DisposableFixer
 				}
 
 				// Grouping
@@ -177,6 +182,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				ParseData(stream);
+
+				if (localStream)
+					stream.Dispose();
 			}
 
 			/// <summary>

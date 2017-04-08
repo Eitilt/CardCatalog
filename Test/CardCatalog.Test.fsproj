@@ -64,13 +64,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AgEitilt.CardCatalog.Audio">
-      <HintPath>..\packages\AgEitilt.CardCatalog.Audio.0.1.0\lib\net46\AgEitilt.CardCatalog.Audio.dll</HintPath>
+      <HintPath>..\packages\AgEitilt.CardCatalog.Audio.0.2.2\lib\net46\AgEitilt.CardCatalog.Audio.dll</HintPath>
     </Reference>
     <Reference Include="AgEitilt.CardCatalog.Core">
-      <HintPath>..\packages\AgEitilt.CardCatalog.Core.0.1.0\lib\net46\AgEitilt.CardCatalog.Core.dll</HintPath>
+      <HintPath>..\packages\AgEitilt.CardCatalog.Core.0.2.0\lib\net46\AgEitilt.CardCatalog.Core.dll</HintPath>
     </Reference>
     <Reference Include="AgEitilt.Dictionary">
-      <HintPath>..\packages\AgEitilt.Dictionary.0.2.0\lib\net45\AgEitilt.Dictionary.dll</HintPath>
+      <HintPath>..\packages\AgEitilt.Dictionary.0.3.0\lib\net45\AgEitilt.Dictionary.dll</HintPath>
     </Reference>
     <Reference Include="AgEitilt.Stream">
       <HintPath>..\packages\AgEitilt.Stream.0.2.0\lib\net45\AgEitilt.Stream.dll</HintPath>

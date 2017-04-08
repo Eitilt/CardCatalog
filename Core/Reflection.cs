@@ -24,8 +24,8 @@ namespace AgEitilt.CardCatalog {
 	}
 
 	internal class ReflectionData<T> where T : IParsable {
-		public Type type;
-		public List<HeaderValidation<T>> validationFunctions = new List<HeaderValidation<T>>(1);
+		public Type Type { get; set; } = typeof(T);
+		public List<HeaderValidation<T>> ValidationFunctions => new List<HeaderValidation<T>>(1);
 
 		/// <summary>
 		/// Check the stream against all registered <see cref="IParsable"/>
@@ -60,7 +60,7 @@ namespace AgEitilt.CardCatalog {
 				var readBytes = new List<byte>();
 
 				bool found = false;
-				foreach (var v in types.SelectMany(t => t.validationFunctions)) {
+				foreach (var v in types.SelectMany(t => t.ValidationFunctions)) {
 					// Make sure we have enough bytes to check the header
 					/* Automatically leaves the stream untouched if we've
 					 * already read enough of a header

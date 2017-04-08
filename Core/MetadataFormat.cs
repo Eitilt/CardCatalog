@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using AgEitilt.Common.Dictionary;
+using AgEitilt.Common.Dictionary.Extensions;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
@@ -39,7 +39,7 @@ namespace AgEitilt.CardCatalog {
 		public static IReadOnlyDictionary<byte[], Type> FieldTypes(string format) =>
 			tagFormats[format].fields.ToDictionary(
 				p => p.Key,
-				p => p.Value.type,
+				p => p.Value.Type,
 				FieldDictionary.KeyComparer
 			);
 
@@ -162,7 +162,7 @@ namespace AgEitilt.CardCatalog {
 		public static void Register<T>(string format) where T : MetadataTag {
 			var formatType = typeof(T);
 
-			tagFormats.GetOrCreate(format).type = formatType;
+			tagFormats.GetOrAdd(format).Type = formatType;
 
 			foreach (var method in formatType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
 					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
@@ -250,8 +250,8 @@ namespace AgEitilt.CardCatalog {
 
 			foreach (var name in formatAttrs) {
 				foreach (var head in headers) {
-					var field = tagFormats.GetOrCreate(name).fields.GetOrCreate(head);
-					field.type = fieldType;
+					var field = tagFormats.GetOrAdd(name).fields.GetOrAdd(head);
+					field.Type = fieldType;
 
 					foreach (var m in parsers)
 						Register(name, head, m.Item1, m.Item2);
@@ -311,8 +311,8 @@ namespace AgEitilt.CardCatalog {
 			MethodSanityChecks<MetadataTag>(method);
 
 			try {
-				tagFormats.GetOrCreate(format)
-					.validationFunctions.Add(new HeaderValidation<MetadataTag>() {
+				tagFormats.GetOrAdd(format)
+					.ValidationFunctions.Add(new HeaderValidation<MetadataTag>() {
 						length = (int)headerLength,
 						function = method.CreateDelegate(typeof(HeaderValidation<MetadataTag>.Validator))
 							as HeaderValidation<MetadataTag>.Validator
@@ -353,8 +353,8 @@ namespace AgEitilt.CardCatalog {
 			MethodSanityChecks<TagField>(method);
 
 			try {
-				tagFormats.GetOrCreate(format).fields.GetOrCreate(field)
-					.validationFunctions.Add(new HeaderValidation<TagField>() {
+				tagFormats.GetOrAdd(format).fields.GetOrAdd(field)
+					.ValidationFunctions.Add(new HeaderValidation<TagField>() {
 						length = (int)headerLength,
 						function = method.CreateDelegate(typeof(HeaderValidation<TagField>.Validator))
 							as HeaderValidation<TagField>.Validator
