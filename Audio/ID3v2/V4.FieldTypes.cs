@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using AgEitilt.Common.Stream;
+using AgEitilt.Common.Stream.Extensions;
 using static AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {

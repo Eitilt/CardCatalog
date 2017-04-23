@@ -6,7 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 
-using AgEitilt.Common.Stream;
+using AgEitilt.Common.Stream.Extensions;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	public partial class ID3v23Plus {

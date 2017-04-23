@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using AgEitilt.Common.Stream;
+using AgEitilt.Common.Stream.Extensions;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
