@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.2.4
+### Added
+- Set neutral resource language
+
 ## 2.2.3
 ### Changed
 - Moved shared strings out of ID3v2.4-specific resources
