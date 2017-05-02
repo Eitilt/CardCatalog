@@ -50,7 +50,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Reduce the lookups of field types by caching the return.
 			/// </summary>
-			static IReadOnlyDictionary<byte[], Type> fields = MetadataFormat.FieldTypes(version.FormatName);
+			static IReadOnlyDictionary<byte[], Type> fields = FormatRegistry.FieldTypes(version.FormatName);
 
 			/// <summary>
 			/// Valid ID3v2 field identification characters.

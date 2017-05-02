@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.2.2
 ### Added
 - Set neutral resource language
+### Changed
+- `MetadataFormat` renamed to `FormatRegistry`
+- `RefreshFormats` and `Register(Assembly)` within `FormatRegistry`
+  renamed to `RegisterAll`
+- `RegisterAll(Assembly)` should be faster due to less reflection calls
+### Removed
+- (Nonfunctional) registration of all loaded formats on package call
 
 ## 0.2.1
 ### Added

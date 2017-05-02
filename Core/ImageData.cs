@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace AgEitilt.CardCatalog {
+﻿namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// A wrapper around raw image data to distinguish it as such.
 	/// </summary>

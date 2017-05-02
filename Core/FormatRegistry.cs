@@ -17,7 +17,7 @@ namespace AgEitilt.CardCatalog {
 	/// A data-free class providing a common means to work with multiple
 	/// metadata formats.
 	/// </summary>
-	public static class MetadataFormat {
+	public static class FormatRegistry {
 		internal class FormatData : ReflectionData<MetadataTag> {
 			public Dictionary<byte[], ReflectionData<TagField>> fields = new Dictionary<byte[], ReflectionData<TagField>>(FieldDictionary.KeyComparer);
 		}
@@ -50,18 +50,8 @@ namespace AgEitilt.CardCatalog {
 		static HashSet<string> assemblies = new HashSet<string>();
 
 		/// <summary>
-		/// Automatically add any metadata classes in opened assemblies on
-		/// first call to the class.
-		/// </summary>
-		/// 
-		/// <seealso cref="RefreshFormats"/>
-		static MetadataFormat() {
-			RefreshFormats<MetadataTag>();
-		}
-
-		/// <summary>
-		/// Scan the assembly enclosing the specified for implementations of
-		/// metadata formats.
+		/// Scan the assembly enclosing the specified class for
+		/// implementations of metadata formats.
 		/// </summary>
 		/// 
 		/// <remarks>
@@ -72,12 +62,8 @@ namespace AgEitilt.CardCatalog {
 		/// <typeparam name="T">
 		/// Any type from the assembly to scan.
 		/// </typeparam>
-		/*TODO: Could be nice to scan all referenced assemblies (loaded or
-		 * not) and load any with the attribute that aren't yet, to avoid
-		 * needing to refresh manually. See .NET Core's AssemblyLoadContext.
-		 */
-		public static void RefreshFormats<T>() {
-			Register(typeof(T).GetTypeInfo().Assembly);
+		public static void RegisterAll<T>() {
+			RegisterAll(typeof(T).GetTypeInfo().Assembly);
 		}
 
 		/// <summary>
@@ -91,31 +77,50 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="assembly">The assembly to scan.</param>
 		/// 
 		/// <seealso cref="MetadataFormatAttribute"/>
-		public static void Register(Assembly assembly) {
+		public static void RegisterAll(Assembly assembly) {
 			// Avoid searching assemblies multiple times to cut down on the
 			// performance hit of reflection
 			if (assemblies.Contains(assembly.FullName))
 				return;
 
 			foreach (Type t in assembly.ExportedTypes) {
-				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false) ?? Array.Empty<MetadataFormatAttribute>())
-					typeof(MetadataFormat).GetMethod(nameof(Register), new Type[1] { typeof(string) })
-						.MakeGenericMethod(new Type[1] { t })
-						.Invoke(null, new object[1] { tagAttr.Name });
+				var tagRegisterFunction = tagRegisterGeneric.MakeGenericMethod(new Type[1] { t });
+				var fieldRegisterFunction = fieldRegisterGeneric.MakeGenericMethod(new Type[1] { t });
 
-				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false) ?? Array.Empty<TagFieldAttribute>())
-					typeof(MetadataFormat).GetMethod(nameof(Register), new Type[2] { typeof(string), typeof(byte[]) })
-						.MakeGenericMethod(new Type[1] { t })
-						.Invoke(null, new object[2] { fieldAttr.Format, fieldAttr.Header });
+				// Register every type as it is described by its attributes
+				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false))
+					tagRegisterFunction.Invoke(null, new object[1] { tagAttr.Name });
+				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false))
+					fieldRegisterFunction.Invoke(null, new object[2] { fieldAttr.Format, fieldAttr.Header });
 			}
 
 			assemblies.Add(assembly.FullName);
 		}
+		/// <summary>
+		/// Cache the method used to register new tag formats in
+		/// <see cref="RegisterAll(Assembly)"/>.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// This needs to be invoked via reflection since we determine the
+		/// generic type via a <see cref="Type"/> variable.
+		/// </remarks>
+		static readonly MethodInfo tagRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(Register), new Type[1] { typeof(string) });
+		/// <summary>
+		/// Cache the method used to register new field formats in
+		/// <see cref="RegisterAll(Assembly)"/>.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// This needs to be invoked via reflection since we determine the
+		/// generic type via a <see cref="Type"/> variable.
+		/// </remarks>
+		static readonly MethodInfo fieldRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(Register), new Type[2] { typeof(string), typeof(byte[]) });
 
 		/// <summary>
-		/// Add the given metadata format type to the lookup tables according
-		/// to the  descriptor specified in its
-		/// <see cref="MetadataFormatAttribute.Name"/>.
+		/// Add the single given metadata format type to the lookup tables
+		/// according to the descriptor specified in each of its
+		/// <see cref="MetadataFormatAttribute.Name"/> fields.
 		/// </summary>
 		/// 
 		/// <remarks>
@@ -127,12 +132,19 @@ namespace AgEitilt.CardCatalog {
 		/// The <see cref="MetadataTag"/> class implementing the format.
 		/// </typeparam>
 		/// 
+		/// <exception cref="TypeLoadException">
+		/// <typeparamref name="T"/> does not have any associated
+		/// <see cref="MetadataFormatAttribute"/>.
+		/// </exception>
+		/// 
 		/// <seealso cref="HeaderParserAttribute"/>
 		public static void Register<T>() where T : MetadataTag {
-			var attr = typeof(T).GetTypeInfo().GetCustomAttribute<MetadataFormatAttribute>(false)
-				?? throw new TypeLoadException(Strings.Base.Exception_NoFormatName);
+			var attrs = typeof(T).GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false);
+			if (attrs.Count() == 0)
+				throw new TypeLoadException(Strings.Base.Exception_NoFormatName);
 
-			Register<T>(attr.Name);
+			foreach (MetadataFormatAttribute attr in attrs)
+				Register<T>(attr.Name);
 		}
 
 		/// <summary>
@@ -164,9 +176,12 @@ namespace AgEitilt.CardCatalog {
 
 			tagFormats.GetOrAdd(format).Type = formatType;
 
-			foreach (var method in formatType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-					.Where(m => m.IsDefined(typeof(HeaderParserAttribute))))
-				Register(format, method.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, method);
+			// Register the type once for each potential header layout
+			//TODO: Stop multiple header parsers from overwriting each other
+			foreach (var m in from method in formatType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+							  where method.IsDefined(typeof(HeaderParserAttribute))
+							  select method)
+				Register(format, m.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, m);
 		}
 
 		/// <summary>
@@ -188,6 +203,7 @@ namespace AgEitilt.CardCatalog {
 		public static void Register<T>(string format, byte[] header) where T : TagField {
 			Register<T>(format, new[] { header });
 		}
+
 		/// <summary>
 		/// Add the given tag field type to the lookup tables under the proper
 		/// format specifier.
@@ -204,56 +220,61 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="headerList">
 		/// The unique specifiers of this field.
 		/// </param>
-		public static void Register<T>(string format, IEnumerable<byte[]> headerList) where T: TagField {
+		public static void Register<T>(string format, IEnumerable<byte[]> headerList) where T : TagField {
 			var fieldType = typeof(T);
 
-			if (typeof(TagField).IsAssignableFrom(fieldType) == false)
-				throw new NotSupportedException(Strings.Base.Exception_ExtendFieldType);
-
 			IEnumerable<string> formatAttrs = Array.Empty<string>();
+			// Detect associated format from context
 			if (format == null) {
+				// Find the innermost enclosing type with a format attribute
 				for (Type enclosingType = fieldType.DeclaringType;
 						(formatAttrs.Count() == 0) && (enclosingType != null);
 						enclosingType = enclosingType.DeclaringType) {
+					// Extract the format names from each such attribute
 					formatAttrs =
-						from attr in enclosingType.GetTypeInfo().GetCustomAttributes(typeof(MetadataFormatAttribute))
-						select (attr as MetadataFormatAttribute).Name;
+						from attr in enclosingType.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false)
+						select attr.Name;
 				}
 
+				// Reached a top-level type without finding a format attribute
 				if (formatAttrs.Count() == 0)
 					throw new MissingFieldException(Strings.Base.Exception_NoFieldEnclosingFormatName);
-
+			// Use the format passed at method invocation
 			} else {
 				formatAttrs = new string[1] { format };
 			}
 
-			var parsers = new List<Tuple<uint, MethodInfo>>();
-			parsers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
-							 where method.IsDefined(typeof(HeaderParserAttribute))
-							 select Tuple.Create(method.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, method));
-
 			var headers = new List<byte[]>();
-			if (headerList != null)
-				headers.AddRange(headerList.Where(h => h != null));
-			headers.AddRange(from field in fieldType.GetFields(BindingFlags.Static | BindingFlags.Public)
-							 where field.IsDefined(typeof(FieldNamesAttribute))
-							 from name in field.GetValue(null) as IEnumerable<byte[]>
-							 select name);
-			headers.AddRange(from property in fieldType.GetProperties(BindingFlags.Static | BindingFlags.Public)
-							 where property.IsDefined(typeof(FieldNamesAttribute))
-							 from name in property.GetValue(null) as IEnumerable<byte[]>
-							 select name);
-			headers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public)
-							 where method.IsDefined(typeof(FieldNamesAttribute))
-							 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>).Invoke()
-							 select name);
+			// Detect applicable field headers from contained generators
+			if (headerList == null) {
+				headers.AddRange(from field in fieldType.GetFields(BindingFlags.Static | BindingFlags.Public)
+								 where field.IsDefined(typeof(FieldNamesAttribute))
+								 from name in field.GetValue(null) as IEnumerable<byte[]>
+								 select name);
+				headers.AddRange(from property in fieldType.GetProperties(BindingFlags.Static | BindingFlags.Public)
+								 where property.IsDefined(typeof(FieldNamesAttribute))
+								 from name in property.GetValue(null) as IEnumerable<byte[]>
+								 select name);
+				headers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+								 where method.IsDefined(typeof(FieldNamesAttribute))
+								 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>).Invoke()
+								 select name);
+			// Use the headers passed at method invocation
+			} else {
+				headers.AddRange(from header in headerList
+								 where header != null
+								 select header);
+			}
 
+			// Add all fields for all formats
 			foreach (var name in formatAttrs) {
 				foreach (var head in headers) {
 					var field = tagFormats.GetOrAdd(name).fields.GetOrAdd(head);
 					field.Type = fieldType;
 
-					foreach (var m in parsers)
+					foreach (var m in from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
+									  where method.IsDefined(typeof(HeaderParserAttribute))
+									  select Tuple.Create(method.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, method))
 						Register(name, head, m.Item1, m.Item2);
 				}
 			}
@@ -269,6 +290,11 @@ namespace AgEitilt.CardCatalog {
 		/// </typeparam>
 		/// 
 		/// <param name="method">The validation function to check.</param>
+		/// 
+		/// <exception cref="NotSupportedException">
+		/// The method fails some requirement for it to be a functional header
+		/// validation function.
+		/// </exception>
 		private static void MethodSanityChecks<T>(MethodInfo method) {
 			if (method.IsPrivate)
 				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionPrivate);

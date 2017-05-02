@@ -24,7 +24,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The short name used to represent ID3v2.4 metadata.
 		/// </summary>
 		/// 
-		/// <seealso cref="MetadataFormat.Register{T}(string)"/>
+		/// <seealso cref="FormatRegistry.Register{T}(string)"/>
 		public const string format = "ID3v2.4";
 		/// <summary>
 		/// The display name of the tag format.

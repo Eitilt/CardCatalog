@@ -3,10 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
@@ -52,7 +50,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="stream">The stream to read.</param>
 		public void Parse(Stream stream) {
-			Fields = ReflectionData<TagField>.ParseAsync(stream, MetadataFormat.tagFormats[Format].fields.Values).Result;
+			Fields = ReflectionData<TagField>.ParseAsync(stream, FormatRegistry.tagFormats[Format].fields.Values).Result;
 		}
 	}
 }

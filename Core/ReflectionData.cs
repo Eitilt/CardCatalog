@@ -24,7 +24,11 @@ namespace AgEitilt.CardCatalog {
 	}
 
 	internal class ReflectionData<T> where T : IParsable {
-		public Type Type { get; set; } = typeof(T);
+		public Type Type { get; set; }
+		/// <summary>
+		/// All functions that might return an instance of <c>T</c> when given
+		/// a byte header.
+		/// </summary>
 		public List<HeaderValidation<T>> ValidationFunctions { get; } = new List<HeaderValidation<T>>(1);
 
 		/// <summary>

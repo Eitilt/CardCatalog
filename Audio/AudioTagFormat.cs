@@ -5,8 +5,6 @@
 
 using System.IO;
 
-[assembly: AgEitilt.CardCatalog.ScanAssembly]
-
 namespace AgEitilt.CardCatalog.Audio {
 	/// <summary>
 	/// Common properties to retrieve info from multiple audio formats.

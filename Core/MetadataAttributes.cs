@@ -8,18 +8,6 @@ using System.Text;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
-	/// Indicate that the assembly should be scanned for classes marked with
-	/// <see cref="MetadataFormatAttribute"/> to automatically register.
-	/// 
-	/// This class cannot be inherited.
-	/// </summary>
-	/// 
-	/// <seealso cref="MetadataFormatAttribute"/>
-	/// <seealso cref="MetadataFormat.Register(System.Reflection.Assembly)"/>
-	[AttributeUsage(AttributeTargets.Assembly, Inherited = false, AllowMultiple = true)]
-	public sealed class ScanAssemblyAttribute : Attribute { }
-
-	/// <summary>
 	/// Indicate that the class implements a metadata format specification.
 	/// 
 	/// This class cannot be inherited.
@@ -29,8 +17,7 @@ namespace AgEitilt.CardCatalog {
 	/// The class must implement <see cref="MetadataTag"/>.
 	/// </remarks>
 	/// 
-	/// <seealso cref="ScanAssemblyAttribute"/>
-	/// <seealso cref="MetadataFormat.Register{T}(string)"/>
+	/// <seealso cref="FormatRegistry.Register{T}(string)"/>
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 	public sealed class MetadataFormatAttribute : Attribute {
 		/// <summary>
@@ -70,7 +57,7 @@ namespace AgEitilt.CardCatalog {
 	/// TODO: Add discussion of required signature according to exceptions in
 	/// method Register(...)
 	/// 
-	/// <seealso cref="MetadataFormat.Register(string, uint, System.Reflection.MethodInfo)"/>
+	/// <seealso cref="FormatRegistry.Register(string, uint, System.Reflection.MethodInfo)"/>
 	[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 	public sealed class HeaderParserAttribute : Attribute {
 		/// <summary>
@@ -128,7 +115,7 @@ namespace AgEitilt.CardCatalog {
 		/// If this is `null` (the default), the immediately-enclosing type
 		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/>
 		/// attribute, or an exception will be thrown on the call to
-		/// <see cref="MetadataFormat.Register{T}(string, byte[])"/>.
+		/// <see cref="FormatRegistry.Register{T}(string, byte[])"/>.
 		/// </remarks>
 		/// 
 		/// <seealso cref="MetadataFormatAttribute.Name"/>
