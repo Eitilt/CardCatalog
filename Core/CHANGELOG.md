@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `RegisterAll(Assembly)` should be faster due to less reflection calls
 ### Removed
 - (Nonfunctional) registration of all loaded formats on package call
+  - Namely, `ScanAssemblyAttribute`
 
 ## 0.2.1
 ### Added

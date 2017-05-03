@@ -99,6 +99,246 @@
             proper format for keys to <see cref="T:AgEitilt.CardCatalog.TagField"/> objects.
             </summary>
         </member>
+        <member name="T:AgEitilt.CardCatalog.FormatRegistry">
+            <summary>
+            A data-free class providing a common means to work with multiple
+            metadata formats.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.tagFormats">
+            <summary>
+            The class encapsulating each registered metadata format.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.FieldTypes(System.String)">
+            <summary>
+            Get all field types registered for the given metadata format.
+            </summary>
+            
+            <param name="format">The short name of the desired format.</param>
+            
+            <returns>
+            The classes implementing each <see cref="T:AgEitilt.CardCatalog.TagField"/>.
+            </returns>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.assemblies">
+            <summary>
+            A registry of previously-scanned assemblies in order to prevent
+            unnecessary use of reflection methods.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterAll``1">
+            <summary>
+            Scan the assembly enclosing the specified class for
+            implementations of metadata formats.
+            </summary>
+            
+            <remarks>
+            The explicit type parameter is preferred over scanning loaded assemblies
+            as oftentimes this will be the first time the 
+            </remarks>
+            
+            <typeparam name="T">
+            Any type from the assembly to scan.
+            </typeparam>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterAll(System.Reflection.Assembly)">
+            <summary>
+            Scan the given assembly for all types marked as implementing a
+            metadata format in a suitable manner for automatic lookup.
+            <para/>
+            Subsequent calls on a previously-scanned assembly will be ignored
+            in order to save unnecessary type reflection.
+            </summary>
+            
+            <param name="assembly">The assembly to scan.</param>
+            
+            <seealso cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.tagRegisterGeneric">
+            <summary>
+            Cache the method used to register new tag formats in
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterAll(System.Reflection.Assembly)"/>.
+            </summary>
+            
+            <remarks>
+            This needs to be invoked via reflection since we determine the
+            generic type via a <see cref="T:System.Type"/> variable.
+            </remarks>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.fieldRegisterGeneric">
+            <summary>
+            Cache the method used to register new field formats in
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterAll(System.Reflection.Assembly)"/>.
+            </summary>
+            
+            <remarks>
+            This needs to be invoked via reflection since we determine the
+            generic type via a <see cref="T:System.Type"/> variable.
+            </remarks>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1">
+            <summary>
+            Add the single given metadata format type to the lookup tables
+            according to the descriptor specified in each of its
+            <see cref="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name"/> fields.
+            </summary>
+            
+            <remarks>
+            Note that if multiple types are registered under the same name,
+            any later registrations will override the previous.
+            </remarks>
+            
+            <typeparam name="T">
+            The <see cref="T:AgEitilt.CardCatalog.MetadataTag"/> class implementing the format.
+            </typeparam>
+            
+            <exception cref="T:System.TypeLoadException">
+            <typeparamref name="T"/> does not have any associated
+            <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>.
+            </exception>
+            
+            <seealso cref="T:AgEitilt.CardCatalog.HeaderParserAttribute"/>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)">
+            <summary>
+            Add the given metadata format type to the lookup tables under the
+            specified custom descriptor, even if it does not have any
+            associated <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>.
+            </summary>
+            
+            <remarks>
+            The validation function must still be identified with a
+            <see cref="T:AgEitilt.CardCatalog.HeaderParserAttribute"/>.
+            <para/>
+            Note that if multiple types are registered under the same name,
+            any later registrations will override the previous.
+            </remarks>
+            
+            <typeparam name="T">
+            The <see cref="T:AgEitilt.CardCatalog.MetadataTag"/> class implementing the format.
+            </typeparam>
+            
+            <param name="format">
+            A short name for the format to be used as an access key for later
+            lookups.
+            <para/>
+            It is recommended that this also be exposed as a constant.
+            </param>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Byte[])">
+            <summary>
+            Add the given tag field type to the lookup tables under the proper
+            format specifier.
+            </summary>
+            
+            <typeparam name="T">
+            The <see cref="T:AgEitilt.CardCatalog.TagField"/> class implementing the field.
+            </typeparam>
+            
+            <param name="format">
+            The short name of the format defining this field, or `null` to
+            autodetect from the enclosing class.
+            </param>
+            <param name="header">
+            The unique specifier of this field.
+            </param>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
+            <summary>
+            Add the given tag field type to the lookup tables under the proper
+            format specifier.
+            </summary>
+            
+            <typeparam name="T">
+            The <see cref="T:AgEitilt.CardCatalog.TagField"/> class implementing the field.
+            </typeparam>
+            
+            <param name="format">
+            The short name of the format defining this field, or `null` to
+            autodetect from the enclosing class.
+            </param>
+            <param name="headerList">
+            The unique specifiers of this field.
+            </param>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.MethodSanityChecks``1(System.Reflection.MethodInfo)">
+            <summary>
+            Group the restriction checking of validation functions for easy
+            reuse.
+            </summary>
+            
+            <typeparam name="T">
+            The required return type of <paramref name="method"/>.
+            </typeparam>
+            
+            <param name="method">The validation function to check.</param>
+            
+            <exception cref="T:System.NotSupportedException">
+            The method fails some requirement for it to be a functional header
+            validation function.
+            </exception>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
+            <summary>
+            Add the given format initialization method to the lookup tables
+            under the specified custom descriptor.
+            </summary>
+            
+            <remarks>
+            This should almost purely be called via
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>, and has been separated
+            primarily for code clarity.
+            </remarks>
+            
+            <param name="format">
+            A short name for the format to be used as an access key for later
+            lookups.
+            </param>
+            <param name="headerLength">
+            The number of bytes <paramref name="method"/> uses to read the tag
+            header.
+            </param>
+            <param name="method">The method to add.</param>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
+            <summary>
+            Add the given field initialization method to the lookup tables
+            under the specified custom descriptor.
+            </summary>
+            
+            <remarks>
+            Note that if multiple methods are registered under the same
+            <paramref name="format"/> and <paramref name="field"/> pairing,
+            any later registrations will override the previous.
+            <para/>
+            This should almost purely be called via
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>, and has been separated
+            primarily for code clarity.
+            </remarks>
+            
+            <param name="format">
+            A short name for the format to be used as an access key for later
+            lookups.
+            </param>
+            <param name="field">
+            The unique identifier for the associated field.
+            </param>
+            <param name="headerLength">
+            The number of bytes <paramref name="method"/> uses to read the tag
+            header.
+            </param>
+            <param name="method">The method to add.</param>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.ParseAsync(System.IO.Stream)">
+            <summary>
+            Parse all recognized tags in a stream asynchronously.
+            </summary>
+            
+            <param name="stream">The stream to parse.</param>
+            
+            <returns>The resulting <see cref="T:AgEitilt.CardCatalog.MetadataTag"/>s.</returns>
+        </member>
         <member name="T:AgEitilt.CardCatalog.ImageData">
             <summary>
             A wrapper around raw image data to distinguish it as such.
@@ -122,17 +362,6 @@
             The raw binary data describing the image.
             </summary>
         </member>
-        <member name="T:AgEitilt.CardCatalog.ScanAssemblyAttribute">
-            <summary>
-            Indicate that the assembly should be scanned for classes marked with
-            <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/> to automatically register.
-            
-            This class cannot be inherited.
-            </summary>
-            
-            <seealso cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>
-            <seealso cref="M:AgEitilt.CardCatalog.MetadataFormat.Register(System.Reflection.Assembly)"/>
-        </member>
         <member name="T:AgEitilt.CardCatalog.MetadataFormatAttribute">
             <summary>
             Indicate that the class implements a metadata format specification.
@@ -144,8 +373,7 @@
             The class must implement <see cref="T:AgEitilt.CardCatalog.MetadataTag"/>.
             </remarks>
             
-            <seealso cref="T:AgEitilt.CardCatalog.ScanAssemblyAttribute"/>
-            <seealso cref="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String)"/>
+            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>
         </member>
         <member name="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name">
             <summary>
@@ -182,7 +410,7 @@
             TODO: Add discussion of required signature according to exceptions in
             method Register(...)
             
-            <seealso cref="M:AgEitilt.CardCatalog.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
+            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
         </member>
         <member name="P:AgEitilt.CardCatalog.HeaderParserAttribute.HeaderLength">
             <summary>
@@ -237,7 +465,7 @@
             If this is `null` (the default), the immediately-enclosing type
             <em>must</em>  have a <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>
             attribute, or an exception will be thrown on the call to
-            <see cref="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String,System.Byte[])"/>.
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Byte[])"/>.
             </remarks>
             
             <seealso cref="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name"/>
@@ -295,222 +523,6 @@
             `static` and `public`.
             </remarks>
         </member>
-        <member name="T:AgEitilt.CardCatalog.MetadataFormat">
-            <summary>
-            A data-free class providing a common means to work with multiple
-            metadata formats.
-            </summary>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.MetadataFormat.tagFormats">
-            <summary>
-            The class encapsulating each registered metadata format.
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.FieldTypes(System.String)">
-            <summary>
-            Get all field types registered for the given metadata format.
-            </summary>
-            
-            <param name="format">The short name of the desired format.</param>
-            
-            <returns>
-            The classes implementing each <see cref="T:AgEitilt.CardCatalog.TagField"/>.
-            </returns>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.MetadataFormat.assemblies">
-            <summary>
-            A registry of previously-scanned assemblies in order to prevent
-            unnecessary use of reflection methods.
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.#cctor">
-            <summary>
-            Automatically add any metadata classes in opened assemblies on
-            first call to the class.
-            </summary>
-            
-            <seealso cref="M:AgEitilt.CardCatalog.MetadataFormat.RefreshFormats``1"/>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.RefreshFormats``1">
-            <summary>
-            Scan the assembly enclosing the specified for implementations of
-            metadata formats.
-            </summary>
-            
-            <remarks>
-            The explicit type parameter is preferred over scanning loaded assemblies
-            as oftentimes this will be the first time the 
-            </remarks>
-            
-            <typeparam name="T">
-            Any type from the assembly to scan.
-            </typeparam>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register(System.Reflection.Assembly)">
-            <summary>
-            Scan the given assembly for all types marked as implementing a
-            metadata format in a suitable manner for automatic lookup.
-            <para/>
-            Subsequent calls on a previously-scanned assembly will be ignored
-            in order to save unnecessary type reflection.
-            </summary>
-            
-            <param name="assembly">The assembly to scan.</param>
-            
-            <seealso cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register``1">
-            <summary>
-            Add the given metadata format type to the lookup tables according
-            to the  descriptor specified in its
-            <see cref="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name"/>.
-            </summary>
-            
-            <remarks>
-            Note that if multiple types are registered under the same name,
-            any later registrations will override the previous.
-            </remarks>
-            
-            <typeparam name="T">
-            The <see cref="T:AgEitilt.CardCatalog.MetadataTag"/> class implementing the format.
-            </typeparam>
-            
-            <seealso cref="T:AgEitilt.CardCatalog.HeaderParserAttribute"/>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String)">
-            <summary>
-            Add the given metadata format type to the lookup tables under the
-            specified custom descriptor, even if it does not have any
-            associated <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>.
-            </summary>
-            
-            <remarks>
-            The validation function must still be identified with a
-            <see cref="T:AgEitilt.CardCatalog.HeaderParserAttribute"/>.
-            <para/>
-            Note that if multiple types are registered under the same name,
-            any later registrations will override the previous.
-            </remarks>
-            
-            <typeparam name="T">
-            The <see cref="T:AgEitilt.CardCatalog.MetadataTag"/> class implementing the format.
-            </typeparam>
-            
-            <param name="format">
-            A short name for the format to be used as an access key for later
-            lookups.
-            <para/>
-            It is recommended that this also be exposed as a constant.
-            </param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String,System.Byte[])">
-            <summary>
-            Add the given tag field type to the lookup tables under the proper
-            format specifier.
-            </summary>
-            
-            <typeparam name="T">
-            The <see cref="T:AgEitilt.CardCatalog.TagField"/> class implementing the field.
-            </typeparam>
-            
-            <param name="format">
-            The short name of the format defining this field, or `null` to
-            autodetect from the enclosing class.
-            </param>
-            <param name="header">
-            The unique specifier of this field.
-            </param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
-            <summary>
-            Add the given tag field type to the lookup tables under the proper
-            format specifier.
-            </summary>
-            
-            <typeparam name="T">
-            The <see cref="T:AgEitilt.CardCatalog.TagField"/> class implementing the field.
-            </typeparam>
-            
-            <param name="format">
-            The short name of the format defining this field, or `null` to
-            autodetect from the enclosing class.
-            </param>
-            <param name="headerList">
-            The unique specifiers of this field.
-            </param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.MethodSanityChecks``1(System.Reflection.MethodInfo)">
-            <summary>
-            Group the restriction checking of validation functions for easy
-            reuse.
-            </summary>
-            
-            <typeparam name="T">
-            The required return type of <paramref name="method"/>.
-            </typeparam>
-            
-            <param name="method">The validation function to check.</param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
-            <summary>
-            Add the given format initialization method to the lookup tables
-            under the specified custom descriptor.
-            </summary>
-            
-            <remarks>
-            This should almost purely be called via
-            <see cref="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String)"/>, and has been separated
-            primarily for code clarity.
-            </remarks>
-            
-            <param name="format">
-            A short name for the format to be used as an access key for later
-            lookups.
-            </param>
-            <param name="headerLength">
-            The number of bytes <paramref name="method"/> uses to read the tag
-            header.
-            </param>
-            <param name="method">The method to add.</param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.Register(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
-            <summary>
-            Add the given field initialization method to the lookup tables
-            under the specified custom descriptor.
-            </summary>
-            
-            <remarks>
-            Note that if multiple methods are registered under the same
-            <paramref name="format"/> and <paramref name="field"/> pairing,
-            any later registrations will override the previous.
-            <para/>
-            This should almost purely be called via
-            <see cref="M:AgEitilt.CardCatalog.MetadataFormat.Register``1(System.String)"/>, and has been separated
-            primarily for code clarity.
-            </remarks>
-            
-            <param name="format">
-            A short name for the format to be used as an access key for later
-            lookups.
-            </param>
-            <param name="field">
-            The unique identifier for the associated field.
-            </param>
-            <param name="headerLength">
-            The number of bytes <paramref name="method"/> uses to read the tag
-            header.
-            </param>
-            <param name="method">The method to add.</param>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.MetadataFormat.ParseAsync(System.IO.Stream)">
-            <summary>
-            Parse all recognized tags in a stream asynchronously.
-            </summary>
-            
-            <param name="stream">The stream to parse.</param>
-            
-            <returns>The resulting <see cref="T:AgEitilt.CardCatalog.MetadataTag"/>s.</returns>
-        </member>
         <member name="T:AgEitilt.CardCatalog.MetadataTag">
             <summary>
             Common properties to retrieve info from multiple tag formats.
@@ -555,6 +567,12 @@
             </remarks>
             
             <param name="stream">The stream to read.</param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.ReflectionData`1.ValidationFunctions">
+            <summary>
+            All functions that might return an instance of <c>T</c> when given
+            a byte header.
+            </summary>
         </member>
         <member name="M:AgEitilt.CardCatalog.ReflectionData`1.ParseAsync(System.IO.Stream,System.Collections.Generic.IEnumerable{AgEitilt.CardCatalog.ReflectionData{`0}})">
             <summary>

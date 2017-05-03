@@ -152,6 +152,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MIME type as follows.
+        /// </summary>
+        public static string Field_TFLT_MIME {
+            get {
+                return ResourceManager.GetString("Field_TFLT_MIME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Production credits.
         /// </summary>
         public static string Field_TIPL {

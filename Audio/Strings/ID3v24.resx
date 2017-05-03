@@ -135,36 +135,31 @@ Parameter 0 will be replaced by the length of data stated in the file</comment>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the length of data stated in the file</comment>
   </data>
-  <data name="Field_DefaultName_Credits"
-        xml:space="preserve">
+  <data name="Field_DefaultName_Credits" xml:space="preserve">
     <value>Other credits</value>
   </data>
-  <data name="Field_TDEN"
-        xml:space="preserve">
+  <data name="Field_TDEN" xml:space="preserve">
     <value>Encoding date</value>
   </data>
-  <data name="Field_TDOR"
-        xml:space="preserve">
+  <data name="Field_TDOR" xml:space="preserve">
     <value>Original release date</value>
   </data>
-  <data name="Field_TDRC"
-        xml:space="preserve">
+  <data name="Field_TDRC" xml:space="preserve">
     <value>Recording date</value>
   </data>
-  <data name="Field_TDRL"
-        xml:space="preserve">
+  <data name="Field_TDRL" xml:space="preserve">
     <value>Release date</value>
   </data>
-  <data name="Field_TDTG"
-        xml:space="preserve">
+  <data name="Field_TDTG" xml:space="preserve">
     <value>Tagging date</value>
   </data>
-  <data name="Field_TIPL"
-        xml:space="preserve">
+  <data name="Field_TFLT_MIME" xml:space="preserve">
+    <value>MIME type as follows</value>
+  </data>
+  <data name="Field_TIPL" xml:space="preserve">
     <value>Production credits</value>
   </data>
-  <data name="Field_TMCL"
-        xml:space="preserve">
+  <data name="Field_TMCL" xml:space="preserve">
     <value>Artist credits</value>
   </data>
   <data name="Field_Value_Credits" xml:space="preserve">

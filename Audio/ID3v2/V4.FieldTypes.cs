@@ -24,8 +24,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// This needs to be located between <see cref="TagField"/> and the
 		/// field classes in the inheritance hierarchy in order for the type
 		/// registration to recognize the <see cref="HeaderParserAttribute"/>.
-		/// <para/>
-		/// TODO: Migrate the lookup-in-resx Name implementations to here.
 		/// </remarks>
 		public abstract class V4Field : V3PlusField<V4Field.V4VersionInfo> {
 			/// <summary>
@@ -50,7 +48,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="fieldObj">
 				/// The new, boxed instance of the field.
 				/// </param>
-				/// <param name="header">The header top parse.</param>
+				/// <param name="header">The header to parse.</param>
 				public override void Initialize(object fieldObj, IEnumerable<byte> header) {
 					var field = fieldObj as V4Field;
 					if (field == null)
@@ -58,45 +56,41 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 					// Store this now, but it needs to be parsed when we get the
 					// rest of the data
-					field.flags = new BitArray(header.Skip(8).ToArray());
-					field.FlagUnknown = field.flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
+					field.Flags = new BitArray(header.Skip(8).ToArray());
+					field.FlagUnknown = field.Flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
 				}
 			}
 
-			/// <summary>
-			/// The flags set on the field.
-			/// </summary>
-			BitArray flags;
 			/// <summary>
 			/// Indicates that this field should be removed if the tag is
 			/// edited in any way, and the program doesn't know how to
 			/// compensate.
 			/// </summary>
-			public override bool DiscardUnknownOnTagEdit => flags[1];
+			public override bool DiscardUnknownOnTagEdit => Flags[1];
 			/// <summary>
 			/// Indicates that this field should be removed if the file
 			/// external to the tag is edited in any way EXCEPT if the audio
 			/// is completely replaced, and the program doesn't know how to
 			/// compensate.
 			/// </summary>
-			public override bool DiscardUnknownOnFileEdit => flags[2];
+			public override bool DiscardUnknownOnFileEdit => Flags[2];
 			/// <summary>
 			/// Indicates that this field should not be changed without direct
 			/// knowledge of its contents and structure.
 			/// </summary>
-			public override bool IsReadOnlyIfUnknown => flags[3];
+			public override bool IsReadOnlyIfUnknown => Flags[3];
 
 			/// <summary>
 			/// Indicates that the data in the field is compressed using the
 			/// zlib compression scheme.
 			/// </summary>
-			public override bool IsFieldCompressed => flags[12];
+			public override bool IsFieldCompressed => Flags[12];
 
 			/// <summary>
 			/// Indicates that the data in the field is encrypted according to
 			/// a specified method.
 			/// </summary>
-			public override bool IsFieldEncrypted => flags[13];
+			public override bool IsFieldEncrypted => Flags[13];
 
 			/// <summary>
 			/// The group identifier for associating multiple fields, or
@@ -107,17 +101,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Indicates what group, if any, of fields this one belongs to.
 			/// </summary>
 			public override byte? IsFieldGrouped => group;
-
-			/// <summary>
-			/// Whether the header includes a non-standard flag, which may
-			/// result in unrecognizable data.
-			/// </summary>
-			/// 
-			/// <remarks>
-			/// TODO: Store data about the unknown flags rather than simply
-			/// indicating their presence.
-			/// </remarks>
-			protected bool FlagUnknown { get; private set; }
 
 			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
@@ -132,7 +115,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/* Implied to affect the flag data bytes, unlike the
 				 * compression and encryption
 				 */
-				if (flags[14]) {
+				if (Flags[14]) {
 					var bytes = new byte[Length];
 					int read = stream.ReadAll(bytes, 0, Length);
 
@@ -151,7 +134,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/* Need to check the flag directly, as the property looks at
 				 * `group` instead.
 				 */
-				if (flags[9]) {
+				if (Flags[9]) {
 					int b = stream.ReadByte();
 					--Length;
 
@@ -175,7 +158,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				// Data length; this may come into play in decompression and
 				// decryption, but we currently have no use for it
-				if (flags[15]) {
+				if (Flags[15]) {
 					var bytes = new byte[4];
 					if (stream.ReadAll(bytes, 0, 4) == 4)
 						Length = (int)ParseUnsignedInteger(bytes);
@@ -186,14 +169,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				if (localStream)
 					stream.Dispose();
 			}
-
-			/// <summary>
-			/// Perform field-specific parsing after the required common
-			/// parsing has been handled.
-			/// </summary>
-			/// 
-			/// <param name="stream">The data to read.</param>
-			protected abstract void ParseData(Stream stream);
 		}
 
 		/// <summary>
@@ -203,8 +178,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			//TODO: RVA2, EQU2, SIGN, SEEK, ASPI
 			
 			/// <summary>
-			/// A wrapper around an arbitrary <see cref="FieldBase"/>
 			/// implementation.
+			/// A wrapper around an arbitrary <see cref="FieldBase"/>
 			/// </summary>
 			/// 
 			/// <remarks>
@@ -308,7 +283,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <returns>
 				/// Whether the field title is defined in <c>ID3v24.resx</c>.
 				/// </returns>
-				protected static bool IsNewTitle(byte[] name) {
+				protected static bool IsLocalTitle(byte[] name) {
 					switch (ISO88591.GetString(name)) {
 						case "TDEN":
 						case "TDOR":
@@ -325,29 +300,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
-			/// An embedded image.
-			/// </summary>
-			[TagField("APIC")]
-			public class PictureField : V4FieldWrapper {
-				/// <summary>
-				/// The constructor required by
-				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-				/// This should not be called manually.
-				/// </summary>
-				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public PictureField(byte[] name, int length)
-					: base(new PictureFieldBase(name, length, TryGetEncoding)) { }
-			}
-
-			/// <summary>
 			/// An identifier unique to a particular database.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Owner identifier       (text string) $00
+			/// Identifier             (up to 64 bytes binary data)
+			/// </c>
+			/// </remarks>
 			[TagField("UFID")]
 			public class UniqueFileId : V4FieldWrapper {
 				/// <summary>
@@ -370,6 +331,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Information            (text string according to encoding)
+			/// </c>
+			/// </remarks>
 			[TagField]
 			[TagField("XSOA")]
 			[TagField("XSOP")]
@@ -467,7 +435,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
 				public TextFrame(byte[] name, int length, FieldBase.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
-					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName, (IsNewTitle(name) ? Strings.ID3v24.ResourceManager : resources))) { }
+					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName, (IsLocalTitle(name) ? Strings.ID3v24.ResourceManager : resources))) { }
 
 				/// <summary>
 				/// The constructor required to properly initialize the inner
@@ -533,15 +501,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
-			/// A frame containing a mapping of role to person.
+			/// A frame containing a mapping of role to person, or similar.
 			/// </summary>
-			/// 
-			/// <remarks>
-			/// These fields are new in ID3v2.4.
-			/// <para/>
-			/// TODO: This is a good candidate for allowing multiple subtitles
-			/// in some form.
-			/// </remarks>
 			[TagField("TIPL")]
 			[TagField("TMCL")]
 			public class ListMappingFrame : TextFrame {
@@ -558,34 +519,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The value to save to <see cref="TagField.Length"/>.
 				/// </param>
 				public ListMappingFrame(byte[] name, int length)
-					: base(name, length, (() => Strings.ID3v24.Field_DefaultName_Credits), Strings.ID3v24.ResourceManager) { }
-
-				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				public override IEnumerable<object> Values {
-					get {
-						// Need easy "random" access for loop
-						var valArray = StringValues?.ToArray();
-
-						if ((valArray?.Length ?? 0) == 0) {
-							yield return null;
-						} else {
-							// Easiest way to iterate over pairs of successive values
-							for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
-								// Singleton element without corresponding title/value
-								if (j == valArray.Length)
-									yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
-								// Credit title is empty
-								else if (valArray[i].Length == 0)
-									yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
-								// Proper credit title/value pair
-								else
-									yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
-							}
-						}
-					}
-				}
+					: base(new ListMappingFrameBase(name, length, TryGetEncoding)) { }
 			}
 
 			/// <summary>
@@ -804,6 +738,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing encoder-defined text.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Value                  (text string according to encoding)
+			/// </c>
+			/// </remarks>
 			[TagField("TXXX")]
 			public class UserTextFrame : TextFrame {
 				/// <summary>
@@ -825,6 +767,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Any frame containing a URL.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
 			[TagField]
 			public class UrlFrame : V4FieldWrapper {
 				/// <summary>
@@ -865,9 +813,18 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public UrlFrame(byte[] name, int length)
 					: base(new UrlFrameBase(name, length)) { }
 			}
+
 			/// <summary>
 			/// A frame containing an encoder-defined URL.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
 			[TagField("WXXX")]
 			public class UserUrlFrame : V4FieldWrapper {
 				/// <summary>
@@ -890,6 +847,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// A frame containing text with a language, a description, and
 			/// non-null-separated text.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Language               $xx xx xx
+			/// Content descriptor     (text string according to encoding) $00 [00]
+			/// Lyrics/text            (full text string according to encoding)
+			/// </c>
+			/// </remarks>
 			[TagField("COMM")]
 			[TagField("USLT")]
 			public class LongTextFrame : V4FieldWrapper {
@@ -910,8 +876,45 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
+			/// An embedded image.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// MIME type              (text string) $00
+			/// Picture type           $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Picture data           (binary data)
+			/// </c>
+			/// </remarks>
+			[TagField("APIC")]
+			public class PictureField : V4FieldWrapper {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TagField.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				public PictureField(byte[] name, int length)
+					: base(new PictureFieldBase(name, length, TryGetEncoding)) { }
+			}
+
+			/// <summary>
 			/// A frame containing a single binary counter.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Counter                $xx xx xx xx [xx ...]
+			/// </c>
+			/// </remarks>
 			[TagField("PCNT")]
 			public class CountFrame : V4FieldWrapper {
 				/// <summary>

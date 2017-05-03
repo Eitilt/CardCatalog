@@ -287,15 +287,6 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MIME type as follows.
-        /// </summary>
-        public static string Field_TFLT_MIME {
-            get {
-                return ResourceManager.GetString("Field_TFLT_MIME", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to MPEG audio.
         /// </summary>
         public static string Field_TFLT_MPG {
@@ -532,27 +523,27 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS AAD).
         /// </summary>
-        public static string Field_TMED_CD_AAD {
+        public static string Field_TMED_CD_AA {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_AAD", resourceCulture);
+                return ResourceManager.GetString("Field_TMED_CD_AA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS ADD).
         /// </summary>
-        public static string Field_TMED_CD_ADD {
+        public static string Field_TMED_CD_AD {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_ADD", resourceCulture);
+                return ResourceManager.GetString("Field_TMED_CD_AD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS DDD).
         /// </summary>
-        public static string Field_TMED_CD_DDD {
+        public static string Field_TMED_CD_DD {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_DDD", resourceCulture);
+                return ResourceManager.GetString("Field_TMED_CD_DD", resourceCulture);
             }
         }
         
@@ -701,6 +692,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Analog transfer from laserdisk.
+        /// </summary>
+        public static string Field_TMED_LD_A {
+            get {
+                return ResourceManager.GetString("Field_TMED_LD_A", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tape cassette.
         /// </summary>
         public static string Field_TMED_MC {
@@ -710,7 +710,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4.75 cm/s cassette.
+        ///   Looks up a localized string similar to 4.75 cm/s cassette (standard).
         /// </summary>
         public static string Field_TMED_MC_4 {
             get {
@@ -728,7 +728,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type I (ferric) cassette.
+        ///   Looks up a localized string similar to Type I (standard, ferric) cassette.
         /// </summary>
         public static string Field_TMED_MC_I {
             get {
@@ -872,7 +872,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type I (ferric) cassette reel.
+        ///   Looks up a localized string similar to Type I (standard, ferric) cassette reel.
         /// </summary>
         public static string Field_TMED_REE_I {
             get {
@@ -913,6 +913,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static string Field_TMED_TEL {
             get {
                 return ResourceManager.GetString("Field_TMED_TEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ISDN telephone.
+        /// </summary>
+        public static string Field_TMED_TEL_I {
+            get {
+                return ResourceManager.GetString("Field_TMED_TEL_I", resourceCulture);
             }
         }
         
@@ -1426,6 +1435,33 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static string Field_WXXX {
             get {
                 return ResourceManager.GetString("Field_WXXX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Album sort order (alternate).
+        /// </summary>
+        public static string Field_XSOA {
+            get {
+                return ResourceManager.GetString("Field_XSOA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artist sort order (alternate).
+        /// </summary>
+        public static string Field_XSOP {
+            get {
+                return ResourceManager.GetString("Field_XSOP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title sort order (alternate).
+        /// </summary>
+        public static string Field_XSOT {
+            get {
+                return ResourceManager.GetString("Field_XSOT", resourceCulture);
             }
         }
     }

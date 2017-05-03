@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -32,7 +33,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <param name="fieldObj">
 			/// The new, boxed instance of the field.
 			/// </param>
-			/// <param name="header">The header top parse.</param>
+			/// <param name="header">The header to parse.</param>
 			public abstract void Initialize(object fieldObj, IEnumerable<byte> header);
 		}
 
@@ -134,6 +135,30 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// ungrouped.
 			/// </value>
 			public abstract byte? IsFieldGrouped { get; }
+
+			/// <summary>
+			/// The flags set on the field.
+			/// </summary>
+			protected BitArray Flags { get; set; }
+
+			/// <summary>
+			/// Whether the header includes a non-standard flag, which may
+			/// result in unrecognizable data.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Store data about the unknown flags rather than simply
+			/// indicating their presence.
+			/// </remarks>
+			protected bool FlagUnknown { get; set; }
+
+			/// <summary>
+			/// Perform field-specific parsing after the required common
+			/// parsing has been handled.
+			/// </summary>
+			/// 
+			/// <param name="stream">The data to read.</param>
+			protected abstract void ParseData(Stream stream);
 		}
 
 		/// <summary>
@@ -211,7 +236,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override byte[] SystemName { get; }
 
 				/// <summary>
-				/// The resources to use for string lookups.
+				/// The version-specific resources to use for string lookups.
 				/// </summary>
 				protected ResourceManager Resources { get; }
 
@@ -220,16 +245,19 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override string Name =>
 					/* Recognized nonstandard fields/usage:
-					 * TCAT: "Category"       (from podcasts)
-					 * TDES: "Description"    (from podcasts)
-					 * TGID: "Album ID"       (podcasts: typically "Podcast ID")
-					 * TIT1: "Work"           (officially "Grouping")
-					 * TKWD: "Keywords"       (from podcasts)
-					 * TOAL: "Original alubm" (Picard: "Work title")
-					 * TPUB: "Publisher"      (Picard: "Record label")
+					 * TCAT: "Category"               (from podcasts)
+					 * TDES: "Description"            (from podcasts)
+					 * TGID: "Album ID"               (podcasts: typically "Podcast ID")
+					 * TIT1: "Work"                   (officially "Grouping")
+					 * TKWD: "Keywords"               (from podcasts)
+					 * TOAL: "Original alubm"         (Picard: "Work title")
+					 * TPUB: "Publisher"              (Picard: "Record label")
 					 * TSO2: "Album artist sort order"
 					 * TSOC: "Composer sort order"
-					 * WFED: "Feed"           (from podcasts)
+					 * WFED: "Feed"                   (from podcasts)
+					 * XSOA: "Album sort order (alternate)"
+					 * XSOP: "Artist sort order (alternate)"
+					 * XSOT: "Title sort order (alternate)"
 					 */
 					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
 						?? DefaultName()
@@ -278,129 +306,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// An identifier unique to a particular database.
 			/// </summary>
-			public class PictureFieldBase : FieldBase {
-				/// <summary>
-				/// The constructor required to initialize the field.
-				/// </summary>
-				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
-				/// <param name="defaultName">
-				/// The name to use if no more specific one is found, or
-				/// <c>null</c> to use the default name as specified in the
-				/// resources.
-				/// </param>
-				/// <param name="resources">
-				/// The resources to use when looking up dynamic strings, or
-				/// <c>null</c> to use the default
-				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
-				/// </param>
-				public PictureFieldBase(byte[] name, int length,
-					Func<byte, Encoding> tryGetEncoding , ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
-
-				/// <summary>
-				/// What is depicted by the image.
-				/// </summary>
-				ImageCategory category;
-				/// <summary>
-				/// The description of the contained values.
-				/// </summary>
-				public override string Name =>
-					category.PrintableName() ?? base.Name;
-
-				/// <summary>
-				/// The database with which this ID is associated.
-				/// </summary>
-				string description = null;
-				/// <summary>
-				/// The description of the contained values.
-				/// </summary>
-				public override string Subtitle {
-					get {
-						if ((description == null) || (description.Length == 0))
-							return null;
-						else
-							return description;
-					}
-				}
-
-				/// <summary>
-				/// The raw image data.
-				/// </summary>
-				ImageData image;
-				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				public override IEnumerable<object> Values =>
-					new object[1] { image };
-
-				/// <summary>
-				/// Preform field-specific parsing after the required common
-				/// parsing has been handled.
-				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					Encoding encoding;
-					var enc = stream.ReadByte();
-					if (enc < 0)
-						encoding = null;
-					else
-						encoding = TryGetEncoding((byte)enc);
-
-					var read = new List<byte>();
-					for (int b = stream.ReadByte(); b > 0x00; b = stream.ReadByte())
-						read.Add((byte)b);
-					var mime = ISO88591.GetString(read.ToArray());
-
-					var next = stream.ReadByte();
-					if (next < 0)
-						category = ImageCategory.Other;
-					else
-						category = (ImageCategory)next;
-
-					read.Clear();
-					var prevZero = false;
-					for (int b = stream.ReadByte(); b >= 0x00; b = stream.ReadByte()) {
-						if (b == 0x00) {
-							if (encoding == ISO88591)
-								break;
-							else
-								prevZero = true;
-						} else {
-							if (prevZero) {
-								read.Add(0x00);
-								prevZero = false;
-							}
-							read.Add((byte)b);
-						}
-					}
-					var descriptionArray = read.ToArray();
-					if (encoding == null)
-						description = TextFrameBase.ReadFromByteOrderMark(descriptionArray);
-					else
-						description = encoding.GetString(descriptionArray);
-
-					var dataLength = Length - 3 - mime.Length - descriptionArray.Length - (encoding == ISO88591 ? 1 : 2);
-					var data = new byte[Length];
-					int readCount = stream.ReadAll(data, 0, dataLength);
-
-					image = new ImageData(data.Take(readCount).ToArray(), mime);
-				}
-			}
-
-			/// <summary>
-			/// An identifier unique to a particular database.
-			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Owner identifier       (text string) $00
+			/// Identifier             (up to 64 bytes binary data)
+			/// </c>
+			/// </remarks>
 			public class UniqueFileIdBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -470,6 +382,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Any of the many tags containing purely textual data.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Information            (text string according to encoding)
+			/// </c>
+			/// </remarks>
 			public class TextFrameBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -732,6 +651,72 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					select isrc.Insert(2, "-")
 						.Insert(6, "-")
 						.Insert(9, "-");
+			}
+
+			/// <summary>
+			/// A frame containing a mapping of role to person, or similar.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: This is a good candidate for allowing multiple subtitles
+			/// in some form.
+			/// </remarks>
+			public class ListMappingFrameBase : TextFrameBase {
+				/// <summary>
+				/// The constructor required to initialize the field.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="TagField.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				/// <param name="tryGetEncoding">
+				/// The proper mapping of encoding-identification byte to
+				/// <see cref="Encoding"/> object.
+				/// </param>
+				/// <param name="defaultName">
+				/// The name to use if no more specific one is found, or
+				/// <c>null</c> to use the default name as specified in the
+				/// resources.
+				/// </param>
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public ListMappingFrameBase(byte[] name, int length,
+						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
+
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<object> Values {
+					get {
+						// Need easy "random" access for loop
+						var valArray = StringValues?.ToArray();
+
+						if ((valArray?.Length ?? 0) == 0) {
+							yield return null;
+						} else {
+							// Easiest way to iterate over pairs of successive values
+							for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
+								// Singleton element without corresponding title/value
+								if (j == valArray.Length)
+									yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
+								// Credit title is empty
+								else if (valArray[i].Length == 0)
+									yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
+								// Proper credit title/value pair
+								else
+									yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
+							}
+						}
+					}
+				}
 			}
 
 			/// <summary>
@@ -1073,8 +1058,16 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
-			/// A frame containing a timestamp.
+			/// A frame containing encoder-defined text.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Value                  (text string according to encoding)
+			/// </c>
+			/// </remarks>
 			public class UserTextFrameBase : TextFrameBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -1120,6 +1113,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// Any frame containing a URL.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
 			public class UrlFrameBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -1183,6 +1182,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing an encoder-defined URL.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
 			public class UserUrlFrameBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -1275,6 +1282,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// A frame containing text with a language, a description, and
 			/// non-null-separated text.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Language               $xx xx xx
+			/// Content descriptor     (text string according to encoding) $00 [00]
+			/// Lyrics/text            (full text string according to encoding)
+			/// </c>
+			/// </remarks>
 			public class LongTextFrameBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.
@@ -1385,8 +1401,147 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			}
 
 			/// <summary>
+			/// An embedded image.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// MIME type              (text string) $00
+			/// Picture type           $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Picture data           (binary data)
+			/// </c>
+			/// </remarks>
+			public class PictureFieldBase : FieldBase {
+				/// <summary>
+				/// The constructor required to initialize the field.
+				/// </summary>
+				/// 
+				/// <param name="name">
+				/// The value to save to <see cref="FieldBase.SystemName"/>.
+				/// </param>
+				/// <param name="length">
+				/// The value to save to <see cref="TagField.Length"/>.
+				/// </param>
+				/// <param name="tryGetEncoding">
+				/// The proper mapping of encoding-identification byte to
+				/// <see cref="Encoding"/> object.
+				/// </param>
+				/// <param name="defaultName">
+				/// The name to use if no more specific one is found, or
+				/// <c>null</c> to use the default name as specified in the
+				/// resources.
+				/// </param>
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				public PictureFieldBase(byte[] name, int length,
+					Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(name, length, tryGetEncoding, defaultName, resources) { }
+
+				/// <summary>
+				/// What is depicted by the image.
+				/// </summary>
+				ImageCategory category;
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Name =>
+					category.PrintableName() ?? base.Name;
+
+				/// <summary>
+				/// The database with which this ID is associated.
+				/// </summary>
+				string description = null;
+				/// <summary>
+				/// The description of the contained values.
+				/// </summary>
+				public override string Subtitle {
+					get {
+						if ((description == null) || (description.Length == 0))
+							return null;
+						else
+							return description;
+					}
+				}
+
+				/// <summary>
+				/// The raw image data.
+				/// </summary>
+				ImageData image;
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<object> Values =>
+					new object[1] { image };
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				/// 
+				/// <param name="stream">The data to read.</param>
+				public override void Parse(Stream stream) {
+					Encoding encoding;
+					var enc = stream.ReadByte();
+					if (enc < 0)
+						encoding = null;
+					else
+						encoding = TryGetEncoding((byte)enc);
+
+					var read = new List<byte>();
+					for (int b = stream.ReadByte(); b > 0x00; b = stream.ReadByte())
+						read.Add((byte)b);
+					var mime = ISO88591.GetString(read.ToArray());
+
+					var next = stream.ReadByte();
+					if (next < 0)
+						category = ImageCategory.Other;
+					else
+						category = (ImageCategory)next;
+
+					read.Clear();
+					var prevZero = false;
+					for (int b = stream.ReadByte(); b >= 0x00; b = stream.ReadByte()) {
+						if (b == 0x00) {
+							if (encoding == ISO88591)
+								break;
+							else
+								prevZero = true;
+						} else {
+							if (prevZero) {
+								read.Add(0x00);
+								prevZero = false;
+							}
+							read.Add((byte)b);
+						}
+					}
+					var descriptionArray = read.ToArray();
+					if (encoding == null)
+						description = TextFrameBase.ReadFromByteOrderMark(descriptionArray);
+					else
+						description = encoding.GetString(descriptionArray);
+
+					var dataLength = Length - 3 - mime.Length - descriptionArray.Length - (encoding == ISO88591 ? 1 : 2);
+					var data = new byte[Length];
+					int readCount = stream.ReadAll(data, 0, dataLength);
+
+					image = new ImageData(data.Take(readCount).ToArray(), mime);
+				}
+			}
+
+			/// <summary>
 			/// A frame containing a single binary counter.
 			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Counter                $xx xx xx xx [xx ...]
+			/// </c>
+			/// </remarks>
 			public class CountFrameBase : FieldBase {
 				/// <summary>
 				/// The constructor required to initialize the field.

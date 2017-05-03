@@ -84,14 +84,23 @@ namespace AgEitilt.CardCatalog {
 				return;
 
 			foreach (Type t in assembly.ExportedTypes) {
-				var tagRegisterFunction = tagRegisterGeneric.MakeGenericMethod(new Type[1] { t });
-				var fieldRegisterFunction = fieldRegisterGeneric.MakeGenericMethod(new Type[1] { t });
+				// Provide cache for if it becomes necessary
+				MethodInfo tagRegisterFunction = null;
+				MethodInfo fieldRegisterFunction = null;
 
 				// Register every type as it is described by its attributes
-				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false))
+				foreach (var tagAttr in t.GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false)) {
+					if (tagRegisterFunction == null)
+						tagRegisterFunction = tagRegisterGeneric.MakeGenericMethod(new Type[1] { t });
+
 					tagRegisterFunction.Invoke(null, new object[1] { tagAttr.Name });
-				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false))
+				}
+				foreach (var fieldAttr in t.GetTypeInfo().GetCustomAttributes<TagFieldAttribute>(false)) {
+					if (fieldRegisterFunction == null)
+						fieldRegisterFunction = fieldRegisterGeneric.MakeGenericMethod(new Type[1] { t });
+
 					fieldRegisterFunction.Invoke(null, new object[2] { fieldAttr.Format, fieldAttr.Header });
+				}
 			}
 
 			assemblies.Add(assembly.FullName);
