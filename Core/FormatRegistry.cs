@@ -210,7 +210,7 @@ namespace AgEitilt.CardCatalog {
 		/// The unique specifier of this field.
 		/// </param>
 		public static void Register<T>(string format, byte[] header) where T : TagField {
-			Register<T>(format, new[] { header });
+			Register<T>(format, new byte[1][] { header });
 		}
 
 		/// <summary>
