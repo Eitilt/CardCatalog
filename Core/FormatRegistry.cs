@@ -255,7 +255,7 @@ namespace AgEitilt.CardCatalog {
 
 			var headers = new List<byte[]>();
 			// Detect applicable field headers from contained generators
-			if (headerList == null) {
+			if ((headerList == null) || (headerList.Contains(null))) {
 				headers.AddRange(from field in fieldType.GetFields(BindingFlags.Static | BindingFlags.Public)
 								 where field.IsDefined(typeof(FieldNamesAttribute))
 								 from name in field.GetValue(null) as IEnumerable<byte[]>
@@ -269,7 +269,7 @@ namespace AgEitilt.CardCatalog {
 								 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>).Invoke()
 								 select name);
 			// Use the headers passed at method invocation
-			} else {
+			} else if (headerList != null) {
 				headers.AddRange(from header in headerList
 								 where header != null
 								 select header);

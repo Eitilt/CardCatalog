@@ -119,7 +119,7 @@ namespace AgEitilt.CardCatalog {
 		/// </remarks>
 		/// 
 		/// <seealso cref="MetadataFormatAttribute.Name"/>
-		public string Format { get; set; } = null;
+		public string Format { get; } = null;
 
 		/// <summary>
 		/// A sequence of bytes used to uniquely identify this type of field.
@@ -130,7 +130,7 @@ namespace AgEitilt.CardCatalog {
 		/// identifier, the <see cref="TagFieldAttribute"/> may be added to a
 		/// common class once for each such tag.
 		/// </remarks>
-		public byte[] Header { get; }
+		public byte[] Header { get; } = null;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TagFieldAttribute"/>
