@@ -3,13 +3,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using AgEitilt.Common.Stream.Extensions;
+
 using static AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
@@ -316,17 +315,24 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 								// Individually-handled text tags
 								switch (new string(new char[3] { b, c, d })) {
 									case "CMP":  // Unofficial: iTunes Compilation
+									case "CON":  // Genre
 									case "COP":  // Copyright
+									case "DAT":  // Release date
 									case "DLY":  // Playlist delay
 									case "FLT":  // Audio encoding
+									case "IME":  // Release time
 									case "LAN":  // Language
 									case "LEN":  // Length
 									case "KEY":  // Key
 									case "MED":  // Original medium
+									case "ORY":  // Original release year
 									case "POS":  // Disk number
 									case "PRO":  // Production copyright
 									case "RCK":  // Track number
+									case "RDA":  // Recording dates
+									case "SIZ":  // File size
 									case "SRC":  // Recording ISRC
+									case "YER":  // Release year
 									case "XXX":  // (User text field)
 										continue;
 									default:
