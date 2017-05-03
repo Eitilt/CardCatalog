@@ -140,7 +140,33 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// Wrapper to organize the classes used to share field content
 		/// implementations between both the ID3v2.3 and ID3v2.4 standards.
 		/// </summary>
+		/// 
+		/// <remarks>
+		/// This may include fields that aren't specified by the ID3v2.3
+		/// standards, on the basis that it is better to recognize fields that
+		/// have been backported from ID3v2.4. Note that, in these cases, the
+		/// experimental flag should probably be set.
+		/// </remarks>
 		public static class FormatFieldBases {
+			/* Tag usage found at several websites:
+			 * https://picard.musicbrainz.org/docs/mappings/
+			 * https://msdn.microsoft.com/en-us/library/windows/desktop/dd743220(v=vs.85).aspx
+			 * http://joelverhagen.com/blog/2010/12/how-itunes-uses-id3-tags/
+			 * http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/ID3.html
+			 * http://wiki.hydrogenaud.io/index.php?title=Tag_Mapping
+			 * http://wiki.hydrogenaud.io/index.php?title=Foobar2000:ID3_Tag_Mapping
+			 * Still need to check:
+			 * http://musoware.com/wiki/index.php?title=Attribute_Mapping
+			 * http://musicbee.wikia.com/wiki/Tag?useskin=monobook
+			 */
+
+			/*TODO: MCDI, ETCO, MLLT, SYTC, SYLT, RVRB, GEOB, POPM, RBUF,
+			 * AENC, LINK, POSS, USER, OWNE, COMR, ENCR, GRID, PRIV
+			 * 
+			 * Unofficial (most may never have a need for inclusion):
+			 * GRP1, MVNM, MVIN, PCST, TSIZ, MCDI, ITNU, XDOR, XOLY
+			 */
+
 			/// <summary>
 			/// An abstract base for handling common field processing tasks.
 			/// </summary>
@@ -193,17 +219,17 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The human-readable name of the field.
 				/// </summary>
 				public override string Name =>
-					/* Recognized nonstandard fields:
-					 * TCAT: Unofficial (podcasts)
-					 * TDES: Unofficial (podcasts)
-					 * TGID: Unofficial (podcasts): "Podcast ID"
-					 * TIT1: Official title: "Grouping"
-					 * TKWD: Unofficial (podcasts)
-					 * TOAL: "Work title" (Picard)
-					 * TPUB: "Record label" (Picard)
-					 * TSO2: Unofficial
-					 * TSOC: Unofficial
-					 * WFED: Unofficial (podcast)
+					/* Recognized nonstandard fields/usage:
+					 * TCAT: "Category"       (from podcasts)
+					 * TDES: "Description"    (from podcasts)
+					 * TGID: "Album ID"       (podcasts: typically "Podcast ID")
+					 * TIT1: "Work"           (officially "Grouping")
+					 * TKWD: "Keywords"       (from podcasts)
+					 * TOAL: "Original alubm" (Picard: "Work title")
+					 * TPUB: "Publisher"      (Picard: "Record label")
+					 * TSO2: "Album artist sort order"
+					 * TSOC: "Composer sort order"
+					 * WFED: "Feed"           (from podcasts)
 					 */
 					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
 						?? DefaultName()
@@ -211,7 +237,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				/// <summary>
 				/// Delay a call to the reource files to ensure the correctly
-				/// localized version is used, if locale changes.
+				/// localized version is used, if locale changes during run.
 				/// </summary>
 				/// 
 				/// <returns>The localized string resource.</returns>
