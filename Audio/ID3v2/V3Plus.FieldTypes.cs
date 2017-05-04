@@ -82,7 +82,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				if (bytes.SequenceEqual(padding)) {
 					return null;
 				} else if (fields.ContainsKey(bytes) == false) {
-					return new TagField.Empty(bytes, length);
+					return new TagField.Empty(header.ToArray(), bytes, length);
 				}
 
 				var field = Activator.CreateInstance(fields[bytes], new object[2] { bytes, length });

@@ -30,15 +30,34 @@ namespace AgEitilt.CardCatalog {
 	/// </summary>
 	public abstract class TagField : IParsable {
 		/// <summary>
+		/// The raw data making up this field's header.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// This -- rather than just parameters derived from it -- is included
+		/// for transparency.
+		/// </remarks>
+		public virtual byte[] Header { get; protected set; }
+
+		/// <summary>
+		/// The raw data contained by this field, including any that would not
+		/// be displayed by <see cref="Values"/>.
+		/// </summary>
+		/// 
+		/// <seealso cref="Header"/>
+		/// <seealso cref="Values"/>
+		/// <seealso cref="HasHiddenData"/>
+		public virtual byte[] Data { get; protected set; }
+
+		/// <summary>
 		/// The byte header used to internally identify the field.
 		/// </summary>
+		/// 
+		/// <remarks>
+		/// This will typically return a sub-array extracted from
+		/// <see cref="Header"/>.
+		/// </remarks>
 		public abstract byte[] SystemName { get; }
-		
-		/// <summary>
-		/// The length in bytes of the data contained in the field (excluding
-		/// the header).
-		/// </summary>
-		public int Length { get; protected set; }
 
 		/// <summary>
 		/// The human-readable name of the field if available, or a
@@ -65,6 +84,17 @@ namespace AgEitilt.CardCatalog {
 		public virtual string Subtitle => null;
 
 		/// <summary>
+		/// The length in bytes of the data contained in the field (excluding
+		/// the header).
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// With its default implementation, this must be available before
+		/// <see cref="Parse(Stream)"/> is called.
+		/// </remarks>
+		public virtual int Length { get; protected set; }
+
+		/// <summary>
 		/// All data contained by this field, in a human-readable format.
 		/// </summary>
 		/// 
@@ -82,7 +112,16 @@ namespace AgEitilt.CardCatalog {
 		/// the including program depending on platform requirements and
 		/// capabilities.
 		/// </remarks>
+		/// 
+		/// <seealso cref="Data"/>
+		/// <see cref="HasHiddenData"/>
 		public abstract IEnumerable<object> Values { get; }
+
+		/// <summary>
+		/// Indicates whether this field includes data not displayed by
+		/// <see cref="Values"/>.
+		/// </summary>
+		public virtual bool HasHiddenData { get; }
 
 		/// <summary>
 		/// Read a sequence of bytes in the manner appropriate to the specific
@@ -90,28 +129,43 @@ namespace AgEitilt.CardCatalog {
 		/// </summary>
 		/// 
 		/// <param name="stream">The data to read.</param>
-		public abstract void Parse(Stream stream);
+		public virtual void Parse(Stream stream) {
+			var data = new byte[Length];
+
+			var read = stream.ReadAll(data, 0, Length);
+			if (read < Length) {
+				data = data.Take(read).ToArray();
+			}
+
+			Data = data;
+		}
 
 		/// <summary>
 		/// A default implementation of <see cref="TagField"/>, not providing
 		/// any data formatting.
 		/// </summary>
+		/// 
+		/// <remarks>
+		/// TODO: Allow more sophisticated Header/Data handling at Parse time.
+		/// </remarks>
 		public class Empty : TagField {
 			/// <summary>
 			/// The minimal constructor for creating a skeleton instance.
 			/// </summary>
 			/// 
+			/// <param name="header">
+			/// The full binary header of the unrecognized field.
+			/// </param>
 			/// <param name="name">
 			/// The value to save to <see cref="SystemName"/>.
 			/// </param>
 			/// <param name="length">
 			/// The value to save to <see cref="TagField.Length"/>.
 			/// </param>
-			public Empty(byte[] name, int length) {
+			public Empty(byte[] header, byte[] name, int length) {
+				Header = header;
 				this.name = name;
-
 				Length = length;
-				data = new byte[length];
 			}
 
 			/// <summary>
@@ -125,33 +179,10 @@ namespace AgEitilt.CardCatalog {
 			public override byte[] SystemName => name;
 
 			/// <summary>
-			/// The container to hold the raw data of this field.
-			/// </summary>
-			/// 
-			/// <remarks>
-			/// TODO: Expose this publicly on the parent, and ensure it is populated by
-			/// not only the field content but also the header.
-			/// </remarks>
-			private byte[] data;
-			/// <summary>
 			/// All data contained by this field, in a human-readable format.
 			/// </summary>
 			public override IEnumerable<object> Values =>
-				(data.Length >= 0 ? new object[1] { data } : null);
-
-			/// <summary>
-			/// Read a sequence of bytes in the manner appropriate to the
-			/// specific type of field.
-			/// </summary>
-			/// 
-			/// <param name="stream">The data to read.</param>
-			public override void Parse(Stream stream) {
-				var read = stream.ReadAll(data, 0, Length);
-				if (read < Length) {
-					Length = read;
-					data = data.Take(read).ToArray();
-				}
-			}
+				new object[1] { Data };
 		}
 	}
 }
