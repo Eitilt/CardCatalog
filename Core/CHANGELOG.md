@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.2.2
+## 0.3.0
+### Added
+- Fields store the raw data before parsing
+
+## 0.2.2
 ### Added
 - Set neutral resource language
 ### Changed
@@ -34,7 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `MetadataTag.Fields` is now represented as a single `IEnumerable`
   rather than as a dictionary
 
-## 0.1.0.1 (Nuget 0.1.0)
+## 0.1.0 (assembly 0.1.0.1)
 ### Added
 - This change log
 - Nuget packaging

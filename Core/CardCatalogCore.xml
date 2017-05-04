@@ -681,16 +681,35 @@
             implementations.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Header">
+            <summary>
+            The raw data making up this field's header.
+            </summary>
+            
+            <remarks>
+            This -- rather than just parameters derived from it -- is included
+            for transparency.
+            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Data">
+            <summary>
+            The raw data contained by this field, including any that would not
+            be displayed by <see cref="P:AgEitilt.CardCatalog.TagField.Values"/>.
+            </summary>
+            
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Header"/>
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Values"/>
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.HasHiddenData"/>
+        </member>
         <member name="P:AgEitilt.CardCatalog.TagField.SystemName">
             <summary>
             The byte header used to internally identify the field.
             </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.TagField.Length">
-            <summary>
-            The length in bytes of the data contained in the field (excluding
-            the header).
-            </summary>
+            
+            <remarks>
+            This will typically return a sub-array extracted from
+            <see cref="P:AgEitilt.CardCatalog.TagField.Header"/>.
+            </remarks>
         </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Name">
             <summary>
@@ -715,6 +734,17 @@
             suitable, the method should be overridden.
             </remarks>
         </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Length">
+            <summary>
+            The length in bytes of the data contained in the field (excluding
+            the header).
+            </summary>
+            
+            <remarks>
+            With its default implementation, this must be available before
+            <see cref="M:AgEitilt.CardCatalog.TagField.Parse(System.IO.Stream)"/> is called.
+            </remarks>
+        </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Values">
             <summary>
             All data contained by this field, in a human-readable format.
@@ -734,6 +764,15 @@
             the including program depending on platform requirements and
             capabilities.
             </remarks>
+            
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Data"/>
+            <see cref="P:AgEitilt.CardCatalog.TagField.HasHiddenData"/>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.TagField.Values"/>.
+            </summary>
         </member>
         <member name="M:AgEitilt.CardCatalog.TagField.Parse(System.IO.Stream)">
             <summary>
@@ -749,16 +788,13 @@
             any data formatting.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.TagField.Empty.#ctor(System.Byte[],System.Int32)">
+        <member name="M:AgEitilt.CardCatalog.TagField.Empty.#ctor(System.Byte[])">
             <summary>
             The minimal constructor for creating a skeleton instance.
             </summary>
             
-            <param name="name">
+            <param name="header">
             The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Empty.SystemName"/>.
-            </param>
-            <param name="length">
-            The value to save to <see cref="P:AgEitilt.CardCatalog.TagField.Length"/>.
             </param>
         </member>
         <member name="F:AgEitilt.CardCatalog.TagField.Empty.name">
@@ -772,28 +808,10 @@
             The byte header used to internally identify the field.
             </summary>
         </member>
-        <member name="F:AgEitilt.CardCatalog.TagField.Empty.data">
-            <summary>
-            The container to hold the raw data of this field.
-            </summary>
-            
-            <remarks>
-            TODO: Expose this publicly on the parent, and ensure it is populated by
-            not only the field content but also the header.
-            </remarks>
-        </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Empty.Values">
             <summary>
             All data contained by this field, in a human-readable format.
             </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.TagField.Empty.Parse(System.IO.Stream)">
-            <summary>
-            Read a sequence of bytes in the manner appropriate to the
-            specific type of field.
-            </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
     </members>
 </doc>

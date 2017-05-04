@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.1
+### Changed
+- Update internals to match patterns in `Core` 0.3.0
+
 ## 0.3.0
 ### Added
 - ID3v2.3 support brought to same level as ID3v2.4
