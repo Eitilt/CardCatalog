@@ -3,6 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -158,7 +159,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// same for both v2.3 and v2.4, while the logic for parsing the
 			/// header is shared with other tags of the <em>same</em> version.
 			/// </remarks>
-			public class V3FieldWrapper : V3Field {
+			public abstract class V3FieldWrapper : V3Field {
 				/// <summary>
 				/// The core behaviour for this field.
 				/// </summary>

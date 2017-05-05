@@ -175,7 +175,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// same for both v2.3 and v2.4, while the logic for parsing the
 			/// header is shared with other tags of the <em>same</em> version.
 			/// </remarks>
-			public class V4FieldWrapper : V4Field {
+			public abstract class V4FieldWrapper : V4Field {
 				/// <summary>
 				/// The core behaviour for this field.
 				/// </summary>
