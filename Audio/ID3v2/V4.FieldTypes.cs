@@ -190,8 +190,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			//TODO: RVA2, EQU2, SIGN, SEEK, ASPI
 
 			/// <summary>
-			/// implementation.
 			/// A wrapper around an arbitrary <see cref="FieldBase{TVersion}"/>
+			/// implementation.
 			/// </summary>
 			/// 
 			/// <remarks>
@@ -262,10 +262,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The length in bytes of the data contained in the field (excluding
 				/// the header).
 				/// </summary>
-				public override int Length {
-					get => fieldBase.Length;
-					protected set { }
-				}
+				public override int Length =>
+					fieldBase.Length;
 
 				/// <summary>
 				/// All values contained within this field.

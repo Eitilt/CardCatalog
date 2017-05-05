@@ -227,10 +227,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The length in bytes of the data contained in the field (excluding
 				/// the header).
 				/// </summary>
-				public override int Length {
-					get => fieldBase.Length;
-					protected set { }
-				}
+				public override int Length =>
+					fieldBase.Length;
 
 				/// <summary>
 				/// All values contained within this field.

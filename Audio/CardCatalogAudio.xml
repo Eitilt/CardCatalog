@@ -2494,8 +2494,8 @@
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.V4FieldWrapper">
             <summary>
-            implementation.
             A wrapper around an arbitrary <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1"/>
+            implementation.
             </summary>
             
             <remarks>

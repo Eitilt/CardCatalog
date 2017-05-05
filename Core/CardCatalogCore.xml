@@ -820,6 +820,18 @@
             The byte header used to internally identify the field.
             </summary>
         </member>
+        <member name="F:AgEitilt.CardCatalog.TagField.Empty.length">
+            <summary>
+            Underlying field ID to work around the lack of a
+            <see cref="P:AgEitilt.CardCatalog.TagField.Empty.Length"/>.set.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.TagField.Empty.Length">
+            <summary>
+            The length in bytes of the data contained in the field (excluding
+            the header).
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Empty.Values">
             <summary>
             All data contained by this field, in a human-readable format.

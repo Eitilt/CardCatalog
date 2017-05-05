@@ -356,10 +356,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					}
 				}
 
-				public override int Length {
-					get => V3PlusField<TVersion>.LengthFromHeader(Header);
-					protected set { }
-				}
+				public override int Length =>
+					V3PlusField<TVersion>.LengthFromHeader(Header);
 
 				/// <summary>
 				/// Perform field-specific parsing after the required common

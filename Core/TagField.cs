@@ -94,7 +94,7 @@ namespace AgEitilt.CardCatalog {
 		/// With its default implementation, this must be available before
 		/// <see cref="Parse(Stream)"/> is called.
 		/// </remarks>
-		public virtual int Length { get; protected set; }
+		public virtual int Length { get; }
 
 		/// <summary>
 		/// All data contained by this field, in a human-readable format.
@@ -167,7 +167,7 @@ namespace AgEitilt.CardCatalog {
 			public Empty(byte[] header, byte[] name, int length) {
 				Header = header;
 				this.name = name;
-				Length = length;
+				this.length = length;
 			}
 
 			/// <summary>
@@ -179,6 +179,17 @@ namespace AgEitilt.CardCatalog {
 			/// The byte header used to internally identify the field.
 			/// </summary>
 			public override byte[] SystemName => name;
+
+			/// <summary>
+			/// Underlying field ID to work around the lack of a
+			/// <see cref="Length"/>.set.
+			/// </summary>
+			private int length;
+			/// <summary>
+			/// The length in bytes of the data contained in the field (excluding
+			/// the header).
+			/// </summary>
+			public override int Length => length;
 
 			/// <summary>
 			/// All data contained by this field, in a human-readable format.
