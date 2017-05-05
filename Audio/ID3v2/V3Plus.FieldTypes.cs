@@ -46,7 +46,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The ID3v2 version-specific code.
 		/// </typeparam>
 		public abstract class V3PlusField<TVersion> : TagField where TVersion : VersionInfo, new() {
-			static TVersion version = new TVersion();
+			/// <summary>
+			/// Variables specific to the version of ID3v2 implemented.
+			/// </summary>
+			static protected TVersion version = new TVersion();
 
 			/// <summary>
 			/// Reduce the lookups of field types by caching the return.
@@ -64,11 +67,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
 
+			internal static int LengthFromHeader(byte[] header) =>
+				(int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), version.FieldSizeBits);
+
 			/// <summary>
 			/// Check whether the stream begins with a valid field header.
 			/// </summary>
 			/// 
-			/// <param name="header">The sequence of bytes to check.</param>
+			/// <param name="header">The binary header to check.</param>
 			/// 
 			/// <returns>
 			/// An empty <see cref="TagField"/> object if the header is in the
@@ -76,16 +82,18 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </returns>
 			[HeaderParser(10)]
 			public static TagField Initialize(IEnumerable<byte> header) {
-				var bytes = header.Take(4).ToArray();
-				int length = (int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), version.FieldSizeBits);
+				var name = header.Take(4).ToArray();
+				var headerArray = header.ToArray();
 
-				if (bytes.SequenceEqual(padding)) {
+				if (name.SequenceEqual(padding)) {
+					//TODO: Implement official padding handling rather than
+					// just ignoring it
 					return null;
-				} else if (fields.ContainsKey(bytes) == false) {
-					return new TagField.Empty(header.ToArray(), bytes, length);
+				} else if (fields.ContainsKey(name) == false) {
+					return new TagField.Empty(headerArray, name, LengthFromHeader(headerArray));
 				}
 
-				var field = Activator.CreateInstance(fields[bytes], new object[2] { bytes, length });
+				var field = Activator.CreateInstance(fields[name], new object[1] { header.ToArray() });
 				if (field == null)
 					return null;
 
@@ -153,12 +161,26 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			protected bool FlagUnknown { get; set; }
 
 			/// <summary>
+			/// The number of data bytes associated with flags in the header.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// These are included in the tag length value in the header, but
+			/// are associated with the header rather than the data in this
+			/// library.
+			/// </remarks>
+			protected int extraHeaderBytes = 0;
+
+			/// <summary>
 			/// Perform field-specific parsing after the required common
 			/// parsing has been handled.
 			/// </summary>
 			/// 
-			/// <param name="stream">The data to read.</param>
-			protected abstract void ParseData(Stream stream);
+			/// <remarks>
+			/// This will typically be used to cache expensive computations or
+			/// to set a field for <see cref="TagField.HasHiddenData"/>.
+			/// </remarks>
+			protected virtual void ParseData() { }
 		}
 
 		/// <summary>
@@ -195,21 +217,50 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// An abstract base for handling common field processing tasks.
 			/// </summary>
-			public abstract class FieldBase : TagField {
+			internal abstract class FieldBase<TVersion> : TagField where TVersion : VersionInfo, new() {
+				/// <summary>
+				/// Variables specific to the version of ID3v2 implemented.
+				/// </summary>
+				static protected TVersion version = new TVersion();
+
+				/// <summary>
+				/// Convert a ID3v2 byte representation of an encoding into the
+				/// proper <see cref="Encoding"/> object.
+				/// </summary>
+				/// 
+				/// <remarks>
+				/// While the ID3v2.3 specification only lists the first two
+				/// potential encodings, it is otherwise compatible with the
+				/// full list from ID3v2.4, and so using this for both allows
+				/// slightly more error tolerance.
+				/// </remarks>
+				/// 
+				/// <param name="enc">The encoding-identification byte.</param>
+				/// 
+				/// <returns>
+				/// The proper <see cref="Encoding"/>, or `null` if the encoding
+				/// is either unrecognized or "Detect Unicode endianness from byte
+				/// order marker."
+				/// </returns>
+				public static Encoding TryGetEncoding(byte enc) {
+					switch (enc) {
+						case 0x00:
+							return ISO88591;
+						case 0x01:
+						default:
+							return null;
+						case 0x02:
+							return Encoding.BigEndianUnicode;
+						case 0x03:
+							return Encoding.UTF8;
+					}
+				}
+
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the fallback <see cref="TagField.Name"/>.
@@ -219,11 +270,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public FieldBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding = null, ResourceAccessor defaultName = null, ResourceManager resources = null) {
-					SystemName = name;
-					Length = length;
-					TryGetEncoding = tryGetEncoding;
+				public FieldBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null) {
+					Header = header;
 					// Ensure that the delegate will always be assigned some
 					// callable function
 					DefaultName = defaultName ?? (() => null);
@@ -233,7 +281,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
-				public override byte[] SystemName { get; }
+				public override byte[] SystemName =>
+					Header.Take(4).ToArray();
 
 				/// <summary>
 				/// The version-specific resources to use for string lookups.
@@ -260,6 +309,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					 * XSOT: "Title sort order (alternate)"
 					 */
 					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
+						?? Strings.ID3v23Plus.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName))
 						?? DefaultName()
 						?? base.Name;
 
@@ -288,19 +338,21 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					}
 				}
 
+				public override int Length {
+					get => V3PlusField<TVersion>.LengthFromHeader(Header);
+					protected set { }
+				}
+
 				/// <summary>
-				/// Convert a ID3v2 byte representation of an encoding into
-				/// the proper <see cref="Encoding"/> object.
+				/// Perform field-specific parsing after the required common
+				/// parsing has been handled.
 				/// </summary>
 				/// 
-				/// <param>The encoding-identification byte.</param>
-				/// 
-				/// <returns>
-				/// The proper <see cref="Encoding"/>, or `null` if the encoding
-				/// is either unrecognized or "Detect Unicode endianness from byte
-				/// order marker."
-				/// </returns>
-				protected Func<byte, Encoding> TryGetEncoding { get; }
+				/// <remarks>
+				/// This will typically be used to cache expensive computations or
+				/// to set a field for <see cref="TagField.HasHiddenData"/>.
+				/// </remarks>
+				public virtual void ParseData() { }
 			}
 
 			/// <summary>
@@ -313,17 +365,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Identifier             (up to 64 bytes binary data)
 			/// </c>
 			/// </remarks>
-			public class UniqueFileIdBase : FieldBase {
+			internal class UniqueFileIdBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -334,9 +381,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UniqueFileIdBase(byte[] name, int length,
-						ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, defaultName:defaultName, resources:resources) { }
+				public UniqueFileIdBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
 				/// The database with which this ID is associated.
@@ -389,21 +435,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Information            (text string according to encoding)
 			/// </c>
 			/// </remarks>
-			public class TextFrameBase : FieldBase {
+			internal class TextFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -414,9 +451,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TextFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Text)), resources) { }
+				public TextFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Text)), resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -540,21 +576,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// A frame containing a number that may optionally be followed by
 			/// a total count (eg. "Track 5 of 13").
 			/// </summary>
-			public class OfNumberFrameBase : TextFrameBase {
+			internal class OfNumberFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -565,9 +592,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public OfNumberFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Number)), resources) { }
+				public OfNumberFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Number)), resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -611,21 +637,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing the ISRC of the recording.
 			/// </summary>
-			public class IsrcFrameBase : TextFrameBase {
+			internal class IsrcFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -636,9 +653,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public IsrcFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
+				public IsrcFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
 
 
 				/// <summary>
@@ -661,21 +677,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// TODO: This is a good candidate for allowing multiple subtitles
 			/// in some form.
 			/// </remarks>
-			public class ListMappingFrameBase : TextFrameBase {
+			internal class ListMappingFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -686,9 +693,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public ListMappingFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
+				public ListMappingFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
 
 
 				/// <summary>
@@ -722,21 +728,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing a length of time, in milliseconds.
 			/// </summary>
-			public class MsFrameBase : TextFrameBase {
+			internal class MsFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -747,9 +744,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public MsFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public MsFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -769,21 +765,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing the musical key.
 			/// </summary>
-			public class KeyFrameBase : TextFrameBase {
+			internal class KeyFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -794,9 +781,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public KeyFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public KeyFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -825,21 +811,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing the language(s) sung/spoken.
 			/// </summary>
-			public class LanguageFrameBase : TextFrameBase {
+			internal class LanguageFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -850,9 +827,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public LanguageFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public LanguageFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -881,21 +857,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <c>CODE</c> is the string value. In both, the characters
 			/// <c>/</c> and <c>.</c> will be replaced with <c>_</c>
 			/// </remarks>
-			public class ResourceFrameBase : TextFrameBase {
+			internal class ResourceFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -906,9 +873,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public ResourceFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public ResourceFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -936,21 +902,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// header of the field, with the characters <c>/</c> and <c>.</c>
 			/// replaced by <c>_</c>
 			/// </remarks>
-			public class ResourceValueFrameBase : TextFrameBase {
+			internal class ResourceValueFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -961,9 +918,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public ResourceValueFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public ResourceValueFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -981,21 +937,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// A frame containing a timestamp.
 			/// </summary>
-			public class TimeFrameBase : TextFrameBase {
+			internal class TimeFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1006,9 +953,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TimeFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public TimeFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1068,21 +1014,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Value                  (text string according to encoding)
 			/// </c>
 			/// </remarks>
-			public class UserTextFrameBase : TextFrameBase {
+			internal class UserTextFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1093,9 +1030,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UserTextFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public UserTextFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1119,17 +1055,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// URL                    (text string)
 			/// </c>
 			/// </remarks>
-			public class UrlFrameBase : FieldBase {
+			internal class UrlFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1140,9 +1071,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UrlFrameBase(byte[] name, int length,
-						ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, defaultName:(defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources:resources) { }
+				public UrlFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName:(defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources:resources) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -1175,7 +1105,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						data = data.Take(read).ToArray();
 
 					// Discard everything after the first null
-					url = TextFrameBase.SplitStrings(data, ISO88591, 2).FirstOrDefault();
+					url = TextFrameBase<TVersion>.SplitStrings(data, ISO88591, 2).FirstOrDefault();
 				}
 			}
 
@@ -1190,21 +1120,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// URL                    (text string)
 			/// </c>
 			/// </remarks>
-			public class UserUrlFrameBase : FieldBase {
+			internal class UserUrlFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1215,9 +1136,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public UserUrlFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
+				public UserUrlFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1269,12 +1189,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					var encoding = TryGetEncoding(data[0]);
 
 					// Retrieve the description according to its encoding
-					var split = TextFrameBase.SplitStrings(data.Skip(1).ToArray(), encoding, 2);
+					var split = TextFrameBase<TVersion>.SplitStrings(data.Skip(1).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 
 					// Get the URL in ISO-8859-1 from the end of the string
 					var remainder = encoding.GetBytes(split.ElementAtOrDefault(1));
-					url = TextFrameBase.SplitStrings(remainder, ISO88591, 2).FirstOrDefault();
+					url = TextFrameBase<TVersion>.SplitStrings(remainder, ISO88591, 2).FirstOrDefault();
 				}
 			}
 
@@ -1291,21 +1211,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Lyrics/text            (full text string according to encoding)
 			/// </c>
 			/// </remarks>
-			public class LongTextFrameBase : FieldBase {
+			internal class LongTextFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1316,9 +1227,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public LongTextFrameBase(byte[] name, int length,
-						Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
+				public LongTextFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Url)), resources) { }
 
 				/// <summary>
 				/// The description of the contained values.
@@ -1394,7 +1304,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					language = ISO88591.GetString(data.ToList().GetRange(1, 3).ToArray());
 
 					// Retrieve the other contents according to their encoding
-					var split = TextFrameBase.SplitStrings(data.Skip(4).ToArray(), encoding, 2);
+					var split = TextFrameBase<TVersion>.SplitStrings(data.Skip(4).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 					text = split.ElementAtOrDefault(1);
 				}
@@ -1413,21 +1323,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Picture data           (binary data)
 			/// </c>
 			/// </remarks>
-			public class PictureFieldBase : FieldBase {
+			internal class PictureFieldBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				/// <param name="tryGetEncoding">
-				/// The proper mapping of encoding-identification byte to
-				/// <see cref="Encoding"/> object.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1438,9 +1339,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public PictureFieldBase(byte[] name, int length,
-					Func<byte, Encoding> tryGetEncoding, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, tryGetEncoding, defaultName, resources) { }
+				public PictureFieldBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName, resources) { }
 
 				/// <summary>
 				/// What is depicted by the image.
@@ -1521,7 +1421,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					}
 					var descriptionArray = read.ToArray();
 					if (encoding == null)
-						description = TextFrameBase.ReadFromByteOrderMark(descriptionArray);
+						description = TextFrameBase<TVersion>.ReadFromByteOrderMark(descriptionArray);
 					else
 						description = encoding.GetString(descriptionArray);
 
@@ -1542,17 +1442,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Counter                $xx xx xx xx [xx ...]
 			/// </c>
 			/// </remarks>
-			public class CountFrameBase : FieldBase {
+			internal class CountFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="FieldBase.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -1563,9 +1458,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public CountFrameBase(byte[] name, int length,
-						ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(name, length, defaultName:defaultName, resources:resources) { }
+				public CountFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
 				/// The value contained by this field.

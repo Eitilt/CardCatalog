@@ -690,6 +690,8 @@
             This -- rather than just parameters derived from it -- is included
             for transparency.
             </remarks>
+            
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Data"/>
         </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Data">
             <summary>

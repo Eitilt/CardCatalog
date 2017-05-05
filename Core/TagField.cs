@@ -37,6 +37,8 @@ namespace AgEitilt.CardCatalog {
 		/// This -- rather than just parameters derived from it -- is included
 		/// for transparency.
 		/// </remarks>
+		/// 
+		/// <seealso cref="Data"/>
 		public virtual byte[] Header { get; protected set; }
 
 		/// <summary>

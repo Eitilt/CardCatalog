@@ -23,12 +23,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// field classes in the inheritance hierarchy in order for the type
 		/// registration to recognize the <see cref="HeaderParserAttribute"/>.
 		/// </remarks>
-		public abstract class V3Field : V3PlusField<V3Field.V3VersionInfo> {
+		public abstract class V3Field : V3PlusField<V3Field.VersionInfo> {
 			/// <summary>
 			/// Behaviours required for field initialization, specific to a
 			/// particular version of the ID3v2 standard.
 			/// </summary>
-			public class V3VersionInfo : VersionInfo {
+			public class VersionInfo : ID3v23Plus.VersionInfo {
 				/// <summary>
 				/// The unique identifier for this version.
 				/// </summary>
@@ -133,7 +133,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						group = (byte)b;
 				}
 
-				ParseData(stream);
+				ParseData();
 			}
 		}
 
@@ -144,7 +144,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			//TODO: TCON, TDAT, TIME, TORY, TRDA, TSIZ, TYER, RVAD, EQUA
 
 			/// <summary>
-			/// A wrapper around an arbitrary <see cref="FieldBase"/>
+			/// A wrapper around an arbitrary <see cref="FieldBase{TVersion}"/>
 			/// implementation.
 			/// </summary>
 			/// 
@@ -158,19 +158,41 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The core behaviour for this field.
 				/// </summary>
-				protected FieldBase fieldBase;
+				internal FieldBase<VersionInfo> fieldBase;
 
 				/// <summary>
-				/// The constructor required by
-				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-				/// This should not be called manually.
+				/// Initialize the wrapped <see cref="FieldBase{TVersion}"/>
+				/// instance.
 				/// </summary>
 				/// 
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				public V3FieldWrapper(FieldBase inner) =>
+				internal V3FieldWrapper(FieldBase<VersionInfo> inner) =>
 					fieldBase = inner;
+
+				/// <summary>
+				/// The raw data making up this field's header.
+				/// </summary>
+				/// 
+				/// <seealso cref="Data"/>
+				public override byte[] Header {
+					get => fieldBase.Header;
+					protected set { }
+				}
+
+				/// <summary>
+				/// The raw data contained by this field, including any that would not
+				/// be displayed by <see cref="Values"/>.
+				/// </summary>
+				/// 
+				/// <seealso cref="Header"/>
+				/// <seealso cref="Values"/>
+				/// <seealso cref="HasHiddenData"/>
+				public override byte[] Data {
+					get => fieldBase.Data;
+					protected set { }
+				}
 
 				/// <summary>
 				/// The byte header used to internally identify the field.
@@ -191,68 +213,36 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					fieldBase.Subtitle;
 
 				/// <summary>
+				/// The length in bytes of the data contained in the field (excluding
+				/// the header).
+				/// </summary>
+				public override int Length {
+					get => fieldBase.Length;
+					protected set { }
+				}
+
+				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
+				/// 
+				/// <seealso cref="Data"/>
+				/// <see cref="HasHiddenData"/>
 				public override IEnumerable<object> Values =>
 					fieldBase.Values;
+
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					fieldBase.HasHiddenData;
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				protected override void ParseData(Stream stream) =>
-					fieldBase.Parse(stream);
-
-				/// <summary>
-				/// Convert a ID3v2 byte representation of an encoding into the
-				/// proper <see cref="Encoding"/> object.
-				/// </summary>
-				/// 
-				/// <param name="enc">The encoding-identification byte.</param>
-				/// 
-				/// <returns>
-				/// The proper <see cref="Encoding"/>, or `null` if the encoding
-				/// is either unrecognized or "Detect Unicode endianness from byte
-				/// order marker."
-				/// </returns>
-				public static Encoding TryGetEncoding(byte enc) {
-					switch (enc) {
-						case 0x00:
-							return ISO88591;
-						case 0x02:
-							return Encoding.BigEndianUnicode;
-						case 0x03:
-							return Encoding.UTF8;
-						default:
-							return null;
-					}
-				}
-
-				/// <summary>
-				/// Determines whether a field has a title specific to v2.3.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// While some tags were deprecated in ID3v2.4, many of those
-				/// are still defined in <c>ID3v23Plus.resx</c> in order to
-				/// support tag writers that still used the old fields.
-				/// </remarks>
-				/// 
-				/// <param name="name">
-				/// The unique header of the field to check.
-				/// </param>
-				/// 
-				/// <returns>
-				/// Whether the field title is defined in <c>ID3v23.resx</c>.
-				/// </returns>
-				protected static bool IsLocalTitle(byte[] name) {
-					switch (ISO88591.GetString(name)) {
-						default:
-							return false;
-					}
-				}
+				protected override void ParseData() =>
+					fieldBase.ParseData();
 			}
 
 			/// <summary>
@@ -268,20 +258,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			[TagField("UFID")]
 			public class UniqueFileId : V3FieldWrapper {
 				/// <summary>
-				/// The constructor required to properly initialize the inner
-				/// implementation of the <see cref="V3FieldWrapper"/>.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
 				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public UniqueFileId(byte[] name, int length)
-					: base(new UniqueFileIdBase(name, length)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public UniqueFileId(byte[] header)
+					: base(new UniqueFileIdBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -347,6 +332,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
@@ -358,14 +344,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// want to target.
 				/// </remarks>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public TextFrame(byte[] name, int length)
-					: this(name, length, null) { }
+				/// <param name="header">The binary header to parse.</param>
+				public TextFrame(byte[] header)
+					: this(header, null) { }
+
 				/// <summary>
 				/// The constructor required to properly initialize the inner
 				/// implementation of the <see cref="V3FieldWrapper"/>.
@@ -373,12 +355,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Used when the inheriting field does not exist in ID3v2.3.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
+				/// <param name="header">The binary header to parse.</param>
 				/// <param name="defaultName">
 				/// The name to use if no more specific one is found, or
 				/// <c>null</c> to use the default name as specified in the
@@ -389,8 +366,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public TextFrame(byte[] name, int length, FieldBase.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
-					: base(new TextFrameBase(name, length, TryGetEncoding, defaultName, (IsLocalTitle(name) ? Strings.ID3v24.ResourceManager : resources))) { }
+				internal TextFrame(byte[] header, FieldBase<VersionInfo>.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
+					: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }
 
 				/// <summary>
 				/// The constructor required to properly initialize the inner
@@ -402,7 +379,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				public TextFrame(TextFrameBase inner) : base(inner) { }
+				internal TextFrame(TextFrameBase<VersionInfo> inner) : base(inner) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -422,7 +399,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// to <see cref="Values"/>.
 				/// </remarks>
 				protected IEnumerable<string> StringValues =>
-					(fieldBase as TextFrameBase)?.StringValues;
+					(fieldBase as TextFrameBase<VersionInfo>)?.StringValues;
 			}
 
 			/// <summary>
@@ -435,17 +412,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public OfNumberFrame(byte[] name, int length)
-					: base(new OfNumberFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public OfNumberFrame(byte[] header)
+					: base(new OfNumberFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -456,17 +429,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public IsrcFrame(byte[] name, int length)
-					: base(new IsrcFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public IsrcFrame(byte[] header)
+					: base(new IsrcFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -478,17 +447,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public MsFrame(byte[] name, int length)
-					: base(new MsFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public MsFrame(byte[] header)
+					: base(new MsFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -499,17 +464,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public KeyFrame(byte[] name, int length)
-					: base(new KeyFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public KeyFrame(byte[] header)
+					: base(new KeyFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -520,17 +481,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public LanguageFrame(byte[] name, int length)
-					: base(new LanguageFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public LanguageFrame(byte[] header)
+					: base(new LanguageFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -553,17 +510,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public ResourceFrame(byte[] name, int length)
-					: base(new ResourceFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public ResourceFrame(byte[] header)
+					: base(new ResourceFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -585,17 +538,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public ResourceValueFrame(byte[] name, int length)
-					: base(new ResourceValueFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public ResourceValueFrame(byte[] header)
+					: base(new ResourceValueFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -614,17 +563,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public UserTextFrame(byte[] name, int length)
-					: base(new UserTextFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public UserTextFrame(byte[] header)
+					: base(new UserTextFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -664,17 +609,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public UrlFrame(byte[] name, int length)
-					: base(new UrlFrameBase(name, length)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public UrlFrame(byte[] header)
+					: base(new UrlFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -693,17 +634,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public UserUrlFrame(byte[] name, int length)
-					: base(new UserUrlFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public UserUrlFrame(byte[] header)
+					: base(new UserUrlFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -721,17 +658,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public ListMappingFrame(byte[] name, int length)
-					: base(new ListMappingFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public ListMappingFrame(byte[] header)
+					: base(new ListMappingFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -753,17 +686,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public LongTextFrame(byte[] name, int length)
-					: base(new LongTextFrameBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public LongTextFrame(byte[] header)
+					: base(new LongTextFrameBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -784,17 +713,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public PictureField(byte[] name, int length)
-					: base(new PictureFieldBase(name, length, TryGetEncoding)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public PictureField(byte[] header)
+					: base(new PictureFieldBase<VersionInfo>(header)) { }
 			}
 
 			/// <summary>
@@ -811,17 +736,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <param name="name">
-				/// The value to save to <see cref="TagField.SystemName"/>.
-				/// </param>
-				/// <param name="length">
-				/// The value to save to <see cref="TagField.Length"/>.
-				/// </param>
-				public CountFrame(byte[] name, int length)
-					: base(new CountFrameBase(name, length)) { }
+				/// <param name="header">The binary header to parse.</param>
+				public CountFrame(byte[] header)
+					: base(new CountFrameBase<VersionInfo>(header)) { }
 			}
 		}
 	}
