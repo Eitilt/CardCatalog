@@ -36,7 +36,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override string FormatName => format;
 
 				/// <summary>
-				/// The number of data bits used in the header field size bytes.
+				/// The number of data bits used in the header field size
+				/// bytes.
 				/// </summary>
 				public override uint FieldSizeBits => 7;
 
@@ -53,8 +54,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					if (field == null)
 						return;
 
-					// Store this now, but it needs to be parsed when we get the
-					// rest of the data
+					// Store this now, but it needs to be parsed when we get
+					// the rest of the data
 					field.Flags = new BitArray(header.Skip(8).ToArray());
 					field.FlagUnknown = field.Flags.And(new BitArray(new byte[2] { 0b10001111, 0b10110000 })).Cast<bool>().Any();
 				}
@@ -108,37 +109,26 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// 
 			/// <param name="stream">The data to read.</param>
 			public sealed override void Parse(Stream stream) {
-				bool localStream = false;
+				base.Parse(stream);
+
+				int extraHeaderBytes = 0;
 
 				// Unsynchronization
 				/* Implied to affect the flag data bytes, unlike the
 				 * compression and encryption, so do it first
 				 */
-				if (Flags[14]) {
-					var bytes = new byte[Length];
-					int read = stream.ReadAll(bytes, 0, Length);
-
-					if (read < Length)
-						bytes = bytes.Take(read).ToArray();
-
-#pragma warning disable DisposableFixer // Disposed in non-system detectable manner
-					localStream = true;
-					stream = new MemoryStream(DeUnsynchronize(bytes));
-#pragma warning restore DisposableFixer
-				}
+				if (Flags[14])
+					Data = DeUnsynchronize(Data.Skip(extraHeaderBytes).ToArray());
 
 				// Grouping
 				/* Need to check the flag directly, as the property looks at
 				 * `group` instead
 				 */
 				if (Flags[9]) {
-					int b = stream.ReadByte();
-					++extraHeaderBytes;
+					group = Data[extraHeaderBytes];
+					Header = Header.Concat(new byte[1] { Data[extraHeaderBytes] }).ToArray();
 
-					if (b >= 0) {
-						group = (byte)b;
-						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
-					}
+					++extraHeaderBytes;
 				}
 
 				// Compression
@@ -148,38 +138,23 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				//TODO: Parse according to the ENCR frame
 				byte? encryption = null;
 				if (IsFieldEncrypted) {
-					int b = stream.ReadByte();
-					++extraHeaderBytes;
+					encryption = Data[extraHeaderBytes];
+					Header = Header.Concat(new byte[1] { Data[extraHeaderBytes] }).ToArray();
 
-					if (b >= 0) {
-						encryption = (byte)b;
-						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
-					}
+					++extraHeaderBytes;
 				}
 
 				// Data length; this may come into play in decompression and
 				// decryption, but we currently have no use for it
 				if (Flags[15]) {
-					int dataLength;
+					var bytes = Data.Skip(extraHeaderBytes).Take(4);
 
-					var bytes = new byte[4];
-					if (stream.ReadAll(bytes, 0, 4) == 4)
-						dataLength = (int)ParseUnsignedInteger(bytes);
-
+					var dataLength = (int)ParseUnsignedInteger(bytes);
 					Header = Header.Concat(bytes).ToArray();
 				}
 
-				var data = new byte[Length];
-				int readData = stream.ReadAll(data, 0, Length);
-				if (readData < Length)
-					Data = data.Take(readData).ToArray();
-				else
-					Data = data;
-
+				Data = Data.Skip(extraHeaderBytes).ToArray();
 				ParseData();
-
-				if (localStream)
-					stream.Dispose();
 			}
 		}
 
@@ -228,8 +203,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
-				/// The raw data contained by this field, including any that would not
-				/// be displayed by <see cref="Values"/>.
+				/// The raw data contained by this field, including any that
+				/// would not be displayed by <see cref="Values"/>.
 				/// </summary>
 				/// 
 				/// <seealso cref="Header"/>
@@ -259,8 +234,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					fieldBase.Subtitle;
 
 				/// <summary>
-				/// The length in bytes of the data contained in the field (excluding
-				/// the header).
+				/// The length in bytes of the data contained in the field
+				/// (excluding the header).
 				/// </summary>
 				public override int Length =>
 					fieldBase.Length;
@@ -275,8 +250,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					fieldBase.Values;
 
 				/// <summary>
-				/// Indicates whether this field includes data not displayed by
-				/// <see cref="Values"/>.
+				/// Indicates whether this field includes data not displayed
+				/// by <see cref="Values"/>.
 				/// </summary>
 				public override bool HasHiddenData =>
 					fieldBase.HasHiddenData;
@@ -287,562 +262,556 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				protected override void ParseData() =>
 					fieldBase.ParseData();
+			}
 
+			/// <summary>
+			/// An identifier unique to a particular database.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Owner identifier       (text string) $00
+			/// Identifier             (up to 64 bytes binary data)
+			/// </c>
+			/// </remarks>
+			[TagField("UFID")]
+			public class UniqueFileId : V4FieldWrapper {
 				/// <summary>
-				/// An identifier unique to a particular database.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Owner identifier       (text string) $00
-				/// Identifier             (up to 64 bytes binary data)
-				/// </c>
-				/// </remarks>
-				[TagField("UFID")]
-				public class UniqueFileId : V4FieldWrapper {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public UniqueFileId(byte[] header)
-						: base(new UniqueFileIdBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// Any of the many tags containing purely textual data.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Text encoding          $xx
-				/// Information            (text string according to encoding)
-				/// </c>
-				/// </remarks>
-				[TagField]
-				[TagField("XSOA")]
-				[TagField("XSOP")]
-				[TagField("XSOT")]
-				public class TextFrame : V4FieldWrapper {
-					/// <summary>
-					/// Generate all text field headers that aren't handled by
-					/// other specialized classes.
-					/// </summary>
-					/// 
-					/// <returns>
-					/// The field headers using default text formatting.
-					/// </returns>
-					[FieldNames]
-					public static IEnumerable<byte[]> NameGenerator() {
-						foreach (char b in HeaderChars) {
-							foreach (char c in HeaderChars) {
-								foreach (char d in HeaderChars) {
-									// Individually-handled text tags
-									switch (new string(new char[3] { b, c, d })) {
-										case "CMP":  // Unofficial: iTunes Compilation
-										case "CON":  // Genre
-										case "COP":  // Copyright
-										case "DEN":  // Encoding date
-										case "DLY":  // Playlist delay
-										case "DOR":  // Original release date
-										case "DRC":  // Recording date         (de-facto: "Release date")
-										case "DRL":  // Release date
-										case "DTG":  // Tagging date
-										case "FLT":  // Audio encoding
-										case "IPL":  // Production credits
-										case "LAN":  // Language
-										case "LEN":  // Length
-										case "KEY":  // Key
-										case "MCL":  // Performer credits
-										case "MED":  // Original medium
-										case "POS":  // Disk number
-										case "PRO":  // Production copyright
-										case "RCK":  // Track number
-										case "SRC":  // Recording ISRC
-										case "XXX":  // (User text field)
-											continue;
-										default:
-											yield return new byte[4] { (byte)'T', (byte)b, (byte)c, (byte)d };
-											break;
-									}
-								}
-							}
-						}
-					}
-
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <remarks>
-					/// In order to properly use reflection, cannot solely use
-					/// the version with a default parameter, as that can only be
-					/// found with <see cref="System.Reflection.BindingFlags"/>
-					/// introduced in .NETStandard 1.5, which is higher than I
-					/// want to target.
-					/// </remarks>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public TextFrame(byte[] header)
-						: this(header, null) { }
-
-					/// <summary>
-					/// The constructor required to properly initialize the inner
-					/// implementation of the <see cref="V4FieldWrapper"/>.
-					/// <para/>
-					/// Used when the inheriting field does not exist in ID3v2.3.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					/// <param name="defaultName">
-					/// The name to use if no more specific one is found, or
-					/// <c>null</c> to use the default name as specified in the
-					/// resources.
-					/// </param>
-					/// <param name="resources">
-					/// The resources to use when looking up dynamic strings, or
-					/// <c>null</c> to use the default
-					/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
-					/// </param>
-					internal TextFrame(byte[] header, FieldBase<VersionInfo>.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
-						: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }
-
-					/// <summary>
-					/// The constructor required to properly initialize the inner
-					/// implementation of the <see cref="V4FieldWrapper"/>.
-					/// <para/>
-					/// Used when the content behaviour is shared with ID3v2.3.
-					/// </summary>
-					/// 
-					/// <param name="inner">
-					/// The underlying implementation to redirect calls to.
-					/// </param>
-					internal TextFrame(TextFrameBase<VersionInfo> inner) : base(inner) { }
-
-					/// <summary>
-					/// All strings contained within this field, still unboxed.
-					/// </summary>
-					protected IEnumerable<string> StringValues =>
-						(fieldBase as TextFrameBase<VersionInfo>)?.StringValues;
-				}
-
-				/// <summary>
-				/// A frame containing a number that may optionally be followed by
-				/// a total count (eg. "Track 5 of 13").
-				/// </summary>
-				[TagField("TPOS")]
-				[TagField("TRCK")]
-				public class OfNumberFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public OfNumberFrame(byte[] header)
-						: base(new OfNumberFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing the ISRC of the recording.
-				/// </summary>
-				[TagField("TSRC")]
-				public class IsrcFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public IsrcFrame(byte[] header)
-						: base(new IsrcFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing a mapping of role to person, or similar.
-				/// </summary>
-				[TagField("TIPL")]
-				[TagField("TMCL")]
-				public class ListMappingFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public ListMappingFrame(byte[] header)
-						: base(new ListMappingFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing a length of time, in milliseconds.
-				/// </summary>
-				[TagField("TDLY")]
-				[TagField("TLEN")]
-				public class MsFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public MsFrame(byte[] header)
-						: base(new MsFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing the musical key.
-				/// </summary>
-				[TagField("TKEY")]
-				public class KeyFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public KeyFrame(byte[] header)
-						: base(new KeyFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing the language(s) sung/spoken.
-				/// </summary>
-				[TagField("TLAN")]
-				public class LanguageFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public LanguageFrame(byte[] header)
-						: base(new LanguageFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing the genre.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// While similar to the ID3v2.3 tag, the syntax is sufficiently
-				/// different to make it not worth sharing code. The resources,
-				/// however, may still be shared.
-				/// </remarks>
-				[TagField("TCON")]
-				public class GenreFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public GenreFrame(byte[] header)
-						: base(header) { }
-
-					/// <summary>
-					/// All values contained within this field.
-					/// </summary>
-					/// 
-					/// <remarks>
-					/// TODO: Split "Remix" and "Cover" into separately-displayed
-					/// field; likely same fix as <see cref="ListMappingFrame"/>.
-					/// </remarks>
-					public override IEnumerable<object> Values {
-						get {
-							foreach (var s in StringValues) {
-								if (s.Equals("RX"))
-									yield return Strings.ID3v23Plus.Field_TCON_RX;
-								else if (s.Equals("CR"))
-									yield return Strings.ID3v23Plus.Field_TCON_CR;
-								else if (s.All(char.IsDigit) && (s.Length <= 3)) {
-									/* Given that everything is a digit and the
-									 * length is capped, Parse is guaranteed to
-									 * not throw an exception with the larger
-									 * datatype.
-									 */
-									var num = uint.Parse(s);
-									if (num > byte.MaxValue)
-										yield return s;
-									else
-										yield return ((ID3v1.Genre)num).PrintableName();
-								} else
-									yield return s;
-							}
-						}
-					}
-				}
-
-				/// <summary>
-				/// A frame containing codes to look up from the resource files.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// If no matching string is found, the code/string will be
-				/// displayed according to the standard "Unrecognized" format.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
 				/// <para/>
-				/// The resource key must fit the pattern <c>Field_HEADER_CODE</c>
-				/// where <c>HEADER</c> is the unique header of the field and
-				/// <c>CODE</c> is the string value. In both, the characters
-				/// <c>/</c> and <c>.</c> will be replaced with <c>_</c>
-				/// </remarks>
-				[TagField("TCMP")]
-				[TagField("TFLT")]
-				[TagField("TMED")]
-				public class ResourceFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public ResourceFrame(byte[] header)
-						: base(new ResourceFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// A frame containing codes to look up from the resource files.
+				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// If no matching string is found, the code/string will be
-				/// displayed according to the standard "Unrecognized" format.
-				/// <para/>
-				/// The resource key must fit the pattern
-				/// <c>Field_HEADER_Value</c> where <c>HEADER</c> is the unique
-				/// header of the field, with the characters <c>/</c> and <c>.</c>
-				/// replaced by <c>_</c>
-				/// </remarks>
-				[TagField("TCOP")]
-				[TagField("TPRO")]
-				public class ResourceValueFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public ResourceValueFrame(byte[] header)
-						: base(new ResourceValueFrameBase<VersionInfo>(header)) { }
-				}
+				/// <param name="header">The binary header to parse.</param>
+				public UniqueFileId(byte[] header)
+					: base(new UniqueFileIdBase<VersionInfo>(header)) { }
+			}
 
+			/// <summary>
+			/// Any of the many tags containing purely textual data.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Information            (text string according to encoding)
+			/// </c>
+			/// </remarks>
+			[TagField]
+			[TagField("XSOA")]
+			[TagField("XSOP")]
+			[TagField("XSOT")]
+			public class TextFrame : V4FieldWrapper {
 				/// <summary>
-				/// A frame containing a timestamp.
-				/// </summary>
-				[TagField("TDEN")]
-				[TagField("TDOR")]
-				[TagField("TDRC")]
-				[TagField("TDRL")]
-				[TagField("TDTG")]
-				public class TimeFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public TimeFrame(byte[] header)
-						: base(new TimeFrameBase<VersionInfo>(header, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager)) { }
-				}
-
-				/// <summary>
-				/// A frame containing encoder-defined text.
+				/// Generate all text field headers that aren't handled by
+				/// other specialized classes.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Text encoding          $xx
-				/// Description            (text string according to encoding) $00 [00]
-				/// Value                  (text string according to encoding)
-				/// </c>
-				/// </remarks>
-				[TagField("TXXX")]
-				public class UserTextFrame : TextFrame {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public UserTextFrame(byte[] header)
-						: base(new UserTextFrameBase<VersionInfo>(header)) { }
-				}
-
-				/// <summary>
-				/// Any frame containing a URL.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// URL                    (text string)
-				/// </c>
-				/// </remarks>
-				[TagField]
-				public class UrlFrame : V4FieldWrapper {
-					/// <summary>
-					/// Generate all text field headers that aren't handled by
-					/// other specialized classes.
-					/// </summary>
-					/// 
-					/// <returns>
-					/// The field headers using default text formatting.
-					/// </returns>
-					[FieldNames]
-					public static IEnumerable<byte[]> NameGenerator() {
-						foreach (char b in HeaderChars) {
-							foreach (char c in HeaderChars) {
-								foreach (char d in HeaderChars) {
-									// Individually-handled URL tag
-									if ((b == 'X') && (c == 'X') && (d == 'X'))
+				/// <returns>
+				/// The field headers using default text formatting.
+				/// </returns>
+				[FieldNames]
+				public static IEnumerable<byte[]> NameGenerator() {
+					foreach (char b in HeaderChars) {
+						foreach (char c in HeaderChars) {
+							foreach (char d in HeaderChars) {
+								// Individually-handled text tags
+								switch (new string(new char[3] { b, c, d })) {
+									case "CMP":  // Unofficial: iTunes Compilation
+									case "CON":  // Genre
+									case "COP":  // Copyright
+									case "DEN":  // Encoding date
+									case "DLY":  // Playlist delay
+									case "DOR":  // Original release date
+									case "DRC":  // Recording date         (de-facto: "Release date")
+									case "DRL":  // Release date
+									case "DTG":  // Tagging date
+									case "FLT":  // Audio encoding
+									case "IPL":  // Production credits
+									case "LAN":  // Language
+									case "LEN":  // Length
+									case "KEY":  // Key
+									case "MCL":  // Performer credits
+									case "MED":  // Original medium
+									case "POS":  // Disk number
+									case "PRO":  // Production copyright
+									case "RCK":  // Track number
+									case "SRC":  // Recording ISRC
+									case "XXX":  // (User text field)
 										continue;
-									else
-										yield return new byte[4] { (byte)'W', (byte)b, (byte)c, (byte)d };
+									default:
+										yield return new byte[4] { (byte)'T', (byte)b, (byte)c, (byte)d };
+										break;
 								}
 							}
 						}
 					}
-
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public UrlFrame(byte[] header)
-						: base(new UrlFrameBase<VersionInfo>(header)) { }
 				}
 
 				/// <summary>
-				/// A frame containing an encoder-defined URL.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public TextFrame(byte[] header)
+					: this(header, null) { }
+
+				/// <summary>
+				/// The constructor required to properly initialize the inner
+				/// implementation of the
+				/// <see cref="V4FieldWrapper"/>.
+				/// <para/>
+				/// Used when the inheriting field does not exist in ID3v2.3.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				/// <param name="defaultName">
+				/// The name to use if no more specific one is found, or
+				/// <c>null</c> to use the default name as specified in the
+				/// resources.
+				/// </param>
+				/// <param name="resources">
+				/// The resources to use when looking up dynamic strings, or
+				/// <c>null</c> to use the default
+				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// </param>
+				internal TextFrame(byte[] header, FieldBase<VersionInfo>.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
+					: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }
+
+				/// <summary>
+				/// The constructor required to properly initialize the inner
+				/// implementation of the <see cref="V4FieldWrapper"/>.
+				/// <para/>
+				/// Used when the content behaviour is shared with ID3v2.3.
+				/// </summary>
+				/// 
+				/// <param name="inner">
+				/// The underlying implementation to redirect calls to.
+				/// </param>
+				internal TextFrame(TextFrameBase<VersionInfo> inner) : base(inner) { }
+
+				/// <summary>
+				/// All strings contained within this field, still unboxed.
+				/// </summary>
+				protected IEnumerable<string> StringValues =>
+					(fieldBase as TextFrameBase<VersionInfo>)?.StringValues;
+			}
+
+			/// <summary>
+			/// A frame containing a number that may optionally be followed
+			/// by a total count (eg. "Track 5 of 13").
+			/// </summary>
+			[TagField("TPOS")]
+			[TagField("TRCK")]
+			public class OfNumberFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public OfNumberFrame(byte[] header)
+					: base(new OfNumberFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing the ISRC of the recording.
+			/// </summary>
+			[TagField("TSRC")]
+			public class IsrcFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public IsrcFrame(byte[] header)
+					: base(new IsrcFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing a mapping of role to person, or similar.
+			/// </summary>
+			[TagField("TIPL")]
+			[TagField("TMCL")]
+			public class ListMappingFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public ListMappingFrame(byte[] header)
+					: base(new ListMappingFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing a length of time, in milliseconds.
+			/// </summary>
+			[TagField("TDLY")]
+			[TagField("TLEN")]
+			public class MsFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public MsFrame(byte[] header)
+					: base(new MsFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing the musical key.
+			/// </summary>
+			[TagField("TKEY")]
+			public class KeyFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public KeyFrame(byte[] header)
+					: base(new KeyFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing the language(s) sung/spoken.
+			/// </summary>
+			[TagField("TLAN")]
+			public class LanguageFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public LanguageFrame(byte[] header)
+					: base(new LanguageFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing the genre.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// While similar to the ID3v2.3 tag, the syntax is sufficiently
+			/// different to make it not worth sharing code. The resources,
+			/// however, may still be shared.
+			/// </remarks>
+			[TagField("TCON")]
+			public class GenreFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public GenreFrame(byte[] header)
+					: base(header) { }
+
+				/// <summary>
+				/// All values contained within this field.
 				/// </summary>
 				/// 
 				/// <remarks>
-				/// Data is in the format:<c>
-				/// Text encoding          $xx
-				/// Description            (text string according to encoding) $00 [00]
-				/// URL                    (text string)
-				/// </c>
+				/// TODO: Split "Remix" and "Cover" into separately-displayed
+				/// field; likely same fix as <see cref="ListMappingFrame"/>.
 				/// </remarks>
-				[TagField("WXXX")]
-				public class UserUrlFrame : V4FieldWrapper {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public UserUrlFrame(byte[] header)
-						: base(new UserUrlFrameBase<VersionInfo>(header)) { }
+				public override IEnumerable<object> Values {
+					get {
+						foreach (var s in StringValues) {
+							if (s.Equals("RX"))
+								yield return Strings.ID3v23Plus.Field_TCON_RX;
+							else if (s.Equals("CR"))
+								yield return Strings.ID3v23Plus.Field_TCON_CR;
+							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
+								/* Given that everything is a digit and the
+								 * length is capped, `Parse` is guaranteed to
+								 * not throw an exception with the larger
+								 * datatype.
+								 */
+								var num = uint.Parse(s);
+								if (num > byte.MaxValue)
+									yield return s;
+								else
+									yield return ((ID3v1.Genre)num).PrintableName();
+							} else
+								yield return s;
+						}
+					}
+				}
+			}
+
+			/// <summary>
+			/// A frame containing codes to look up from the resource files.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// If no matching string is found, the code/string will be
+			/// displayed according to the standard "Unrecognized" format.
+			/// <para/>
+			/// The resource key must fit the pattern <c>Field_HEADER_CODE</c>
+			/// where <c>HEADER</c> is the unique header of the field and
+			/// <c>CODE</c> is the string value. In both, the characters
+			/// <c>/</c> and <c>.</c> will be replaced with <c>_</c>
+			/// </remarks>
+			[TagField("TCMP")]
+			[TagField("TFLT")]
+			[TagField("TMED")]
+			public class ResourceFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public ResourceFrame(byte[] header)
+					: base(new ResourceFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing codes to look up from the resource files.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// If no matching string is found, the code/string will be
+			/// displayed according to the standard "Unrecognized" format.
+			/// <para/>
+			/// The resource key must fit the pattern
+			/// <c>Field_HEADER_Value</c> where <c>HEADER</c> is the unique
+			/// header of the field, with the characters <c>/</c> and <c>.</c>
+			/// replaced by <c>_</c>
+			/// </remarks>
+			[TagField("TCOP")]
+			[TagField("TPRO")]
+			public class ResourceValueFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public ResourceValueFrame(byte[] header)
+					: base(new ResourceValueFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing a timestamp.
+			/// </summary>
+			[TagField("TDEN")]
+			[TagField("TDOR")]
+			[TagField("TDRC")]
+			[TagField("TDRL")]
+			[TagField("TDTG")]
+			public class TimeFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public TimeFrame(byte[] header)
+					: base(new TimeFrameBase<VersionInfo>(header, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager)) { }
+			}
+
+			/// <summary>
+			/// A frame containing encoder-defined text.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Value                  (text string according to encoding)
+			/// </c>
+			/// </remarks>
+			[TagField("TXXX")]
+			public class UserTextFrame : TextFrame {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public UserTextFrame(byte[] header)
+					: base(new UserTextFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// Any frame containing a URL.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
+			[TagField]
+			public class UrlFrame : V4FieldWrapper {
+				/// <summary>
+				/// Generate all text field headers that aren't handled by
+				/// other specialized classes.
+				/// </summary>
+				/// 
+				/// <returns>
+				/// The field headers using default text formatting.
+				/// </returns>
+				[FieldNames]
+				public static IEnumerable<byte[]> NameGenerator() {
+					foreach (char b in HeaderChars) {
+						foreach (char c in HeaderChars) {
+							foreach (char d in HeaderChars) {
+								// Individually-handled URL tag
+								if ((b == 'X') && (c == 'X') && (d == 'X'))
+									continue;
+								else
+									yield return new byte[4] { (byte)'W', (byte)b, (byte)c, (byte)d };
+							}
+						}
+					}
 				}
 
 				/// <summary>
-				/// A frame containing text with a language, a description, and
-				/// non-null-separated text.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Text encoding          $xx
-				/// Language               $xx xx xx
-				/// Content descriptor     (text string according to encoding) $00 [00]
-				/// Lyrics/text            (full text string according to encoding)
-				/// </c>
-				/// </remarks>
-				[TagField("COMM")]
-				[TagField("USLT")]
-				public class LongTextFrame : V4FieldWrapper {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public LongTextFrame(byte[] header)
-						: base(new LongTextFrameBase<VersionInfo>(header)) { }
-				}
+				/// <param name="header">The binary header to parse.</param>
+				public UrlFrame(byte[] header)
+					: base(new UrlFrameBase<VersionInfo>(header)) { }
+			}
 
+			/// <summary>
+			/// A frame containing an encoder-defined URL.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// URL                    (text string)
+			/// </c>
+			/// </remarks>
+			[TagField("WXXX")]
+			public class UserUrlFrame : V4FieldWrapper {
 				/// <summary>
-				/// An embedded image.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Text encoding          $xx
-				/// MIME type              (text string) $00
-				/// Picture type           $xx
-				/// Description            (text string according to encoding) $00 [00]
-				/// Picture data           (binary data)
-				/// </c>
-				/// </remarks>
-				[TagField("APIC")]
-				public class PictureField : V4FieldWrapper {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public PictureField(byte[] header)
-						: base(new PictureFieldBase<VersionInfo>(header)) { }
-				}
+				/// <param name="header">The binary header to parse.</param>
+				public UserUrlFrame(byte[] header)
+					: base(new UserUrlFrameBase<VersionInfo>(header)) { }
+			}
 
+			/// <summary>
+			/// A frame containing text with a language, a description, and
+			/// non-null-separated text.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// Language               $xx xx xx
+			/// Content descriptor     (text string according to encoding) $00 [00]
+			/// Lyrics/text            (full text string according to encoding)
+			/// </c>
+			/// </remarks>
+			[TagField("COMM")]
+			[TagField("USLT")]
+			public class LongTextFrame : V4FieldWrapper {
 				/// <summary>
-				/// A frame containing a single binary counter.
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// Data is in the format:<c>
-				/// Counter                $xx xx xx xx [xx ...]
-				/// </c>
-				/// </remarks>
-				[TagField("PCNT")]
-				public class CountFrame : V4FieldWrapper {
-					/// <summary>
-					/// The constructor required by
-					/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
-					/// <para/>
-					/// This should not be called manually.
-					/// </summary>
-					/// 
-					/// <param name="header">The binary header to parse.</param>
-					public CountFrame(byte[] header)
-						: base(new CountFrameBase<VersionInfo>(header)) { }
-				}
+				/// <param name="header">The binary header to parse.</param>
+				public LongTextFrame(byte[] header)
+					: base(new LongTextFrameBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// An embedded image.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Text encoding          $xx
+			/// MIME type              (text string) $00
+			/// Picture type           $xx
+			/// Description            (text string according to encoding) $00 [00]
+			/// Picture data           (binary data)
+			/// </c>
+			/// </remarks>
+			[TagField("APIC")]
+			public class PictureField : V4FieldWrapper {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public PictureField(byte[] header)
+					: base(new PictureFieldBase<VersionInfo>(header)) { }
+			}
+
+			/// <summary>
+			/// A frame containing a single binary counter.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// Data is in the format:<c>
+			/// Counter                $xx xx xx xx [xx ...]
+			/// </c>
+			/// </remarks>
+			[TagField("PCNT")]
+			public class CountFrame : V4FieldWrapper {
+				/// <summary>
+				/// The constructor required by
+				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
+				/// <para/>
+				/// This should not be called manually.
+				/// </summary>
+				/// 
+				/// <param name="header">The binary header to parse.</param>
+				public CountFrame(byte[] header)
+					: base(new CountFrameBase<VersionInfo>(header)) { }
 			}
 		}
 	}

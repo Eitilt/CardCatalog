@@ -2,12 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Text;
-
-using AgEitilt.Common.Stream.Extensions;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	public partial class ID3v23Plus {
@@ -67,6 +64,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			static byte[] padding = new byte[4] { 0x00, 0x00, 0x00, 0x00 };
 
+			/// <summary>
+			/// Determine the length of the data contained by this field,
+			/// according to the header and the version of the specification.
+			/// </summary>
+			/// 
+			/// <param name="header">The binary header to check.</param>
+			/// 
+			/// <returns>The size of the field, minus the header.</returns>
 			internal static int LengthFromHeader(byte[] header) =>
 				(int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), version.FieldSizeBits);
 
@@ -93,7 +98,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					return new TagField.Empty(headerArray, name, LengthFromHeader(headerArray));
 				}
 
-				var field = Activator.CreateInstance(fields[name], new object[1] { header.ToArray() });
+				var field = Activator.CreateInstance(fields[name], new object[1] { headerArray });
 				if (field == null)
 					return null;
 
@@ -159,17 +164,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// indicating their presence.
 			/// </remarks>
 			protected bool FlagUnknown { get; set; }
-
-			/// <summary>
-			/// The number of data bytes associated with flags in the header.
-			/// </summary>
-			/// 
-			/// <remarks>
-			/// These are included in the tag length value in the header, but
-			/// are associated with the header rather than the data in this
-			/// library.
-			/// </remarks>
-			protected int extraHeaderBytes = 0;
 
 			/// <summary>
 			/// Perform field-specific parsing after the required common
@@ -238,9 +232,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="enc">The encoding-identification byte.</param>
 				/// 
 				/// <returns>
-				/// The proper <see cref="Encoding"/>, or `null` if the encoding
-				/// is either unrecognized or "Detect Unicode endianness from byte
-				/// order marker."
+				/// The proper <see cref="Encoding"/>, or `null` if the
+				/// encoding is either unrecognized or "Detect Unicode
+				/// endianness from byte order marker."
 				/// </returns>
 				public static Encoding TryGetEncoding(byte enc) {
 					switch (enc) {
@@ -344,8 +338,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				ResourceAccessor DefaultName;
 
 				/// <summary>
-				/// Extra human-readable information describing the field, such as the
-				/// "category" of a header with multiple realizations.
+				/// Extra human-readable information describing the field,
+				/// such as the "category" of a header with multiple
+				/// realizations.
 				/// </summary>
 				public override string Subtitle {
 					get {
@@ -356,8 +351,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					}
 				}
 
+				/// <summary>
+				/// The length in bytes of the data contained in the field
+				/// (excluding the header).
+				/// </summary>
 				public override int Length =>
-					V3PlusField<TVersion>.LengthFromHeader(Header);
+					Data?.Length
+						?? V3PlusField<TVersion>.LengthFromHeader(Header);
 
 				/// <summary>
 				/// Perform field-specific parsing after the required common
@@ -365,8 +365,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <remarks>
-				/// This will typically be used to cache expensive computations or
-				/// to set a field for <see cref="TagField.HasHiddenData"/>.
+				/// This will typically be used to cache expensive
+				/// computations or to set a field for
+				/// <see cref="TagField.HasHiddenData"/>.
 				/// </remarks>
 				public virtual void ParseData() { }
 			}
@@ -1362,7 +1363,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override void ParseData() {
 					Encoding encoding = TryGetEncoding(Data[0]);
 					var mime = ISO88591.GetString(Data.Skip(1).TakeWhile(b => b > 0x00).ToArray());
-					var category = (ImageCategory)Data[mime.Length + 2];
+					category = (ImageCategory)Data[mime.Length + 2];
 
 					var prevZero = false;
 					var descriptionArray = Data.Skip(mime.Length + 3).TakeWhile(b => {
@@ -1423,8 +1424,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <remarks>
 				/// The specification implements a potentially-infinite
 				/// integer, but a `ulong` should in theory never overflow
-				/// given the effort required to play one file of a one song
-				/// 18,446,744,073,709,551,615 times.
+				/// given the effort required to play one file of one song
+				/// more than 18,446,744,073,709,551,615 times.
 				/// 
 				/// TODO: Probably should allow that
 				/// 18,446,744,073,709,551,616th play anyway.

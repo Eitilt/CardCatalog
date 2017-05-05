@@ -39,7 +39,7 @@ namespace AgEitilt.CardCatalog {
 		/// </remarks>
 		/// 
 		/// <seealso cref="Data"/>
-		public virtual byte[] Header { get; protected set; }
+		public virtual byte[] Header { get; protected set; } = null;
 
 		/// <summary>
 		/// The raw data contained by this field, including any that would not
@@ -49,7 +49,7 @@ namespace AgEitilt.CardCatalog {
 		/// <seealso cref="Header"/>
 		/// <seealso cref="Values"/>
 		/// <seealso cref="HasHiddenData"/>
-		public virtual byte[] Data { get; protected set; }
+		public virtual byte[] Data { get; protected set; } = null;
 
 		/// <summary>
 		/// The byte header used to internally identify the field.

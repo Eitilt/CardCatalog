@@ -35,7 +35,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override string FormatName => format;
 
 				/// <summary>
-				/// The number of data bits used in the header field size bytes.
+				/// The number of data bits used in the header field size
+				/// bytes.
 				/// </summary>
 				public override uint FieldSizeBits => 8;
 
@@ -52,8 +53,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					if (field == null)
 						return;
 
-					// Store this now, but it needs to be parsed when we get the
-					// rest of the data
+					// Store this now, but it needs to be parsed when we get
+					// the rest of the data
 					field.Flags = new BitArray(header.Skip(8).ToArray());
 					field.FlagUnknown = field.Flags.And(new BitArray(new byte[2] { 0b00011111, 0b00011111 })).Cast<bool>().Any();
 				}
@@ -107,6 +108,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// 
 			/// <param name="stream">The data to read.</param>
 			public sealed override void Parse(Stream stream) {
+				base.Parse(stream);
+
+				int extraHeaderBytes = 0;
+
 				// Compression
 				bool zlib = IsFieldCompressed;
 
@@ -114,13 +119,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				//TODO: Parse according to the ENCR frame
 				byte? encryption = null;
 				if (IsFieldEncrypted) {
-					int b = stream.ReadByte();
-					++extraHeaderBytes;
+					encryption = Data[extraHeaderBytes];
+					Header = Header.Concat(new byte[1] { Data[extraHeaderBytes] }).ToArray();
 
-					if (b >= 0) {
-						encryption = (byte)b;
-						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
-					}
+					++extraHeaderBytes;
 				}
 
 				// Grouping
@@ -128,22 +130,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				 * `group` instead.
 				 */
 				if (Flags[10]) {
-					int b = stream.ReadByte();
-					++extraHeaderBytes;
+					group = Data[extraHeaderBytes];
+					Header = Header.Concat(new byte[1] { Data[extraHeaderBytes] }).ToArray();
 
-					if (b >= 0) {
-						group = (byte)b;
-						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
-					}
+					++extraHeaderBytes;
 				}
 
-				var data = new byte[Length];
-				int readData = stream.ReadAll(data, 0, Length);
-				if (readData < Length)
-					Data = data.Take(readData).ToArray();
-				else
-					Data = data;
-
+				Data = Data.Skip(extraHeaderBytes).ToArray();
 				ParseData();
 			}
 		}
@@ -193,8 +186,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
-				/// The raw data contained by this field, including any that would not
-				/// be displayed by <see cref="Values"/>.
+				/// The raw data contained by this field, including any that
+				/// would not be displayed by <see cref="Values"/>.
 				/// </summary>
 				/// 
 				/// <seealso cref="Header"/>
@@ -224,8 +217,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					fieldBase.Subtitle;
 
 				/// <summary>
-				/// The length in bytes of the data contained in the field (excluding
-				/// the header).
+				/// The length in bytes of the data contained in the field
+				/// (excluding the header).
 				/// </summary>
 				public override int Length =>
 					fieldBase.Length;
@@ -240,8 +233,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					fieldBase.Values;
 
 				/// <summary>
-				/// Indicates whether this field includes data not displayed by
-				/// <see cref="Values"/>.
+				/// Indicates whether this field includes data not displayed
+				/// by <see cref="Values"/>.
 				/// </summary>
 				public override bool HasHiddenData =>
 					fieldBase.HasHiddenData;
@@ -344,14 +337,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <para/>
 				/// This should not be called manually.
 				/// </summary>
-				/// 
-				/// <remarks>
-				/// In order to properly use reflection, cannot solely use
-				/// the version with a default parameter, as that can only be
-				/// found with <see cref="System.Reflection.BindingFlags"/>
-				/// introduced in .NETStandard 1.5, which is higher than I
-				/// want to target.
-				/// </remarks>
 				/// 
 				/// <param name="header">The binary header to parse.</param>
 				public TextFrame(byte[] header)
