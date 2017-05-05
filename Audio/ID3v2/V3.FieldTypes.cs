@@ -7,8 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
+using AgEitilt.Common.Stream.Extensions;
 using static AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
@@ -115,10 +115,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				byte? encryption = null;
 				if (IsFieldEncrypted) {
 					int b = stream.ReadByte();
-					--Length;
+					++extraHeaderBytes;
 
-					if (b >= 0)
+					if (b >= 0) {
 						encryption = (byte)b;
+						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
+					}
 				}
 
 				// Grouping
@@ -127,11 +129,20 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				 */
 				if (Flags[10]) {
 					int b = stream.ReadByte();
-					--Length;
+					++extraHeaderBytes;
 
-					if (b >= 0)
+					if (b >= 0) {
 						group = (byte)b;
+						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
+					}
 				}
+
+				var data = new byte[Length];
+				int readData = stream.ReadAll(data, 0, Length);
+				if (readData < Length)
+					Data = data.Take(readData).ToArray();
+				else
+					Data = data;
 
 				ParseData();
 			}
@@ -178,7 +189,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <seealso cref="Data"/>
 				public override byte[] Header {
 					get => fieldBase.Header;
-					protected set { }
+					protected set => fieldBase.SetHeader(value);
 				}
 
 				/// <summary>
@@ -191,7 +202,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <seealso cref="HasHiddenData"/>
 				public override byte[] Data {
 					get => fieldBase.Data;
-					protected set { }
+					protected set => fieldBase.SetData(value);
 				}
 
 				/// <summary>

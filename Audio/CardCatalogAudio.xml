@@ -751,6 +751,22 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.SetHeader(System.Byte[])">
+            <summary>
+            Provide a public interface for setting the header, as this
+            class is meant to be used within a wrapper.
+            </summary>
+            
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Header"/>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.SetData(System.Byte[])">
+            <summary>
+            Provide a public interface for setting the data, as this
+            class is meant to be used within a wrapper.
+            </summary>
+            
+            <seealso cref="P:AgEitilt.CardCatalog.TagField.Data"/>
+        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.SystemName">
             <summary>
             The byte header used to internally identify the field.
@@ -845,13 +861,11 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1">
             <summary>
@@ -892,13 +906,11 @@
             All strings contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.ReadFromByteOrderMark(System.Byte[])">
              <summary>
@@ -1292,13 +1304,11 @@
             The URL contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1">
             <summary>
@@ -1350,13 +1360,11 @@
             The URL contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase`1">
             <summary>
@@ -1425,13 +1433,11 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1">
             <summary>
@@ -1495,13 +1501,11 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase`1">
             <summary>
@@ -1551,13 +1555,11 @@
             All values contained within this field.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase`1.Parse(System.IO.Stream)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
-            
-            <param name="stream">The data to read.</param>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ImageCategoryExtension">
             <summary>

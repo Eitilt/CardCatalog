@@ -279,6 +279,24 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				}
 
 				/// <summary>
+				/// Provide a public interface for setting the header, as this
+				/// class is meant to be used within a wrapper.
+				/// </summary>
+				/// 
+				/// <seealso cref="TagField.Header"/>
+				public void SetHeader(byte[] header) =>
+					Header = header;
+
+				/// <summary>
+				/// Provide a public interface for setting the data, as this
+				/// class is meant to be used within a wrapper.
+				/// </summary>
+				/// 
+				/// <seealso cref="TagField.Data"/>
+				public void SetData(byte[] data) =>
+					Data = data;
+
+				/// <summary>
 				/// The byte header used to internally identify the field.
 				/// </summary>
 				public override byte[] SystemName =>
@@ -414,14 +432,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var data = new byte[Length];
-					int read = stream.ReadAll(data, 0, Length);
-
-					owner = ISO88591.GetString(data.Take(read).TakeWhile(b => b != 0x00).ToArray());
-					id = data.Take(read).Skip(owner.Length + 1).ToArray();
+				public override void ParseData() {
+					owner = ISO88591.GetString(Data.TakeWhile(b => b != 0x00).ToArray());
+					id = Data.Skip(owner.Length + 1).ToArray();
 				}
 			}
 
@@ -468,17 +481,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var data = new byte[Length];
+				public override void ParseData() {
 					// SplitStrings doesn't care about length, but shouldn't
 					// be passed the unset tail if the stream ended early
-					int read = stream.ReadAll(data, 0, Length);
-					if (read < Length)
-						data = data.Take(read).ToArray();
-
-					StringValues = SplitStrings(data.Skip(1).ToArray(), TryGetEncoding(data.First()));
+					StringValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First()));
 				}
 
 				/// <summary>
@@ -1094,18 +1100,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var data = new byte[Length];
-					// SplitStrings doesn't care about length, but shouldn't
-					// be passed the unset tail if the stream ended early
-					int read = stream.ReadAll(data, 0, Length);
-					if (read < Length)
-						data = data.Take(read).ToArray();
-
+				public override void ParseData() {
 					// Discard everything after the first null
-					url = TextFrameBase<TVersion>.SplitStrings(data, ISO88591, 2).FirstOrDefault();
+					url = TextFrameBase<TVersion>.SplitStrings(Data, ISO88591, 2).FirstOrDefault();
 				}
 			}
 
@@ -1175,21 +1172,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var data = new byte[Length];
-					// SplitStrings doesn't care about length, but shouldn't
-					// be passed the unset tail if the stream ended early
-					int read = stream.ReadAll(data, 0, Length);
-					if (read < Length)
-						data = data.Take(read).ToArray();
-
+				public override void ParseData() {
 					// Get the encoding of the description
-					var encoding = TryGetEncoding(data[0]);
+					var encoding = TryGetEncoding(Data[0]);
 
 					// Retrieve the description according to its encoding
-					var split = TextFrameBase<TVersion>.SplitStrings(data.Skip(1).ToArray(), encoding, 2);
+					var split = TextFrameBase<TVersion>.SplitStrings(Data.Skip(1).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 
 					// Get the URL in ISO-8859-1 from the end of the string
@@ -1287,24 +1275,15 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var data = new byte[Length];
-					// SplitStrings doesn't care about length, but shouldn't
-					// be passed the unset tail if the stream ended early
-					int read = stream.ReadAll(data, 0, Length);
-					if (read < Length)
-						data = data.Take(read).ToArray();
-
+				public override void ParseData() {
 					// Get the encoding of the description
-					var encoding = TryGetEncoding(data[0]);
+					var encoding = TryGetEncoding(Data[0]);
 
 					// Get the language code using the invariable encoding
-					language = ISO88591.GetString(data.ToList().GetRange(1, 3).ToArray());
+					language = ISO88591.GetString(Data.ToList().GetRange(1, 3).ToArray());
 
 					// Retrieve the other contents according to their encoding
-					var split = TextFrameBase<TVersion>.SplitStrings(data.Skip(4).ToArray(), encoding, 2);
+					var split = TextFrameBase<TVersion>.SplitStrings(Data.Skip(4).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 					text = split.ElementAtOrDefault(1);
 				}
@@ -1382,54 +1361,32 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					Encoding encoding;
-					var enc = stream.ReadByte();
-					if (enc < 0)
-						encoding = null;
-					else
-						encoding = TryGetEncoding((byte)enc);
+				public override void ParseData() {
+					Encoding encoding = TryGetEncoding(Data[0]);
+					var mime = ISO88591.GetString(Data.Skip(1).TakeWhile(b => b > 0x00).ToArray());
+					var category = (ImageCategory)Data[mime.Length + 2];
 
-					var read = new List<byte>();
-					for (int b = stream.ReadByte(); b > 0x00; b = stream.ReadByte())
-						read.Add((byte)b);
-					var mime = ISO88591.GetString(read.ToArray());
-
-					var next = stream.ReadByte();
-					if (next < 0)
-						category = ImageCategory.Other;
-					else
-						category = (ImageCategory)next;
-
-					read.Clear();
 					var prevZero = false;
-					for (int b = stream.ReadByte(); b >= 0x00; b = stream.ReadByte()) {
+					var descriptionArray = Data.Skip(mime.Length + 3).TakeWhile(b => {
 						if (b == 0x00) {
 							if (encoding == ISO88591)
-								break;
+								return false;
 							else
 								prevZero = true;
 						} else {
-							if (prevZero) {
-								read.Add(0x00);
+							if (prevZero)
+								return false;
+							else
 								prevZero = false;
-							}
-							read.Add((byte)b);
 						}
-					}
-					var descriptionArray = read.ToArray();
+						return true;
+					}).ToArray();
 					if (encoding == null)
 						description = TextFrameBase<TVersion>.ReadFromByteOrderMark(descriptionArray);
 					else
-						description = encoding.GetString(descriptionArray);
+						description = encoding?.GetString(descriptionArray);
 
-					var dataLength = Length - 3 - mime.Length - descriptionArray.Length - (encoding == ISO88591 ? 1 : 2);
-					var data = new byte[Length];
-					int readCount = stream.ReadAll(data, 0, dataLength);
-
-					image = new ImageData(data.Take(readCount).ToArray(), mime);
+					image = new ImageData(Data.Skip(mime.Length + 3 + descriptionArray.Length + (encoding == ISO88591 ? 1 : 2)).ToArray(), mime);
 				}
 			}
 
@@ -1485,17 +1442,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				/// 
-				/// <param name="stream">The data to read.</param>
-				public override void Parse(Stream stream) {
-					var bytes = new byte[Length];
-					int read = stream.ReadAll(bytes, 0, Length);
-
-					if (read < Length)
-						bytes = bytes.Take(read).ToArray();
-
-					count = ParseUnsignedInteger(bytes);
-				}
+				public override void ParseData() =>
+					count = ParseUnsignedInteger(Data);
 			}
 		}
 	}

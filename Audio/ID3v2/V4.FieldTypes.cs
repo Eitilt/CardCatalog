@@ -112,7 +112,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				// Unsynchronization
 				/* Implied to affect the flag data bytes, unlike the
-				 * compression and encryption
+				 * compression and encryption, so do it first
 				 */
 				if (Flags[14]) {
 					var bytes = new byte[Length];
@@ -120,8 +120,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 					if (read < Length)
 						bytes = bytes.Take(read).ToArray();
-
-					Length -= bytes.Length;
 
 #pragma warning disable DisposableFixer // Disposed in non-system detectable manner
 					localStream = true;
@@ -131,14 +129,16 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 
 				// Grouping
 				/* Need to check the flag directly, as the property looks at
-				 * `group` instead.
+				 * `group` instead
 				 */
 				if (Flags[9]) {
 					int b = stream.ReadByte();
-					--Length;
+					++extraHeaderBytes;
 
-					if (b >= 0)
+					if (b >= 0) {
 						group = (byte)b;
+						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
+					}
 				}
 
 				// Compression
@@ -149,19 +149,32 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				byte? encryption = null;
 				if (IsFieldEncrypted) {
 					int b = stream.ReadByte();
-					--Length;
+					++extraHeaderBytes;
 
-					if (b >= 0)
+					if (b >= 0) {
 						encryption = (byte)b;
+						Header = Header.Concat(new byte[1] { (byte)b }).ToArray();
+					}
 				}
 
 				// Data length; this may come into play in decompression and
 				// decryption, but we currently have no use for it
 				if (Flags[15]) {
+					int dataLength;
+
 					var bytes = new byte[4];
 					if (stream.ReadAll(bytes, 0, 4) == 4)
-						Length = (int)ParseUnsignedInteger(bytes);
+						dataLength = (int)ParseUnsignedInteger(bytes);
+
+					Header = Header.Concat(bytes).ToArray();
 				}
+
+				var data = new byte[Length];
+				int readData = stream.ReadAll(data, 0, Length);
+				if (readData < Length)
+					Data = data.Take(readData).ToArray();
+				else
+					Data = data;
 
 				ParseData();
 
@@ -211,7 +224,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <seealso cref="Data"/>
 				public override byte[] Header {
 					get => fieldBase.Header;
-					protected set { }
+					protected set => fieldBase.SetHeader(value);
 				}
 
 				/// <summary>
@@ -224,7 +237,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <seealso cref="HasHiddenData"/>
 				public override byte[] Data {
 					get => fieldBase.Data;
-					protected set { }
+					protected set => fieldBase.SetData(value);
 				}
 
 				/// <summary>
