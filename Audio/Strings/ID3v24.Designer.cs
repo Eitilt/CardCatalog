@@ -161,6 +161,33 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ???? \u2013 {1}.
+        /// </summary>
+        public static string Field_Time_End {
+            get {
+                return ResourceManager.GetString("Field_Time_End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} \u2013 {1}.
+        /// </summary>
+        public static string Field_Time_Span {
+            get {
+                return ResourceManager.GetString("Field_Time_Span", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} \u2013 ????.
+        /// </summary>
+        public static string Field_Time_Start {
+            get {
+                return ResourceManager.GetString("Field_Time_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Production credits.
         /// </summary>
         public static string Field_TIPL {

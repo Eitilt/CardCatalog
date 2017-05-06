@@ -103,6 +103,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public override byte? IsFieldGrouped => group;
 
 			/// <summary>
+			/// Initialize the field with the proper binary header.
+			/// </summary>
+			/// 
+			/// <param name="header">The binary header of the field.</param>
+			public V3Field(byte[] header) : base(header) { }
+
+			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
 			/// specific type of field.
 			/// </summary>
@@ -173,7 +180,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				internal V3FieldWrapper(FieldBase<VersionInfo> inner) =>
+				internal V3FieldWrapper(FieldBase<VersionInfo> inner) : base(Array.Empty<byte>()) =>
 					fieldBase = inner;
 
 				/// <summary>
@@ -244,7 +251,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				protected override void ParseData() =>
+				internal override void ParseData() =>
 					fieldBase.ParseData();
 			}
 
@@ -382,7 +389,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override IEnumerable<object> Values =>
 					// The FieldBase parses according to v2.4 format, but v2.3
 					// ignores everything after the first `null`
-					fieldBase.Values;
+					base.Values?.Take(1);
+
+				/// <summary>
+				/// Indicates whether this field includes data not displayed
+				/// by <see cref="Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					base.HasHiddenData || (base.Values?.Count() > 1);
 
 				/// <summary>
 				/// All strings contained within this field, still unboxed.
@@ -403,7 +417,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			[TagField("TPOS")]
 			[TagField("TRCK")]
-			public class OfNumberFrame : TextFrame {
+			public class OfNumberFrame : V3FieldWrapper {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
@@ -414,6 +428,21 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="header">The binary header to parse.</param>
 				public OfNumberFrame(byte[] header)
 					: base(new OfNumberFrameBase<VersionInfo>(header)) { }
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<object> Values =>
+					// The FieldBase parses according to v2.4 format, but v2.3
+					// ignores everything after the first `null`
+					base.Values?.Take(1);
+
+				/// <summary>
+				/// Indicates whether this field includes data not displayed
+				/// by <see cref="Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					base.HasHiddenData || (base.Values?.Count() > 1);
 			}
 
 			/// <summary>
@@ -649,7 +678,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </c>
 			/// </remarks>
 			[TagField("IPLS")]
-			public class ListMappingFrame : TextFrame {
+			public class ListMappingFrame : V3FieldWrapper {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.

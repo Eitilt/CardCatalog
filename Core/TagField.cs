@@ -123,7 +123,7 @@ namespace AgEitilt.CardCatalog {
 		/// Indicates whether this field includes data not displayed by
 		/// <see cref="Values"/>.
 		/// </summary>
-		public virtual bool HasHiddenData { get; }
+		public virtual bool HasHiddenData { get; } = false;
 
 		/// <summary>
 		/// Read a sequence of bytes in the manner appropriate to the specific

@@ -608,6 +608,64 @@
             
             <returns>The size of the field, minus the header.</returns>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.TryGetEncoding(System.Byte)">
+            <summary>
+            Convert a ID3v2 byte representation of an encoding into the
+            proper <see cref="T:System.Text.Encoding"/> object.
+            </summary>
+            
+            <remarks>
+            While the ID3v2.3 specification only lists the first two
+            potential encodings, it is otherwise compatible with the
+            full list from ID3v2.4, and so using this for both allows
+            slightly more error tolerance.
+            </remarks>
+            
+            <param name="enc">The encoding-identification byte.</param>
+            
+            <returns>
+            The proper <see cref="T:System.Text.Encoding"/>, or `null` if the
+            encoding is either unrecognized or "Detect Unicode
+            endianness from byte order marker."
+            </returns>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.ReadFromByteOrderMark(System.Byte[])">
+             <summary>
+             Read a sequence of bytes according to the encoding implied
+             by a byte-order-mark at the head.
+             </summary>
+             
+             <remarks>
+             TODO: Split this into its own class, as it includes
+             support for more encodings than ID3v2 does.
+             </remarks>
+            
+             <param name="data">The bytes to decode.</param>
+             
+             <returns>
+             The decoded string, or `null` if <paramref name="data"/>
+             isn't headed by a recognized byte-order-mark.
+             </returns>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.SplitStrings(System.Byte[],System.Text.Encoding,System.Int32)">
+            <summary>
+            Parse a sequence of bytes as a list of null-separated
+            strings.
+            </summary>
+            
+            <param name="data">The raw bytestream.</param>
+            <param name="encoding">
+            The text encoding to use in decoding <paramref name="data"/>,
+            or `null` if each string begins with a byte order marker
+            which may be used to detect the encoding dynamically.
+            </param>
+            <param name="count">
+            The maximum number of substrings to return, as in
+            <see cref="M:System.String.Split(System.Char[],System.Int32)"/>.
+            </param>
+            
+            <returns>The separated and parsed strings.</returns>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Initialize(System.Collections.Generic.IEnumerable{System.Byte})">
             <summary>
             Check whether the stream begins with a valid field header.
@@ -679,6 +737,53 @@
             indicating their presence.
             </remarks>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor)">
+            <summary>
+            Initialize the field with the proper binary header.
+            </summary>
+            
+            <param name="header">The binary header of the field.</param>
+            <param name="defaultName">
+            The name to use if no more specific one is found, or
+            <c>null</c> to use the fallback <see cref="P:AgEitilt.CardCatalog.TagField.Name"/>.
+            </param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.SystemName">
+            <summary>
+            The byte header used to internally identify the field.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Name">
+            <summary>
+            The human-readable name of the field.
+            </summary>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.ResourceAccessor">
+            <summary>
+            Delay a call to the reource files to ensure the correctly
+            localized version is used, if locale changes during run.
+            </summary>
+            
+            <returns>The localized string resource.</returns>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.DefaultName">
+            <summary>
+            The name to use if the header was not matched.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Subtitle">
+            <summary>
+            Extra human-readable information describing the field,
+            such as the "category" of a header with multiple
+            realizations.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.Length">
+            <summary>
+            The length in bytes of the data contained in the field
+            (excluding the header).
+            </summary>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.ParseData">
             <summary>
             Perform field-specific parsing after the required common
@@ -708,33 +813,7 @@
             An abstract base for handling common field processing tasks.
             </summary>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.version">
-            <summary>
-            Variables specific to the version of ID3v2 implemented.
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.TryGetEncoding(System.Byte)">
-            <summary>
-            Convert a ID3v2 byte representation of an encoding into the
-            proper <see cref="T:System.Text.Encoding"/> object.
-            </summary>
-            
-            <remarks>
-            While the ID3v2.3 specification only lists the first two
-            potential encodings, it is otherwise compatible with the
-            full list from ID3v2.4, and so using this for both allows
-            slightly more error tolerance.
-            </remarks>
-            
-            <param name="enc">The encoding-identification byte.</param>
-            
-            <returns>
-            The proper <see cref="T:System.Text.Encoding"/>, or `null` if the
-            encoding is either unrecognized or "Detect Unicode
-            endianness from byte order marker."
-            </returns>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -766,11 +845,6 @@
             
             <seealso cref="P:AgEitilt.CardCatalog.TagField.Data"/>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.SystemName">
-            <summary>
-            The byte header used to internally identify the field.
-            </summary>
-        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.Resources">
             <summary>
             The version-specific resources to use for string lookups.
@@ -781,43 +855,48 @@
             The human-readable name of the field.
             </summary>
         </member>
-        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.ResourceAccessor">
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.DiscardUnknownOnTagEdit">
             <summary>
-            Delay a call to the reource files to ensure the correctly
-            localized version is used, if locale changes during run.
+            Indicates that this field should be removed if the tag is
+            edited in any way, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.DiscardUnknownOnFileEdit">
+            <summary>
+            Indicates that this field should be removed if the file
+            external to the tag is edited in any way EXCEPT if the audio
+            is completely replaced, and the program doesn't know how to
+            compensate.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.IsReadOnlyIfUnknown">
+            <summary>
+            Indicates that this field should not be changed without direct
+            knowledge of its contents and structure.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.IsFieldCompressed">
+            <summary>
+            Indicates that the data in the field is compressed using the
+            zlib compression scheme.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.IsFieldEncrypted">
+            <summary>
+            Indicates that the data in the field is encrypted according to
+            a specified method.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.IsFieldGrouped">
+            <summary>
+            Indicates what group, if any, of fields this one belongs to.
             </summary>
             
-            <returns>The localized string resource.</returns>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.DefaultName">
-            <summary>
-            The name to use if the header was not matched.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.Subtitle">
-            <summary>
-            Extra human-readable information describing the field,
-            such as the "category" of a header with multiple
-            realizations.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.Length">
-            <summary>
-            The length in bytes of the data contained in the field
-            (excluding the header).
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase`1.ParseData">
-            <summary>
-            Perform field-specific parsing after the required common
-            parsing has been handled.
-            </summary>
-            
-            <remarks>
-            This will typically be used to cache expensive
-            computations or to set a field for
-            <see cref="P:AgEitilt.CardCatalog.TagField.HasHiddenData"/>.
-            </remarks>
+            <value>
+            The number of the group, or <c>null</c> if the field is
+            ungrouped.
+            </value>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1">
             <summary>
@@ -831,7 +910,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -848,19 +927,14 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.owner">
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.bound">
             <summary>
-            The database with which this ID is associated.
+            The byte separating the ID owner from the ID itself.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.Subtitle">
             <summary>
             The description of the contained values.
-            </summary>
-        </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.id">
-            <summary>
-            The raw identifier.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UniqueFileIdBase`1.Values">
@@ -886,7 +960,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -913,48 +987,29 @@
             All strings contained within this field.
             </summary>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.FormatValues">
+            <summary>
+            Transform the string values into the desired format just
+            before they are displayed.
+            </summary>
+            
+            <returns>The properly-formatted strings.</returns>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
             parsing has been handled.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.ReadFromByteOrderMark(System.Byte[])">
-             <summary>
-             Read a sequence of bytes according to the encoding implied
-             by a byte-order-mark at the head.
-             </summary>
-             
-             <remarks>
-             TODO: Split this into its own class, as it includes
-             support for more encodings than ID3v2 does.
-             </remarks>
-            
-             <param name="data">The bytes to decode.</param>
-             
-             <returns>
-             The decoded string, or `null` if <paramref name="data"/>
-             isn't headed by a recognized byte-order-mark.
-             </returns>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.SplitStrings(System.Byte[],System.Text.Encoding,System.Int32)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.ParseData(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
-            Parse a sequence of bytes as a list of null-separated
-            strings.
+            Preform field-specific filtering of the parsed strings
+            before they're stored.
             </summary>
             
-            <param name="data">The raw bytestream.</param>
-            <param name="encoding">
-            The text encoding to use in decoding <paramref name="data"/>,
-            or `null` if each string begins with a byte order marker
-            which may be used to detect the encoding dynamically.
-            </param>
-            <param name="count">
-            The maximum number of substrings to return, as in
-            <see cref="M:System.String.Split(System.Char[],System.Int32)"/>.
-            </param>
+            <param name="strs">The data as unfiltered strings.</param>
             
-            <returns>The separated and parsed strings.</returns>
+            <returns>The desired strings to store.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1">
             <summary>
@@ -962,7 +1017,7 @@
             a total count (eg. "Track 5 of 13").
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -981,7 +1036,34 @@
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.Values">
             <summary>
-            All values contained within this field.
+            Transform the string values into the desired format just
+            before they are displayed.
+            </summary>
+            
+            <returns>The properly-formatted strings.</returns>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.ParsedValues">
+            <summary>
+            All values contained within this field, in more friendly
+            formats.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.skippedValue">
+            <summary>
+            Whether any value was skipped and is therefore considered
+            hidden data.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.Values"/>.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.OfNumberFrameBase`1.ParseData">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
             </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1">
@@ -989,7 +1071,7 @@
             A frame containing the ISRC of the recording.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1006,10 +1088,27 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.Values">
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.skippedValue">
             <summary>
-            All values contained within this field.
+            Whether any value was skipped and is therefore considered
+            hidden data.
             </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.Values"/>.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.IsrcFrameBase`1.ParseData(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Preform field-specific filtering of the parsed strings
+            before they're stored.
+            </summary>
+            
+            <param name="strs">The data as unfiltered strings.</param>
+            
+            <returns>The desired strings to store.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ListMappingFrameBase`1">
             <summary>
@@ -1021,7 +1120,7 @@
             in some form.
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ListMappingFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ListMappingFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1038,17 +1137,20 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ListMappingFrameBase`1.Values">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ListMappingFrameBase`1.FormatValues">
             <summary>
-            All values contained within this field.
+            Transform the string values into the desired format just
+            before they are displayed.
             </summary>
+            
+            <returns>The properly-formatted strings.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase`1">
             <summary>
             A frame containing a length of time, in milliseconds.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1065,17 +1167,20 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase`1.Values">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.MsFrameBase`1.FormatValues">
             <summary>
-            All values contained within this field.
+            Transform the string values into the desired format just
+            before they are displayed.
             </summary>
+            
+            <returns>The properly-formatted strings.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1">
             <summary>
             A frame containing the musical key.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1092,17 +1197,40 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.Values">
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.flat">
             <summary>
-            All values contained within this field.
+            The musical flat sign.
             </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.sharp">
+            <summary>
+            The musical sharp sign.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.FormatValues">
+            <summary>
+            Transform the string values into the desired format just
+            before they are displayed.
+            </summary>
+            
+            <returns>The properly-formatted strings.</returns>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.KeyFrameBase`1.ParseData(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Preform field-specific filtering of the parsed strings
+            before they're stored.
+            </summary>
+            
+            <param name="strs">The data as unfiltered strings.</param>
+            
+            <returns>The desired strings to store.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase`1">
             <summary>
             A frame containing the language(s) sung/spoken.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LanguageFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1129,8 +1257,35 @@
             implementation: see solution at
             http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
             Might also be nice to add e.g. ISO 639-3 support in the
-            same package ("CultureExtensions").
+            same package ("CultureExtensions"?).
             </remarks>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.GenreText">
+            <summary>
+            Non-numerical genre values.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.GenreText.Remix">
+            <summary>
+            <c>RX</c>
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.GenreText.Cover">
+            <summary>
+            <c>CR</c>
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.GenreFromString(System.String)">
+            <summary>
+            Parse a string that may represent a genre.
+            </summary>
+            
+            <param name="str">The string to parse.</param>
+            
+            <returns>
+            The genre indicated by <paramref name="str"/>, or <c>null</c>
+            if it doesn't ma
+            </returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase`1">
             <summary>
@@ -1143,11 +1298,11 @@
             <para/>
             The resource key must fit the pattern <c>Field_HEADER_CODE</c>
             where <c>HEADER</c> is the unique header of the field and
-            <c>CODE</c> is the string value. In both, the characters
-            <c>/</c> and <c>.</c> will be replaced with <c>_</c>
+            <c>CODE</c> is the string value of the field. In both, the 
+            characters <c>/</c> and <c>.</c> will be replaced with <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1164,10 +1319,13 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase`1.Values">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceFrameBase`1.FormatValues">
             <summary>
-            All values contained within this field.
+            Transform the string values into the desired format just
+            before they are displayed.
             </summary>
+            
+            <returns>The properly-formatted strings.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase`1">
             <summary>
@@ -1184,7 +1342,7 @@
             replaced by <c>_</c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1201,37 +1359,13 @@
             <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
             </param>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase`1.Values">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.ResourceValueFrameBase`1.FormatValues">
             <summary>
-            All values contained within this field.
-            </summary>
-        </member>
-        <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase`1">
-            <summary>
-            A frame containing a timestamp.
-            </summary>
-        </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
-            <summary>
-            The constructor required to initialize the field.
+            Transform the string values into the desired format just
+            before they are displayed.
             </summary>
             
-            <param name="header">The binary header to parse.</param>
-            <param name="defaultName">
-            The name to use if no more specific one is found, or
-            <c>null</c> to use the default name as specified in the
-            resources.
-            </param>
-            <param name="resources">
-            The resources to use when looking up dynamic strings, or
-            <c>null</c> to use the default
-            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.ResourceManager"/>.
-            </param>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TimeFrameBase`1.Values">
-            <summary>
-            All values contained within this field.
-            </summary>
+            <returns>The properly-formatted strings.</returns>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase`1">
             <summary>
@@ -1246,7 +1380,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserTextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1284,7 +1418,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1311,6 +1445,18 @@
             The URL contained within this field.
             </summary>
         </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.trailingValue">
+            <summary>
+            Whether any data remains after the URL is therefore
+            considered hidden.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.Values"/>.
+            </summary>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UrlFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
@@ -1330,7 +1476,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1367,6 +1513,18 @@
             The URL contained within this field.
             </summary>
         </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.trailingValue">
+            <summary>
+            Whether any data remains after the URL is therefore
+            considered hidden.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase`1.Values"/>.
+            </summary>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.UserUrlFrameBase`1.ParseData">
             <summary>
             Preform field-specific parsing after the required common
@@ -1388,7 +1546,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.LongTextFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1461,7 +1619,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1498,9 +1656,15 @@
             The description of the contained values.
             </summary>
         </member>
-        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.image">
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.imageStart">
             <summary>
-            The raw image data.
+            The index within <see cref="P:AgEitilt.CardCatalog.TagField.Data"/> where the
+            embedded image begins.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.mime">
+            <summary>
+            The MIME type of the embedded image.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.PictureFieldBase`1.Values">
@@ -1525,7 +1689,7 @@
             </c>
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{`0}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.CountFrameBase`1.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{`0}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to initialize the field.
             </summary>
@@ -1812,6 +1976,13 @@
             Indicates what group, if any, of fields this one belongs to.
             </summary>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.#ctor(System.Byte[])">
+            <summary>
+            Initialize the field with the proper binary header.
+            </summary>
+            
+            <param name="header">The binary header of the field.</param>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
@@ -1965,7 +2136,7 @@
             
             <param name="header">The binary header to parse.</param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.VersionInfo}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.VersionInfo}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to properly initialize the inner
             implementation of the <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.V3FieldWrapper"/>.
@@ -2002,6 +2173,12 @@
             All values contained within this field.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed
+            by <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.Values"/>.
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.StringValues">
             <summary>
             All strings contained within this field, still unboxed.
@@ -2028,6 +2205,17 @@
             </summary>
             
             <param name="header">The binary header to parse.</param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.OfNumberFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.OfNumberFrame.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed
+            by <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.OfNumberFrame.Values"/>.
+            </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.IsrcFrame">
             <summary>
@@ -2480,6 +2668,13 @@
             Indicates what group, if any, of fields this one belongs to.
             </summary>
         </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.#ctor(System.Byte[])">
+            <summary>
+            Initialize the field with the proper binary header.
+            </summary>
+            
+            <param name="header">The binary header of the field.</param>
+        </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Parse(System.IO.Stream)">
             <summary>
             Read a sequence of bytes in the manner appropriate to the
@@ -2633,7 +2828,7 @@
             
             <param name="header">The binary header to parse.</param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.FieldBase{AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.VersionInfo}.ResourceAccessor,System.Resources.ResourceManager)">
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TextFrame.#ctor(System.Byte[],AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField{AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.VersionInfo}.ResourceAccessor,System.Resources.ResourceManager)">
             <summary>
             The constructor required to properly initialize the inner
             implementation of the
@@ -2787,11 +2982,18 @@
             <summary>
             All values contained within this field.
             </summary>
-            
-            <remarks>
-            TODO: Split "Remix" and "Cover" into separately-displayed
-            field; likely same fix as <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.ListMappingFrame"/>.
-            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.ParsedValues">
+            <summary>
+            All values contained within this field, in more friendly
+            formats.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.GenreFrame.ParseData">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.ResourceFrame">
             <summary>
@@ -2857,6 +3059,35 @@
             </summary>
             
             <param name="header">The binary header to parse.</param>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.Values">
+            <summary>
+            All values contained within this field.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.ParsedValues">
+            <summary>
+            All values contained within this field, in more friendly
+            formats.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.skippedValue">
+            <summary>
+            Whether any value was skipped and is therefore considered
+            hidden data.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.HasHiddenData">
+            <summary>
+            Indicates whether this field includes data not displayed by
+            <see cref="P:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.Values"/>.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.TimeFrame.ParseData">
+            <summary>
+            Preform field-specific parsing after the required common
+            parsing has been handled.
+            </summary>
         </member>
         <member name="T:AgEitilt.CardCatalog.Audio.ID3v2.V4.FormatFields.UserTextFrame">
             <summary>
@@ -4175,6 +4406,11 @@
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag">
+            <summary>
+              Looks up a localized string similar to Attempted to access the value of an ID3v2 header from a FieldBase class.
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_COMM">
             <summary>
               Looks up a localized string similar to Comment.
@@ -4885,7 +5121,7 @@
               Looks up a localized string similar to Lyrics.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_ValueFormat_Number">
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus.Field_ValueFormat_NumberOf">
             <summary>
               Looks up a localized string similar to {0} of {1}.
             </summary>
@@ -5024,6 +5260,21 @@
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MIME">
             <summary>
               Looks up a localized string similar to MIME type as follows.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_End">
+            <summary>
+              Looks up a localized string similar to ???? \u2013 {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Span">
+            <summary>
+              Looks up a localized string similar to {0} \u2013 {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Start">
+            <summary>
+              Looks up a localized string similar to {0} \u2013 ????.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIPL">

@@ -3,8 +3,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -103,6 +105,13 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			public override byte? IsFieldGrouped => group;
 
 			/// <summary>
+			/// Initialize the field with the proper binary header.
+			/// </summary>
+			/// 
+			/// <param name="header">The binary header of the field.</param>
+			public V4Field(byte[] header) : base(header) { }
+
+			/// <summary>
 			/// Read a sequence of bytes in the manner appropriate to the
 			/// specific type of field.
 			/// </summary>
@@ -189,7 +198,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				internal V4FieldWrapper(FieldBase<VersionInfo> inner) =>
+				internal V4FieldWrapper(FieldBase<VersionInfo> inner) : base(Array.Empty<byte>()) =>
 					fieldBase = inner;
 
 				/// <summary>
@@ -260,7 +269,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				protected override void ParseData() =>
+				internal override void ParseData() =>
 					fieldBase.ParseData();
 			}
 
@@ -407,7 +416,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// </summary>
 			[TagField("TPOS")]
 			[TagField("TRCK")]
-			public class OfNumberFrame : TextFrame {
+			public class OfNumberFrame : V4FieldWrapper {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
@@ -517,7 +526,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// however, may still be shared.
 			/// </remarks>
 			[TagField("TCON")]
-			public class GenreFrame : TextFrame {
+			public class GenreFrame : V4Field {
 				/// <summary>
 				/// The constructor required by
 				/// <see cref="ID3v23Plus.V3PlusField{TVersion}.Initialize(IEnumerable{byte})"/>.
@@ -532,33 +541,54 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				/// 
-				/// <remarks>
-				/// TODO: Split "Remix" and "Cover" into separately-displayed
-				/// field; likely same fix as <see cref="ListMappingFrame"/>.
-				/// </remarks>
 				public override IEnumerable<object> Values {
 					get {
-						foreach (var s in StringValues) {
-							if (s.Equals("RX"))
-								yield return Strings.ID3v23Plus.Field_TCON_RX;
-							else if (s.Equals("CR"))
-								yield return Strings.ID3v23Plus.Field_TCON_CR;
-							else if (s.All(char.IsDigit) && (s.Length <= 3)) {
-								/* Given that everything is a digit and the
-								 * length is capped, `Parse` is guaranteed to
-								 * not throw an exception with the larger
-								 * datatype.
-								 */
-								var num = uint.Parse(s);
-								if (num > byte.MaxValue)
-									yield return s;
-								else
-									yield return ((ID3v1.Genre)num).PrintableName();
-							} else
-								yield return s;
-						}
+						if (ParsedValues.Count() == 0)
+							return null;
+						return ParsedValues.Select(v => {
+							if (v is GenreText t) {
+								switch (t) {
+									case GenreText.Remix:
+										return Strings.ID3v23Plus.Field_TCON_RX;
+									case GenreText.Cover:
+										return Strings.ID3v23Plus.Field_TCON_CR;
+								}
+							} else if (v is ID3v1.Genre g) {
+								return g.PrintableName();
+							}
+							return v;
+						});
 					}
+				}
+				/// <summary>
+				/// All values contained within this field, in more friendly
+				/// formats.
+				/// </summary>
+				public IEnumerable<object> ParsedValues { get; private set; }
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				internal override void ParseData() {
+					ParsedValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data[0]))
+						.Select<string, object>(s => {
+							if (s.Equals("RX")) {
+								return GenreText.Remix;
+							} else if (s.Equals("CR")) {
+								return GenreText.Cover;
+							} else if (s.All(char.IsDigit) && (s.Length <= 3)) {
+								/* Given that everything is a digit and
+									* the length is capped, `Parse` is
+									* guaranteed to not throw an exception
+									* when using the larger datatype
+									*/
+								var num = uint.Parse(s);
+								if (num <= byte.MaxValue)
+									return (ID3v1.Genre)num;
+							}
+							return s;
+						});
 				}
 			}
 
@@ -637,7 +667,104 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// 
 				/// <param name="header">The binary header to parse.</param>
 				public TimeFrame(byte[] header)
-					: base(new TimeFrameBase<VersionInfo>(header, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager)) { }
+					: base(header, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager) { }
+
+				/// <summary>
+				/// All values contained within this field.
+				/// </summary>
+				public override IEnumerable<object> Values {
+					get {
+						if (ParsedValues.Count() == 0)
+							return null;
+						return ParsedValues.Select(v => {
+							if (v is Tuple<DateTimeOffset?, DateTimeOffset?> t) {
+								if (t.Item1 == null)
+									return String.Format(Strings.ID3v24.Field_Time_End, t.Item2);
+								else if (t.Item2 == null)
+									return String.Format(Strings.ID3v24.Field_Time_Start, t.Item1);
+								else
+									return String.Format(Strings.ID3v24.Field_Time_Span, t.Item1, t.Item2);
+							} else {
+								return v;
+							}
+						});
+					}
+				}
+				/// <summary>
+				/// All values contained within this field, in more friendly
+				/// formats.
+				/// </summary>
+				public IEnumerable<object> ParsedValues { get; private set; }
+
+				/// <summary>
+				/// Whether any value was skipped and is therefore considered
+				/// hidden data.
+				/// </summary>
+				bool skippedValue;
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					skippedValue;
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				internal override void ParseData() {
+					skippedValue = false;
+					ParsedValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data[0]))
+						.Select<string, object>(s => {
+							/*TODO: ID3v2 describes timestamps as a "subset"
+							 * of ISO 8601, but may still want to support
+							 * interval notation for additional robustness
+							 */
+							DateTimeOffset? time0, time1;
+
+							var split = s.Split(new string[2] { "/", "--" }, StringSplitOptions.None);
+							if (split.Length <= 0) {
+								skippedValue = true;
+								return null;
+							} else if (DateTimeOffset.TryParse(
+									split[0],
+									CultureInfo.InvariantCulture,
+									DateTimeStyles.AdjustToUniversal,
+									out DateTimeOffset time0tmp
+								)) {
+								if (split.Length == 1)
+									return time0tmp;
+								else
+									time0 = time0tmp;
+							} else {
+								skippedValue = true;
+								if (split.Length == 1)
+									return null;
+								else
+									time0 = null;
+							}
+
+							/* All cases where `split.Length < 2` have already
+							 * returned
+							 */
+							/* This will lose data if more than two timestamps
+							 * are included, but that violates ISO 8601 anyway
+							 */
+							if (DateTimeOffset.TryParse(
+									split[1],
+									CultureInfo.InvariantCulture,
+									DateTimeStyles.AdjustToUniversal,
+									out DateTimeOffset time1tmp
+								)) {
+								time1 = time1tmp;
+							} else {
+								skippedValue = true;
+								time1 = null;
+							}
+
+							return Tuple.Create(time0, time1);
+						}).Where(v => v != null);
+				}
 			}
 
 			/// <summary>

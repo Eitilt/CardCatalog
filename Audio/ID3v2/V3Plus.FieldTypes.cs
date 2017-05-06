@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	public partial class ID3v23Plus {
@@ -74,6 +75,129 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <returns>The size of the field, minus the header.</returns>
 			internal static int LengthFromHeader(byte[] header) =>
 				(int)ParseUnsignedInteger(header.Skip(4).Take(4).ToArray(), version.FieldSizeBits);
+
+			/// <summary>
+			/// Convert a ID3v2 byte representation of an encoding into the
+			/// proper <see cref="Encoding"/> object.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// While the ID3v2.3 specification only lists the first two
+			/// potential encodings, it is otherwise compatible with the
+			/// full list from ID3v2.4, and so using this for both allows
+			/// slightly more error tolerance.
+			/// </remarks>
+			/// 
+			/// <param name="enc">The encoding-identification byte.</param>
+			/// 
+			/// <returns>
+			/// The proper <see cref="Encoding"/>, or `null` if the
+			/// encoding is either unrecognized or "Detect Unicode
+			/// endianness from byte order marker."
+			/// </returns>
+			public static Encoding TryGetEncoding(byte enc) {
+				switch (enc) {
+					case 0x00:
+						return ISO88591;
+					case 0x01:
+					default:
+						return null;
+					case 0x02:
+						return Encoding.BigEndianUnicode;
+					case 0x03:
+						return Encoding.UTF8;
+				}
+			}
+
+			/// <summary>
+			/// Read a sequence of bytes according to the encoding implied
+			/// by a byte-order-mark at the head.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Split this into its own class, as it includes
+			/// support for more encodings than ID3v2 does.
+			/// </remarks>
+			///
+			/// <param name="data">The bytes to decode.</param>
+			/// 
+			/// <returns>
+			/// The decoded string, or `null` if <paramref name="data"/>
+			/// isn't headed by a recognized byte-order-mark.
+			/// </returns>
+			internal static string ReadFromByteOrderMark(byte[] data) {
+				if ((data?.Length ?? 0) == 0)
+					return null;
+				switch (data[0]) {
+					case 0x00:
+						if ((data.Length >= 4) && (data[1] == 0x00) && (data[2] == 0xFE) && (data[3] == 0xFF))
+							return Encoding.GetEncoding("utf-32BE").GetString(data);
+						goto default;
+					case 0x2B:
+						if ((data.Length >= 4) && (data[1] == 0x2F) && (data[2] == 0x76)) {
+							switch (data[3]) {
+								case 0x38:
+								case 0x39:
+								case 0x2B:
+								case 0x2F:
+									return Encoding.UTF7.GetString(data);
+							}
+						}
+						goto default;
+					case 0xEF:
+						if ((data.Length >= 3) && (data[1] == 0xBB) && (data[2] == 0xBF))
+							return Encoding.UTF8.GetString(data);
+						goto default;
+					case 0xFE:
+						if ((data.Length >= 2) && (data[1] == 0xFF))
+							return Encoding.BigEndianUnicode.GetString(data);
+						goto default;
+					case 0xFF:
+						if ((data.Length >= 2) && (data[1] == 0xFE)) {
+							if ((data.Length >= 4) && (data[2] == 0x00) && (data[3] == 0x00))
+								return Encoding.UTF32.GetString(data);
+							else
+								return Encoding.Unicode.GetString(data);
+						}
+						goto default;
+					default:
+						return null;
+				}
+			}
+
+			/// <summary>
+			/// Parse a sequence of bytes as a list of null-separated
+			/// strings.
+			/// </summary>
+			/// 
+			/// <param name="data">The raw bytestream.</param>
+			/// <param name="encoding">
+			/// The text encoding to use in decoding <paramref name="data"/>,
+			/// or `null` if each string begins with a byte order marker
+			/// which may be used to detect the encoding dynamically.
+			/// </param>
+			/// <param name="count">
+			/// The maximum number of substrings to return, as in
+			/// <see cref="string.Split(char[], int)"/>.
+			/// </param>
+			/// 
+			/// <returns>The separated and parsed strings.</returns>
+			internal static IEnumerable<string> SplitStrings(byte[] data, Encoding encoding, int count = int.MaxValue) {
+				var raw = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
+				var split = raw.Split(new char[1] { '\0' }, count, StringSplitOptions.None);
+
+				var last = split.Length - 1;
+				// Empty array shouldn't happen, but handle it just in case
+				if (last < 0)
+					return new string[1] { raw };
+
+				// If the last string in the list is empty or null, remove
+				// it, as the actual last string is typically terminated
+				if ((split[last]?.Length ?? 0) == 0)
+					return split.Take(last);
+				else
+					return split;
+			}
 
 			/// <summary>
 			/// Check whether the stream begins with a valid field header.
@@ -166,6 +290,83 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			protected bool FlagUnknown { get; set; }
 
 			/// <summary>
+			/// Initialize the field with the proper binary header.
+			/// </summary>
+			/// 
+			/// <param name="header">The binary header of the field.</param>
+			/// <param name="defaultName">
+			/// The name to use if no more specific one is found, or
+			/// <c>null</c> to use the fallback <see cref="TagField.Name"/>.
+			/// </param>
+			public V3PlusField(byte[] header, ResourceAccessor defaultName = null) {
+				Header = header;
+				// Ensure that the delegate will always be assigned some
+				// callable function
+				DefaultName = defaultName ?? (() => null);
+			}
+
+			/// <summary>
+			/// The byte header used to internally identify the field.
+			/// </summary>
+			public override byte[] SystemName =>
+				Header.Take(4).ToArray();
+
+			/// <summary>
+			/// The human-readable name of the field.
+			/// </summary>
+			public override string Name =>
+				/* Recognized nonstandard fields/usage:
+				 * TCAT: "Category"               (from podcasts)
+				 * TDES: "Description"            (from podcasts)
+				 * TGID: "Album ID"               (podcasts: typically "Podcast ID")
+				 * TIT1: "Work"                   (officially "Grouping")
+				 * TKWD: "Keywords"               (from podcasts)
+				 * TOAL: "Original alubm"         (Picard: "Work title")
+				 * TPUB: "Publisher"              (Picard: "Record label")
+				 * TSO2: "Album artist sort order"
+				 * TSOC: "Composer sort order"
+				 * WFED: "Feed"                   (from podcasts)
+				 * XSOA: "Album sort order (alternate)"
+				 * XSOP: "Artist sort order (alternate)"
+				 * XSOT: "Title sort order (alternate)"
+				 */
+				Strings.ID3v23Plus.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName))
+					?? DefaultName()
+					?? base.Name;
+			/// <summary>
+			/// Delay a call to the reource files to ensure the correctly
+			/// localized version is used, if locale changes during run.
+			/// </summary>
+			/// 
+			/// <returns>The localized string resource.</returns>
+			public delegate string ResourceAccessor();
+			/// <summary>
+			/// The name to use if the header was not matched.
+			/// </summary>
+			ResourceAccessor DefaultName;
+
+			/// <summary>
+			/// Extra human-readable information describing the field,
+			/// such as the "category" of a header with multiple
+			/// realizations.
+			/// </summary>
+			public override string Subtitle {
+				get {
+					if (Name.Equals(DefaultName()))
+						return null;
+					else
+						return base.Subtitle;
+				}
+			}
+
+			/// <summary>
+			/// The length in bytes of the data contained in the field
+			/// (excluding the header).
+			/// </summary>
+			public override int Length =>
+				Data?.Length ?? LengthFromHeader(Header);
+
+			/// <summary>
 			/// Perform field-specific parsing after the required common
 			/// parsing has been handled.
 			/// </summary>
@@ -174,7 +375,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// This will typically be used to cache expensive computations or
 			/// to set a field for <see cref="TagField.HasHiddenData"/>.
 			/// </remarks>
-			protected virtual void ParseData() { }
+			internal virtual void ParseData() { }
 		}
 
 		/// <summary>
@@ -211,45 +412,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <summary>
 			/// An abstract base for handling common field processing tasks.
 			/// </summary>
-			internal abstract class FieldBase<TVersion> : TagField where TVersion : VersionInfo, new() {
-				/// <summary>
-				/// Variables specific to the version of ID3v2 implemented.
-				/// </summary>
-				static protected TVersion version = new TVersion();
-
-				/// <summary>
-				/// Convert a ID3v2 byte representation of an encoding into the
-				/// proper <see cref="Encoding"/> object.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// While the ID3v2.3 specification only lists the first two
-				/// potential encodings, it is otherwise compatible with the
-				/// full list from ID3v2.4, and so using this for both allows
-				/// slightly more error tolerance.
-				/// </remarks>
-				/// 
-				/// <param name="enc">The encoding-identification byte.</param>
-				/// 
-				/// <returns>
-				/// The proper <see cref="Encoding"/>, or `null` if the
-				/// encoding is either unrecognized or "Detect Unicode
-				/// endianness from byte order marker."
-				/// </returns>
-				public static Encoding TryGetEncoding(byte enc) {
-					switch (enc) {
-						case 0x00:
-							return ISO88591;
-						case 0x01:
-						default:
-							return null;
-						case 0x02:
-							return Encoding.BigEndianUnicode;
-						case 0x03:
-							return Encoding.UTF8;
-					}
-				}
-
+			internal abstract class FieldBase<TVersion> : V3PlusField<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
@@ -264,11 +427,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				public FieldBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null) {
-					Header = header;
-					// Ensure that the delegate will always be assigned some
-					// callable function
-					DefaultName = defaultName ?? (() => null);
+				public FieldBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
+					: base(header, defaultName) {
 					Resources = resources ?? Strings.ID3v23Plus.ResourceManager;
 				}
 
@@ -291,12 +451,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					Data = data;
 
 				/// <summary>
-				/// The byte header used to internally identify the field.
-				/// </summary>
-				public override byte[] SystemName =>
-					Header.Take(4).ToArray();
-
-				/// <summary>
 				/// The version-specific resources to use for string lookups.
 				/// </summary>
 				protected ResourceManager Resources { get; }
@@ -305,71 +459,57 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// The human-readable name of the field.
 				/// </summary>
 				public override string Name =>
-					/* Recognized nonstandard fields/usage:
-					 * TCAT: "Category"               (from podcasts)
-					 * TDES: "Description"            (from podcasts)
-					 * TGID: "Album ID"               (podcasts: typically "Podcast ID")
-					 * TIT1: "Work"                   (officially "Grouping")
-					 * TKWD: "Keywords"               (from podcasts)
-					 * TOAL: "Original alubm"         (Picard: "Work title")
-					 * TPUB: "Publisher"              (Picard: "Record label")
-					 * TSO2: "Album artist sort order"
-					 * TSOC: "Composer sort order"
-					 * WFED: "Feed"                   (from podcasts)
-					 * XSOA: "Album sort order (alternate)"
-					 * XSOP: "Artist sort order (alternate)"
-					 * XSOT: "Title sort order (alternate)"
-					 */
 					Resources.GetString("Field_" + ISO88591.GetString(SystemName))
-						?? Strings.ID3v23Plus.ResourceManager.GetString("Field_" + ISO88591.GetString(SystemName))
-						?? DefaultName()
 						?? base.Name;
 
 				/// <summary>
-				/// Delay a call to the reource files to ensure the correctly
-				/// localized version is used, if locale changes during run.
+				/// Indicates that this field should be removed if the tag is
+				/// edited in any way, and the program doesn't know how to
+				/// compensate.
+				/// </summary>
+				public override bool DiscardUnknownOnTagEdit =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
+
+				/// <summary>
+				/// Indicates that this field should be removed if the file
+				/// external to the tag is edited in any way EXCEPT if the audio
+				/// is completely replaced, and the program doesn't know how to
+				/// compensate.
+				/// </summary>
+				public override bool DiscardUnknownOnFileEdit =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
+
+				/// <summary>
+				/// Indicates that this field should not be changed without direct
+				/// knowledge of its contents and structure.
+				/// </summary>
+				public override bool IsReadOnlyIfUnknown =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
+
+				/// <summary>
+				/// Indicates that the data in the field is compressed using the
+				/// zlib compression scheme.
+				/// </summary>
+				public override bool IsFieldCompressed =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
+
+				/// <summary>
+				/// Indicates that the data in the field is encrypted according to
+				/// a specified method.
+				/// </summary>
+				public override bool IsFieldEncrypted =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
+
+				/// <summary>
+				/// Indicates what group, if any, of fields this one belongs to.
 				/// </summary>
 				/// 
-				/// <returns>The localized string resource.</returns>
-				public delegate string ResourceAccessor();
-				/// <summary>
-				/// The name to use if the header was not matched.
-				/// </summary>
-				ResourceAccessor DefaultName;
-
-				/// <summary>
-				/// Extra human-readable information describing the field,
-				/// such as the "category" of a header with multiple
-				/// realizations.
-				/// </summary>
-				public override string Subtitle {
-					get {
-						if (Name.Equals(DefaultName()))
-							return null;
-						else
-							return base.Subtitle;
-					}
-				}
-
-				/// <summary>
-				/// The length in bytes of the data contained in the field
-				/// (excluding the header).
-				/// </summary>
-				public override int Length =>
-					Data?.Length
-						?? V3PlusField<TVersion>.LengthFromHeader(Header);
-
-				/// <summary>
-				/// Perform field-specific parsing after the required common
-				/// parsing has been handled.
-				/// </summary>
-				/// 
-				/// <remarks>
-				/// This will typically be used to cache expensive
-				/// computations or to set a field for
-				/// <see cref="TagField.HasHiddenData"/>.
-				/// </remarks>
-				public virtual void ParseData() { }
+				/// <value>
+				/// The number of the group, or <c>null</c> if the field is
+				/// ungrouped.
+				/// </value>
+				public override byte? IsFieldGrouped =>
+					throw new InvalidOperationException(Strings.ID3v23Plus.Exception_FieldBaseHeaderFlag);
 			}
 
 			/// <summary>
@@ -402,28 +542,25 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					: base(header, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
-				/// The database with which this ID is associated.
+				/// The byte separating the ID owner from the ID itself.
 				/// </summary>
-				string owner = null;
+				int bound;
+
 				/// <summary>
 				/// The description of the contained values.
 				/// </summary>
 				public override string Subtitle =>
-					owner;
+					ISO88591.GetString(Data.Take(bound).ToArray());
 
-				/// <summary>
-				/// The raw identifier.
-				/// </summary>
-				byte[] id = null;
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<object> Values {
 					get {
-						if ((id == null) || (id.Length == 0))
+						if ((bound + 1) >= Data.Length)
 							return null;
 						else
-							return new object[] { id };
+							return new object[1] { Data.Skip(bound + 1).ToArray() };
 					}
 				}
 
@@ -431,9 +568,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
-					owner = ISO88591.GetString(Data.TakeWhile(b => b != 0x00).ToArray());
-					id = Data.Skip(owner.Length + 1).ToArray();
+				internal override void ParseData() {
+					for (bound = 0; bound < Data.Length; ++bound)
+						if (Data[bound] == 0x00)
+							break;
 				}
 			}
 
@@ -469,119 +607,49 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<object> Values =>
-					StringValues;
+				public override IEnumerable<object> Values {
+					get {
+						if (StringValues.Count() == 0)
+							return null;
+						return FormatValues();
+					}
+				}
 				/// <summary>
 				/// All strings contained within this field.
 				/// </summary>
 				public IEnumerable<string> StringValues { get; private set; }
 
 				/// <summary>
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
+				/// </summary>
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
+				protected virtual IEnumerable<object> FormatValues() =>
+					StringValues;
+
+				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
-					// SplitStrings doesn't care about length, but shouldn't
-					// be passed the unset tail if the stream ended early
-					StringValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First()));
-				}
-
+				internal override void ParseData() =>
+					StringValues = ParseData(SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First())));
 				/// <summary>
-				/// Read a sequence of bytes according to the encoding implied
-				/// by a byte-order-mark at the head.
+				/// Preform field-specific filtering of the parsed strings
+				/// before they're stored.
 				/// </summary>
 				/// 
-				/// <remarks>
-				/// TODO: Split this into its own class, as it includes
-				/// support for more encodings than ID3v2 does.
-				/// </remarks>
-				///
-				/// <param name="data">The bytes to decode.</param>
+				/// <param name="strs">The data as unfiltered strings.</param>
 				/// 
-				/// <returns>
-				/// The decoded string, or `null` if <paramref name="data"/>
-				/// isn't headed by a recognized byte-order-mark.
-				/// </returns>
-				internal static string ReadFromByteOrderMark(byte[] data) {
-					if ((data?.Length ?? 0) == 0)
-						return null;
-					switch (data[0]) {
-						case 0x00:
-							if ((data.Length >= 4) && (data[1] == 0x00) && (data[2] == 0xFE) && (data[3] == 0xFF))
-								return Encoding.GetEncoding("utf-32BE").GetString(data);
-							goto default;
-						case 0x2B:
-							if ((data.Length >= 4) && (data[1] == 0x2F) && (data[2] == 0x76)) {
-								switch (data[3]) {
-									case 0x38:
-									case 0x39:
-									case 0x2B:
-									case 0x2F:
-										return Encoding.UTF7.GetString(data);
-								}
-							}
-							goto default;
-						case 0xEF:
-							if ((data.Length >= 3) && (data[1] == 0xBB) && (data[2] == 0xBF))
-								return Encoding.UTF8.GetString(data);
-							goto default;
-						case 0xFE:
-							if ((data.Length >= 2) && (data[1] == 0xFF))
-								return Encoding.BigEndianUnicode.GetString(data);
-							goto default;
-						case 0xFF:
-							if ((data.Length >= 2) && (data[1] == 0xFE)) {
-								if ((data.Length >= 4) && (data[2] == 0x00) && (data[3] == 0x00))
-									return Encoding.UTF32.GetString(data);
-								else
-									return Encoding.Unicode.GetString(data);
-							}
-							goto default;
-						default:
-							return null;
-					}
-				}
-
-				/// <summary>
-				/// Parse a sequence of bytes as a list of null-separated
-				/// strings.
-				/// </summary>
-				/// 
-				/// <param name="data">The raw bytestream.</param>
-				/// <param name="encoding">
-				/// The text encoding to use in decoding <paramref name="data"/>,
-				/// or `null` if each string begins with a byte order marker
-				/// which may be used to detect the encoding dynamically.
-				/// </param>
-				/// <param name="count">
-				/// The maximum number of substrings to return, as in
-				/// <see cref="string.Split(char[], int)"/>.
-				/// </param>
-				/// 
-				/// <returns>The separated and parsed strings.</returns>
-				internal static IEnumerable<string> SplitStrings(byte[] data, Encoding encoding, int count = int.MaxValue) {
-					var raw = (encoding == null ? ReadFromByteOrderMark(data) : encoding.GetString(data));
-					var split = raw.Split(new char[1] { '\0' }, count, StringSplitOptions.None);
-
-					var last = split.Length - 1;
-					// Empty array shouldn't happen, but handle it just in case
-					if (last < 0)
-						return new string[1] { raw };
-
-					// If the last string in the list is empty or null, remove
-					// it, as the actual last string is typically terminated
-					if ((split[last]?.Length ?? 0) == 0)
-						return split.Take(last);
-					else
-						return split;
-				}
+				/// <returns>The desired strings to store.</returns>
+				protected virtual IEnumerable<string> ParseData(IEnumerable<string> strs) => strs;
 			}
 
 			/// <summary>
 			/// A frame containing a number that may optionally be followed by
 			/// a total count (eg. "Track 5 of 13").
 			/// </summary>
-			internal class OfNumberFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
+			internal class OfNumberFrameBase<TVersion> : FieldBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
 				/// The constructor required to initialize the field.
 				/// </summary>
@@ -598,44 +666,86 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
 				public OfNumberFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Number)), resources) { }
+					: base(header, defaultName:defaultName, resources:resources) { }
 
 				/// <summary>
-				/// All values contained within this field.
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
 				/// </summary>
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
 				public override IEnumerable<object> Values {
 					get {
-						return StringValues.Select<string, object>(s => {
-							var split = s?.Split(new char[1] { '/' }, 2) ?? Array.Empty<string>();
-
-							// If there's nothing in the array, this value
-							// shouldn't be returned
-							if (split.Length <= 0) {
-								return null;
-
-								// If the value is only a single number...
-							} else if (split.Length == 1) {
-								// ...try returning an int to be more specific...
-								if (int.TryParse(split[0], out var parsed))
-									return parsed;
-								// ...but fall back on the original string
-								else
-									return s;
-
-								// If the value seems to be split in two...
-							} else {
-								// ...only format if it seems to be "# of total"
-								// (note the max count on the .Split(...) call)...
-								if (int.TryParse(split[0], out var parsed0) && int.TryParse(split[1], out var parsed1))
-									return String.Format(Strings.ID3v23Plus.Field_ValueFormat_Number, parsed0, parsed1);
-								// ...and return the original if it's more complex
-								else
-									return s;
-							}
-
-							// Filter out any values we've said to remove
-						}).Where(s => s != null);
+						if (ParsedValues.Count() == 0)
+							return null;
+						return ParsedValues.Select(v => {
+							if (v is Tuple<int, int> t)
+								// Only format tuples now to ensure that
+								// the proper localization is used
+								return String.Format(Strings.ID3v23Plus.Field_ValueFormat_NumberOf, t.Item1, t.Item2);
+							else
+								return v;
+						});
 					}
+				}
+				/// <summary>
+				/// All values contained within this field, in more friendly
+				/// formats.
+				/// </summary>
+				public IEnumerable<object> ParsedValues { get; private set; }
+
+				/// <summary>
+				/// Whether any value was skipped and is therefore considered
+				/// hidden data.
+				/// </summary>
+				bool skippedValue;
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					skippedValue;
+
+				/// <summary>
+				/// Preform field-specific parsing after the required common
+				/// parsing has been handled.
+				/// </summary>
+				internal override void ParseData() {
+					skippedValue = false;
+
+					// Save on complex computations by pre-parsing the strings
+					ParsedValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First()))
+							.Select<string, object>(s => {
+						var split = s?.Split(new char[1] { '/' }, 2) ?? Array.Empty<string>();
+
+						// If there's nothing in the array, this value
+						// shouldn't be returned
+						if (split.Length <= 0) {
+							skippedValue = true;
+							return null;
+
+						// If the value is only a single number...
+						} else if (split.Length == 1) {
+							// ...try returning an int to be more specific...
+							if (int.TryParse(split[0], out var parsed))
+								return parsed;
+							// ...but fall back on the original string
+							else
+								return s;
+
+						// If the value seems to be split in two (note the max
+						// count on the .Split(...) call)...
+						} else {
+							// ...only format if it seems to be "# of total #"
+							if (int.TryParse(split[0], out var parsed0) && int.TryParse(split[1], out var parsed1))
+								return Tuple.Create(parsed0, parsed1);
+							// ...and return the original if it's more complex
+							else
+								return s;
+						}
+
+						// Filter out any values we've said to remove
+					}).Where(s => s != null);
 				}
 			}
 
@@ -661,17 +771,38 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public IsrcFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
 
+				/// <summary>
+				/// Whether any value was skipped and is therefore considered
+				/// hidden data.
+				/// </summary>
+				bool skippedValue;
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="TextFrameBase{TVersion}.Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					skippedValue;
 
 				/// <summary>
-				/// All values contained within this field.
+				/// Preform field-specific filtering of the parsed strings
+				/// before they're stored.
 				/// </summary>
-				public override IEnumerable<object> Values =>
-					from isrc in StringValues
-					where isrc.Contains('-') == false
-					where isrc.Length == 12
-					select isrc.Insert(2, "-")
-						.Insert(6, "-")
-						.Insert(9, "-");
+				/// 
+				/// <param name="strs">The data as unfiltered strings.</param>
+				/// 
+				/// <returns>The desired strings to store.</returns>
+				protected override IEnumerable<string> ParseData(IEnumerable<string> strs) {
+					skippedValue = false;
+
+					foreach (var s in strs) {
+						if (Regex.IsMatch(s, @"^\w{2}-\w{3}-\w{2}-\w{5}$"))
+							yield return s;
+						else if (Regex.IsMatch(s, @"^\w{12}$"))
+							yield return Regex.Replace(s, @"(\w{2})(\w{3})(\w{2})(\w{5})", @"$1-$2-$3-$4");
+						else
+							skippedValue = true;
+					}
+				}
 			}
 
 			/// <summary>
@@ -701,31 +832,27 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public ListMappingFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
 					: base(header, (defaultName ?? (() => Strings.ID3v23Plus.Field_DefaultName_Length)), resources) { }
 
-
 				/// <summary>
-				/// All values contained within this field.
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
 				/// </summary>
-				public override IEnumerable<object> Values {
-					get {
-						// Need easy "random" access for loop
-						var valArray = StringValues?.ToArray();
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
+				protected override IEnumerable<object> FormatValues() {
+					// Need easy "random" access for loop
+					var valArray = StringValues.ToArray();
 
-						if ((valArray?.Length ?? 0) == 0) {
-							yield return null;
-						} else {
-							// Easiest way to iterate over pairs of successive values
-							for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
-								// Singleton element without corresponding title/value
-								if (j == valArray.Length)
-									yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
-								// Credit title is empty
-								else if (valArray[i].Length == 0)
-									yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
-								// Proper credit title/value pair
-								else
-									yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
-							}
-						}
+					// Easiest way to iterate over pairs of successive values
+					for (int i = 0, j = 1; i < valArray.Length; i += 2, j += 2) {
+						// Singleton element without corresponding title/value
+						if (j == valArray.Length)
+							yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, valArray[i]);
+						// Credit title is empty
+						else if (valArray[i].Length == 0)
+							yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
+						// Proper credit title/value pair
+						else
+							yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
 					}
 				}
 			}
@@ -753,16 +880,17 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					: base(header, defaultName, resources) { }
 
 				/// <summary>
-				/// All values contained within this field.
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
 				/// </summary>
-				public override IEnumerable<object> Values {
-					get {
-						foreach (var s in StringValues) {
-							if (DateTime.TryParse(s, out var time))
-								yield return time;
-							else
-								yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
-						}
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
+				protected override IEnumerable<object> FormatValues() {
+					foreach (var s in StringValues) {
+						if (DateTime.TryParse(s, out var time))
+							yield return time;
+						else
+							yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 					}
 				}
 			}
@@ -790,27 +918,41 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					: base(header, defaultName, resources) { }
 
 				/// <summary>
-				/// All values contained within this field.
+				/// The musical flat sign.
 				/// </summary>
-				public override IEnumerable<object> Values {
-					get {
-						foreach (var s in StringValues) {
-							if (s == "o") {
-								yield return Strings.ID3v23Plus.Field_TKEY_OffKey;
-							} else {
-								var cs = s.ToCharArray();
-								// Validate that the value is a properly-formatted key
-								if (((s.Length >= 1) && (s.Length <= 3))
-										&& "ABCDEFG".Contains(cs[0])
-										&& ((s.Length < 2) || "b#m".Contains(cs[1]))
-										&& ((s.Length < 3) || ('m' == cs[2])))
-									yield return s.Replace('b', '\u266D').Replace('#', '\u266F');
-								else
-									yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
-							}
-						}
+				static char flat = '\u266D';
+				/// <summary>
+				/// The musical sharp sign.
+				/// </summary>
+				static char sharp = '\u266F';
+
+				/// <summary>
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
+				/// </summary>
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
+				protected override IEnumerable<object> FormatValues() {
+					foreach (var s in StringValues) {
+						if (s == "o")
+							yield return Strings.ID3v23Plus.Field_TKEY_OffKey;
+						else if (Regex.IsMatch(s, @"^[ABCDEFG][" + flat + sharp + @"]?m?$"))
+							yield return s;
+						else
+							yield return String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
 					}
 				}
+
+				/// <summary>
+				/// Preform field-specific filtering of the parsed strings
+				/// before they're stored.
+				/// </summary>
+				/// 
+				/// <param name="strs">The data as unfiltered strings.</param>
+				/// 
+				/// <returns>The desired strings to store.</returns>
+				protected override IEnumerable<string> ParseData(IEnumerable<string> strs) =>
+					strs.Select(s => s.Replace('b', flat).Replace('#', sharp));
 			}
 
 			/// <summary>
@@ -844,9 +986,43 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// implementation: see solution at
 				/// http://stackoverflow.com/questions/12485626/replacement-for-cultureinfo-getcultures-in-net-windows-store-apps
 				/// Might also be nice to add e.g. ISO 639-3 support in the
-				/// same package ("CultureExtensions").
+				/// same package ("CultureExtensions"?).
 				/// </remarks>
 				public override IEnumerable<object> Values => base.Values;
+			}
+
+			/// <summary>
+			/// Non-numerical genre values.
+			/// </summary>
+			internal enum GenreText {
+				/// <summary>
+				/// <c>RX</c>
+				/// </summary>
+				Remix,
+				/// <summary>
+				/// <c>CR</c>
+				/// </summary>
+				Cover
+			}
+			/// <summary>
+			/// Parse a string that may represent a genre.
+			/// </summary>
+			/// 
+			/// <param name="str">The string to parse.</param>
+			/// 
+			/// <returns>
+			/// The genre indicated by <paramref name="str"/>, or <c>null</c>
+			/// if it doesn't ma
+			/// </returns>
+			internal static GenreText? GenreFromString(string str) {
+				switch (str) {
+					case "RX":
+						return GenreText.Remix;
+					case "CR":
+						return GenreText.Cover;
+					default:
+						return null;
+				}
 			}
 
 			/// <summary>
@@ -859,8 +1035,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// <para/>
 			/// The resource key must fit the pattern <c>Field_HEADER_CODE</c>
 			/// where <c>HEADER</c> is the unique header of the field and
-			/// <c>CODE</c> is the string value. In both, the characters
-			/// <c>/</c> and <c>.</c> will be replaced with <c>_</c>
+			/// <c>CODE</c> is the string value of the field. In both, the 
+			/// characters <c>/</c> and <c>.</c> will be replaced with <c>_</c>
 			/// </remarks>
 			internal class ResourceFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
 				/// <summary>
@@ -882,16 +1058,16 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					: base(header, defaultName, resources) { }
 
 				/// <summary>
-				/// All values contained within this field.
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
 				/// </summary>
-				public override IEnumerable<object> Values =>
-					from keyBase in StringValues
-						// Replace non-key-safe characters
-					select (keyBase, keyBase.Replace('/', '_').Replace('.', '_')) into keyValues
-					// Compose the value into the proper format for lookup
-					select Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_" + keyValues.Item2)
-						// Fallback if key not found
-						?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, keyValues.Item1);
+				/// 
+				/// <returns>The properly-formatted strings.</returns>
+				protected override IEnumerable<object> FormatValues() {
+					foreach (var s in StringValues)
+						yield return Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_" + s.Replace('/', '_').Replace('.', '_'))
+							?? String.Format(CardCatalog.Strings.Base.Field_DefaultValue, s);
+				}
 			}
 
 			/// <summary>
@@ -927,83 +1103,18 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					: base(header, defaultName, resources) { }
 
 				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				public override IEnumerable<object> Values =>
-					from valueBase in StringValues
-						// Try to find the format string for this field
-					let format = Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_Value")
-						// Fallback if key not found
-						?? CardCatalog.Strings.Base.Field_DefaultValue
-					// Apply the value to the format string
-					select String.Format(format, valueBase);
-			}
-
-			/// <summary>
-			/// A frame containing a timestamp.
-			/// </summary>
-			internal class TimeFrameBase<TVersion> : TextFrameBase<TVersion> where TVersion : VersionInfo, new() {
-				/// <summary>
-				/// The constructor required to initialize the field.
+				/// Transform the string values into the desired format just
+				/// before they are displayed.
 				/// </summary>
 				/// 
-				/// <param name="header">The binary header to parse.</param>
-				/// <param name="defaultName">
-				/// The name to use if no more specific one is found, or
-				/// <c>null</c> to use the default name as specified in the
-				/// resources.
-				/// </param>
-				/// <param name="resources">
-				/// The resources to use when looking up dynamic strings, or
-				/// <c>null</c> to use the default
-				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
-				/// </param>
-				public TimeFrameBase(byte[] header, ResourceAccessor defaultName = null, ResourceManager resources = null)
-					: base(header, defaultName, resources) { }
-
-				/// <summary>
-				/// All values contained within this field.
-				/// </summary>
-				public override IEnumerable<object> Values {
-					get {
-						foreach (var s in StringValues) {
-							var times = new DateTimeOffset[2];
-							/*TODO: ID3v2 describes timestamps as a "subset"
-							 * of ISO 8601, but may still want to support
-							 * interval notation for additional robustness
-							 */
-
-							bool first = true;
-							foreach (var time in s.Split(new string[2] { "/", "--" }, StringSplitOptions.RemoveEmptyEntries)) {
-								/* This will lose data if more than two
-								 * timestamps are included, but that violates
-								 * ISO 8601 anyway
-								 */
-								if (DateTimeOffset.TryParse(
-										time,
-										CultureInfo.InvariantCulture,
-										DateTimeStyles.AdjustToUniversal,
-										out times[first ? 0 : 1]
-										) == false) {
-									times = null;
-									break;
-								}
-								first = false;
-							}
-
-							if (times == null) {
-								yield return s;
-								continue;
-							}
-
-							if ((times[0] == null) || (times[0] == DateTimeOffset.MinValue))
-								yield return Strings.ID3v23Plus.Field_Time_Unknown;
-							else if ((times[1] != null) && (times[1] != DateTimeOffset.MinValue))
-								yield return String.Format(Strings.ID3v23Plus.Field_Time_Range, times[0], times[1]);
-							else
-								//TODO: Only return the given values
-								yield return String.Format(Strings.ID3v23Plus.Field_Time_Single, times[0]);
-						}
+				/// <returns>The properly-formatted strings.</returns>
+				protected override IEnumerable<object> FormatValues() {
+					foreach (var s in StringValues) {
+						yield return String.Format(
+							Resources.GetString("Field_" + ISO88591.GetString(SystemName) + "_Value")
+								?? CardCatalog.Strings.Base.Field_DefaultValue,
+							s
+						);
 					}
 				}
 			}
@@ -1086,8 +1197,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						if ((url == null) || (url.Length == 0))
 							return null;
-						else
-							return new object[] { url };
+						return new object[1] { url };
 					}
 				}
 				/// <summary>
@@ -1096,12 +1206,27 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				protected string url = null;
 
 				/// <summary>
+				/// Whether any data remains after the URL is therefore
+				/// considered hidden.
+				/// </summary>
+				bool trailingValue;
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="TextFrameBase{TVersion}.Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					trailingValue;
+
+				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
+				internal override void ParseData() {
+					var split = SplitStrings(Data, ISO88591, 2);
+
 					// Discard everything after the first null
-					url = TextFrameBase<TVersion>.SplitStrings(Data, ISO88591, 2).FirstOrDefault();
+					url = split.FirstOrDefault();
+					trailingValue = (split.Count() >= 2);
 				}
 			}
 
@@ -1142,8 +1267,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						if ((description == null) || (description.Length == 0))
 							return null;
-						else
-							return description;
+						return description;
 					}
 				}
 				/// <summary>
@@ -1158,8 +1282,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						if ((url == null) || (url.Length == 0))
 							return null;
-						else
-							return new object[] { url };
+						return new object[1] { url };
 					}
 				}
 				/// <summary>
@@ -1168,20 +1291,36 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				protected string url = null;
 
 				/// <summary>
+				/// Whether any data remains after the URL is therefore
+				/// considered hidden.
+				/// </summary>
+				bool trailingValue;
+				/// <summary>
+				/// Indicates whether this field includes data not displayed by
+				/// <see cref="TextFrameBase{TVersion}.Values"/>.
+				/// </summary>
+				public override bool HasHiddenData =>
+					trailingValue;
+
+				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
+				internal override void ParseData() {
 					// Get the encoding of the description
 					var encoding = TryGetEncoding(Data[0]);
 
 					// Retrieve the description according to its encoding
-					var split = TextFrameBase<TVersion>.SplitStrings(Data.Skip(1).ToArray(), encoding, 2);
+					var split = SplitStrings(Data.Skip(1).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 
 					// Get the URL in ISO-8859-1 from the end of the string
+					// by temporarily converting back to a raw array
 					var remainder = encoding.GetBytes(split.ElementAtOrDefault(1));
-					url = TextFrameBase<TVersion>.SplitStrings(remainder, ISO88591, 2).FirstOrDefault();
+					url = SplitStrings(remainder, ISO88591, 2).FirstOrDefault();
+
+					// Indicate if any data remains after the URL
+					trailingValue = (split.Count() >= 2);
 				}
 			}
 
@@ -1265,8 +1404,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						if ((text == null) || (text.Length == 0))
 							return Array.Empty<object>();
-						else
-							return new object[1] { text };
+						return new object[1] { text };
 					}
 				}
 
@@ -1274,7 +1412,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
+				internal override void ParseData() {
 					// Get the encoding of the description
 					var encoding = TryGetEncoding(Data[0]);
 
@@ -1282,7 +1420,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					language = ISO88591.GetString(Data.ToList().GetRange(1, 3).ToArray());
 
 					// Retrieve the other contents according to their encoding
-					var split = TextFrameBase<TVersion>.SplitStrings(Data.Skip(4).ToArray(), encoding, 2);
+					var split = SplitStrings(Data.Skip(4).ToArray(), encoding, 2);
 					description = split.FirstOrDefault();
 					text = split.ElementAtOrDefault(1);
 				}
@@ -1341,28 +1479,32 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 					get {
 						if ((description == null) || (description.Length == 0))
 							return null;
-						else
-							return description;
+						return description;
 					}
 				}
 
 				/// <summary>
-				/// The raw image data.
+				/// The index within <see cref="TagField.Data"/> where the
+				/// embedded image begins.
 				/// </summary>
-				ImageData image;
+				int imageStart;
+				/// <summary>
+				/// The MIME type of the embedded image.
+				/// </summary>
+				string mime;
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<object> Values =>
-					new object[1] { image };
+					new object[1] { new ImageData(Data.Skip(imageStart).ToArray(), mime) };
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() {
+				internal override void ParseData() {
 					Encoding encoding = TryGetEncoding(Data[0]);
-					var mime = ISO88591.GetString(Data.Skip(1).TakeWhile(b => b > 0x00).ToArray());
+					mime = ISO88591.GetString(Data.Skip(1).TakeWhile(b => b > 0x00).ToArray());
 					category = (ImageCategory)Data[mime.Length + 2];
 
 					var prevZero = false;
@@ -1381,11 +1523,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						return true;
 					}).ToArray();
 					if (encoding == null)
-						description = TextFrameBase<TVersion>.ReadFromByteOrderMark(descriptionArray);
+						description = ReadFromByteOrderMark(descriptionArray);
 					else
 						description = encoding?.GetString(descriptionArray);
 
-					image = new ImageData(Data.Skip(mime.Length + 3 + descriptionArray.Length + (encoding == ISO88591 ? 1 : 2)).ToArray(), mime);
+					imageStart = (mime.Length + 3 + descriptionArray.Length + (encoding == ISO88591 ? 1 : 2));
 				}
 			}
 
@@ -1441,7 +1583,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				public override void ParseData() =>
+				internal override void ParseData() =>
 					count = ParseUnsignedInteger(Data);
 			}
 		}

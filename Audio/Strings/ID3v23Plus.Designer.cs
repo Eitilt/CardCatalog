@@ -62,6 +62,15 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attempted to access the value of an ID3v2 header from a FieldBase class.
+        /// </summary>
+        public static string Exception_FieldBaseHeaderFlag {
+            get {
+                return ResourceManager.GetString("Exception_FieldBaseHeaderFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
         public static string Field_COMM {
@@ -1342,9 +1351,9 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         /// <summary>
         ///   Looks up a localized string similar to {0} of {1}.
         /// </summary>
-        public static string Field_ValueFormat_Number {
+        public static string Field_ValueFormat_NumberOf {
             get {
-                return ResourceManager.GetString("Field_ValueFormat_Number", resourceCulture);
+                return ResourceManager.GetString("Field_ValueFormat_NumberOf", resourceCulture);
             }
         }
         

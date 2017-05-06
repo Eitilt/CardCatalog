@@ -156,6 +156,22 @@ Parameter 0 will be replaced by the length of data stated in the file</comment>
   <data name="Field_TFLT_MIME" xml:space="preserve">
     <value>MIME type as follows</value>
   </data>
+  <data name="Field_Time_End" xml:space="preserve">
+    <value>???? \u2013 {1}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the end time</comment>
+  </data>
+  <data name="Field_Time_Span" xml:space="preserve">
+    <value>{0} \u2013 {1}</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the start time
+Parameter 1 will be replaced by the end time</comment>
+  </data>
+  <data name="Field_Time_Start" xml:space="preserve">
+    <value>{0} \u2013 ????</value>
+    <comment>Must be formatted as a format string
+Parameter 0 will be replaced by the start time</comment>
+  </data>
   <data name="Field_TIPL" xml:space="preserve">
     <value>Production credits</value>
   </data>
