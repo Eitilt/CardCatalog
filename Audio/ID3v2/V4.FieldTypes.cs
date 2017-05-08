@@ -388,7 +388,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <c>null</c> to use the default
 				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
 				/// </param>
-				internal TextFrame(byte[] header, FieldBase<VersionInfo>.ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
+				internal TextFrame(byte[] header, ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
 					: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }
 
 				/// <summary>

@@ -94,7 +94,7 @@ namespace AgEitilt.CardCatalog {
 		/// With its default implementation, this must be available before
 		/// <see cref="Parse(Stream)"/> is called.
 		/// </remarks>
-		public virtual int Length { get; }
+		public virtual int Length { get; } = 0;
 
 		/// <summary>
 		/// All data contained by this field, in a human-readable format.

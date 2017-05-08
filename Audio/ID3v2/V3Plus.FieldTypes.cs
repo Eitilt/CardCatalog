@@ -287,7 +287,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// TODO: Store data about the unknown flags rather than simply
 			/// indicating their presence.
 			/// </remarks>
-			protected bool FlagUnknown { get; set; }
+			protected bool FlagUnknown { get; set; } = false;
 
 			/// <summary>
 			/// Initialize the field with the proper binary header.
