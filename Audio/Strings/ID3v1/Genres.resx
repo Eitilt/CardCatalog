@@ -117,588 +117,588 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Genre_Acid" xml:space="preserve">
+  <data name="Acid" xml:space="preserve">
     <value>Acid</value>
   </data>
-  <data name="Genre_AcidJazz" xml:space="preserve">
+  <data name="AcidJazz" xml:space="preserve">
     <value>Acid Jazz</value>
   </data>
-  <data name="Genre_AcidPunk" xml:space="preserve">
+  <data name="AcidPunk" xml:space="preserve">
     <value>Acid Punk</value>
   </data>
-  <data name="Genre_Alternative" xml:space="preserve">
+  <data name="Alternative" xml:space="preserve">
     <value>Alternative</value>
   </data>
-  <data name="Genre_AlternRock" xml:space="preserve">
+  <data name="AlternRock" xml:space="preserve">
     <value>AlternRock</value>
   </data>
-  <data name="Genre_Ambient" xml:space="preserve">
+  <data name="Ambient" xml:space="preserve">
     <value>Ambient</value>
   </data>
-  <data name="Genre_Bass" xml:space="preserve">
+  <data name="Bass" xml:space="preserve">
     <value>Bass</value>
   </data>
-  <data name="Genre_Blues" xml:space="preserve">
+  <data name="Blues" xml:space="preserve">
     <value>Blues</value>
   </data>
-  <data name="Genre_Cabaret" xml:space="preserve">
+  <data name="Cabaret" xml:space="preserve">
     <value>Cabaret</value>
   </data>
-  <data name="Genre_ChristianRap" xml:space="preserve">
+  <data name="ChristianRap" xml:space="preserve">
     <value>Christian Rap</value>
   </data>
-  <data name="Genre_Classical" xml:space="preserve">
+  <data name="Classical" xml:space="preserve">
     <value>Classical</value>
   </data>
-  <data name="Genre_ClassicRock" xml:space="preserve">
+  <data name="ClassicRock" xml:space="preserve">
     <value>Classic Rock</value>
   </data>
-  <data name="Genre_Comedy" xml:space="preserve">
+  <data name="Comedy" xml:space="preserve">
     <value>Comedy</value>
   </data>
-  <data name="Genre_Country" xml:space="preserve">
+  <data name="Country" xml:space="preserve">
     <value>Country</value>
   </data>
-  <data name="Genre_Cult" xml:space="preserve">
+  <data name="Cult" xml:space="preserve">
     <value>Cult</value>
   </data>
-  <data name="Genre_Dance" xml:space="preserve">
+  <data name="Dance" xml:space="preserve">
     <value>Dance</value>
   </data>
-  <data name="Genre_Darkwave" xml:space="preserve">
+  <data name="Darkwave" xml:space="preserve">
     <value>Darkwave</value>
   </data>
-  <data name="Genre_DeathMetal" xml:space="preserve">
+  <data name="DeathMetal" xml:space="preserve">
     <value>Death Metal</value>
   </data>
-  <data name="Genre_Disco" xml:space="preserve">
+  <data name="Disco" xml:space="preserve">
     <value>Disco</value>
   </data>
-  <data name="Genre_Dream" xml:space="preserve">
+  <data name="Dream" xml:space="preserve">
     <value>Dream</value>
   </data>
-  <data name="Genre_Electronic" xml:space="preserve">
+  <data name="Electronic" xml:space="preserve">
     <value>Electronic</value>
   </data>
-  <data name="Genre_Ethnic" xml:space="preserve">
+  <data name="Ethnic" xml:space="preserve">
     <value>Ethnic</value>
   </data>
-  <data name="Genre_Eurodance" xml:space="preserve">
+  <data name="Eurodance" xml:space="preserve">
     <value>Eurodance</value>
   </data>
-  <data name="Genre_EuroTechno" xml:space="preserve">
+  <data name="EuroTechno" xml:space="preserve">
     <value>Euro-Techno</value>
   </data>
-  <data name="Genre_Funk" xml:space="preserve">
+  <data name="Funk" xml:space="preserve">
     <value>Funk</value>
   </data>
-  <data name="Genre_Fusion" xml:space="preserve">
+  <data name="Fusion" xml:space="preserve">
     <value>Fusion</value>
   </data>
-  <data name="Genre_Game" xml:space="preserve">
+  <data name="Game" xml:space="preserve">
     <value>Game</value>
   </data>
-  <data name="Genre_Gangsta" xml:space="preserve">
+  <data name="Gangsta" xml:space="preserve">
     <value>Gangsta</value>
   </data>
-  <data name="Genre_Gospel" xml:space="preserve">
+  <data name="Gospel" xml:space="preserve">
     <value>Gospel</value>
   </data>
-  <data name="Genre_Gothic" xml:space="preserve">
+  <data name="Gothic" xml:space="preserve">
     <value>Gothic</value>
   </data>
-  <data name="Genre_Grunge" xml:space="preserve">
+  <data name="Grunge" xml:space="preserve">
     <value>Grunge</value>
   </data>
-  <data name="Genre_HardRock" xml:space="preserve">
+  <data name="HardRock" xml:space="preserve">
     <value>Hard Rock</value>
   </data>
-  <data name="Genre_HipHop" xml:space="preserve">
+  <data name="HipHop" xml:space="preserve">
     <value>Hip-Hop</value>
   </data>
-  <data name="Genre_House" xml:space="preserve">
+  <data name="House" xml:space="preserve">
     <value>House</value>
   </data>
-  <data name="Genre_Industrial" xml:space="preserve">
+  <data name="Industrial" xml:space="preserve">
     <value>Industrial</value>
   </data>
-  <data name="Genre_InstrPop" xml:space="preserve">
+  <data name="InstrPop" xml:space="preserve">
     <value>Instrumental Pop</value>
   </data>
-  <data name="Genre_InstrRock" xml:space="preserve">
+  <data name="InstrRock" xml:space="preserve">
     <value>Instrumental Rock</value>
   </data>
-  <data name="Genre_Instrumental" xml:space="preserve">
+  <data name="Instrumental" xml:space="preserve">
     <value>Instrumental</value>
   </data>
-  <data name="Genre_Jazz" xml:space="preserve">
+  <data name="Jazz" xml:space="preserve">
     <value>Jazz</value>
   </data>
-  <data name="Genre_JazzFunk" xml:space="preserve">
+  <data name="JazzFunk" xml:space="preserve">
     <value>Jazz+Funk</value>
   </data>
-  <data name="Genre_Jungle" xml:space="preserve">
+  <data name="Jungle" xml:space="preserve">
     <value>Jungle</value>
   </data>
-  <data name="Genre_LoFi" xml:space="preserve">
+  <data name="LoFi" xml:space="preserve">
     <value>Lo-Fi</value>
   </data>
-  <data name="Genre_Meditative" xml:space="preserve">
+  <data name="Meditative" xml:space="preserve">
     <value>Meditative</value>
   </data>
-  <data name="Genre_Metal" xml:space="preserve">
+  <data name="Metal" xml:space="preserve">
     <value>Metal</value>
   </data>
-  <data name="Genre_Musical" xml:space="preserve">
+  <data name="Musical" xml:space="preserve">
     <value>Musical</value>
   </data>
-  <data name="Genre_NativeAm" xml:space="preserve">
+  <data name="NativeAm" xml:space="preserve">
     <value>Native American</value>
   </data>
-  <data name="Genre_NewAge" xml:space="preserve">
+  <data name="NewAge" xml:space="preserve">
     <value>New Age</value>
   </data>
-  <data name="Genre_NewWave" xml:space="preserve">
+  <data name="NewWave" xml:space="preserve">
     <value>New Wave</value>
   </data>
-  <data name="Genre_Noise" xml:space="preserve">
+  <data name="Noise" xml:space="preserve">
     <value>Noise</value>
   </data>
-  <data name="Genre_Oldies" xml:space="preserve">
+  <data name="Oldies" xml:space="preserve">
     <value>Oldies</value>
   </data>
-  <data name="Genre_Other" xml:space="preserve">
+  <data name="Other" xml:space="preserve">
     <value>Other genre</value>
   </data>
-  <data name="Genre_Polka" xml:space="preserve">
+  <data name="Polka" xml:space="preserve">
     <value>Polka</value>
   </data>
-  <data name="Genre_Pop" xml:space="preserve">
+  <data name="Pop" xml:space="preserve">
     <value>Pop</value>
   </data>
-  <data name="Genre_PopFolk" xml:space="preserve">
+  <data name="PopFolk" xml:space="preserve">
     <value>Pop-Folk</value>
   </data>
-  <data name="Genre_PopFunk" xml:space="preserve">
+  <data name="PopFunk" xml:space="preserve">
     <value>Pop-Funk</value>
   </data>
-  <data name="Genre_Pranks" xml:space="preserve">
+  <data name="Pranks" xml:space="preserve">
     <value>Pranks</value>
   </data>
-  <data name="Genre_Psychedelic" xml:space="preserve">
+  <data name="Psychedelic" xml:space="preserve">
     <value>Psychedelic</value>
   </data>
-  <data name="Genre_Punk" xml:space="preserve">
+  <data name="Punk" xml:space="preserve">
     <value>Punk</value>
   </data>
-  <data name="Genre_Rap" xml:space="preserve">
+  <data name="Rap" xml:space="preserve">
     <value>Rap</value>
   </data>
-  <data name="Genre_Rave" xml:space="preserve">
+  <data name="Rave" xml:space="preserve">
     <value>Rave</value>
   </data>
-  <data name="Genre_RB" xml:space="preserve">
+  <data name="RB" xml:space="preserve">
     <value>R&amp;B</value>
   </data>
-  <data name="Genre_Reggae" xml:space="preserve">
+  <data name="Reggae" xml:space="preserve">
     <value>Reggae</value>
   </data>
-  <data name="Genre_Retro" xml:space="preserve">
+  <data name="Retro" xml:space="preserve">
     <value>Retro</value>
   </data>
-  <data name="Genre_Rock" xml:space="preserve">
+  <data name="Rock" xml:space="preserve">
     <value>Rock</value>
   </data>
-  <data name="Genre_RockRoll" xml:space="preserve">
+  <data name="RockRoll" xml:space="preserve">
     <value>Rock &amp; Roll</value>
   </data>
-  <data name="Genre_Showtunes" xml:space="preserve">
+  <data name="Showtunes" xml:space="preserve">
     <value>Showtunes</value>
   </data>
-  <data name="Genre_Ska" xml:space="preserve">
+  <data name="Ska" xml:space="preserve">
     <value>Ska</value>
   </data>
-  <data name="Genre_Soul" xml:space="preserve">
+  <data name="Soul" xml:space="preserve">
     <value>Soul</value>
   </data>
-  <data name="Genre_SoundClip" xml:space="preserve">
+  <data name="SoundClip" xml:space="preserve">
     <value>Sound Clip</value>
   </data>
-  <data name="Genre_Soundtrack" xml:space="preserve">
+  <data name="Soundtrack" xml:space="preserve">
     <value>Soundtrack</value>
   </data>
-  <data name="Genre_SouthernRock" xml:space="preserve">
+  <data name="SouthernRock" xml:space="preserve">
     <value>Southern Rock</value>
   </data>
-  <data name="Genre_Space" xml:space="preserve">
+  <data name="Space" xml:space="preserve">
     <value>Space</value>
   </data>
-  <data name="Genre_Techno" xml:space="preserve">
+  <data name="Techno" xml:space="preserve">
     <value>Techno</value>
   </data>
-  <data name="Genre_TechnoIndustr" xml:space="preserve">
+  <data name="TechnoIndustr" xml:space="preserve">
     <value>Techno-Industrial</value>
   </data>
-  <data name="Genre_Top40" xml:space="preserve">
+  <data name="Top40" xml:space="preserve">
     <value>Top 40</value>
   </data>
-  <data name="Genre_Trailer" xml:space="preserve">
+  <data name="Trailer" xml:space="preserve">
     <value>Trailer</value>
   </data>
-  <data name="Genre_Trance" xml:space="preserve">
+  <data name="Trance" xml:space="preserve">
     <value>Trance</value>
   </data>
-  <data name="Genre_Tribal" xml:space="preserve">
+  <data name="Tribal" xml:space="preserve">
     <value>Tribal</value>
   </data>
-  <data name="Genre_TripHop" xml:space="preserve">
+  <data name="TripHop" xml:space="preserve">
     <value>Trip-Hop</value>
   </data>
-  <data name="Genre_Unknown" xml:space="preserve">
+  <data name="Unknown" xml:space="preserve">
     <value>Unknown genre: {0}</value>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the numerical genre ID</comment>
   </data>
-  <data name="Genre_Vocal" xml:space="preserve">
+  <data name="Vocal" xml:space="preserve">
     <value>Vocal</value>
   </data>
-  <data name="Genre_Bebop" xml:space="preserve">
+  <data name="Bebop" xml:space="preserve">
     <value>Bebop</value>
   </data>
-  <data name="Genre_Celtic" xml:space="preserve">
+  <data name="Celtic" xml:space="preserve">
     <value>Celtic</value>
   </data>
-  <data name="Genre_FastFusion" xml:space="preserve">
+  <data name="FastFusion" xml:space="preserve">
     <value>Fast-Fusion</value>
   </data>
-  <data name="Genre_Folk" xml:space="preserve">
+  <data name="Folk" xml:space="preserve">
     <value>Folk</value>
   </data>
-  <data name="Genre_FolkRock" xml:space="preserve">
+  <data name="FolkRock" xml:space="preserve">
     <value>Folk-Rock</value>
   </data>
-  <data name="Genre_Latin" xml:space="preserve">
+  <data name="Latin" xml:space="preserve">
     <value>Latin</value>
   </data>
-  <data name="Genre_NationalFolk" xml:space="preserve">
+  <data name="NationalFolk" xml:space="preserve">
     <value>National Folk</value>
   </data>
-  <data name="Genre_Revival" xml:space="preserve">
+  <data name="Revival" xml:space="preserve">
     <value>Revival</value>
   </data>
-  <data name="Genre_Swing" xml:space="preserve">
+  <data name="Swing" xml:space="preserve">
     <value>Swing</value>
   </data>
-  <data name="Genre_Bluegrass" xml:space="preserve">
+  <data name="Bluegrass" xml:space="preserve">
     <value>Bluegrass</value>
   </data>
-  <data name="Genre_Avantgarde" xml:space="preserve">
+  <data name="Avantgarde" xml:space="preserve">
     <value>Avant-garde</value>
   </data>
-  <data name="Genre_GothicRock" xml:space="preserve">
+  <data name="GothicRock" xml:space="preserve">
     <value>Gothic Rock</value>
   </data>
-  <data name="Genre_ProgRock" xml:space="preserve">
+  <data name="ProgRock" xml:space="preserve">
     <value>Progressive Rock</value>
   </data>
-  <data name="Genre_PsychRock" xml:space="preserve">
+  <data name="PsychRock" xml:space="preserve">
     <value>Psychedelic Rock</value>
   </data>
-  <data name="Genre_SymphRock" xml:space="preserve">
+  <data name="SymphRock" xml:space="preserve">
     <value>Symphonic Rock</value>
   </data>
-  <data name="Genre_SlowRock" xml:space="preserve">
+  <data name="SlowRock" xml:space="preserve">
     <value>Slow Rock</value>
   </data>
-  <data name="Genre_BigBand" xml:space="preserve">
+  <data name="BigBand" xml:space="preserve">
     <value>Big Band</value>
   </data>
-  <data name="Genre_Chorus" xml:space="preserve">
+  <data name="Chorus" xml:space="preserve">
     <value>Chorus</value>
   </data>
-  <data name="Genre_EasyListening" xml:space="preserve">
+  <data name="EasyListening" xml:space="preserve">
     <value>Easy Listening</value>
   </data>
-  <data name="Genre_Acoustic" xml:space="preserve">
+  <data name="Acoustic" xml:space="preserve">
     <value>Acoustic</value>
   </data>
-  <data name="Genre_Humor" xml:space="preserve">
+  <data name="Humor" xml:space="preserve">
     <value>Humor</value>
   </data>
-  <data name="Genre_Speech" xml:space="preserve">
+  <data name="Speech" xml:space="preserve">
     <value>Speech</value>
   </data>
-  <data name="Genre_Chanson" xml:space="preserve">
+  <data name="Chanson" xml:space="preserve">
     <value>Chanson</value>
   </data>
-  <data name="Genre_Opera" xml:space="preserve">
+  <data name="Opera" xml:space="preserve">
     <value>Opera</value>
   </data>
-  <data name="Genre_ChamberMusic" xml:space="preserve">
+  <data name="ChamberMusic" xml:space="preserve">
     <value>Chamber Music</value>
   </data>
-  <data name="Genre_Sonata" xml:space="preserve">
+  <data name="Sonata" xml:space="preserve">
     <value>Sonata</value>
   </data>
-  <data name="Genre_Symphony" xml:space="preserve">
+  <data name="Symphony" xml:space="preserve">
     <value>Symphony</value>
   </data>
-  <data name="Genre_BootyBass" xml:space="preserve">
+  <data name="BootyBass" xml:space="preserve">
     <value>Booty Bass</value>
   </data>
-  <data name="Genre_Primus" xml:space="preserve">
+  <data name="Primus" xml:space="preserve">
     <value>Primus</value>
   </data>
-  <data name="Genre_PornGroove" xml:space="preserve">
+  <data name="PornGroove" xml:space="preserve">
     <value>Porn Groove</value>
   </data>
-  <data name="Genre_Satire" xml:space="preserve">
+  <data name="Satire" xml:space="preserve">
     <value>Satire</value>
   </data>
-  <data name="Genre_SlowJam" xml:space="preserve">
+  <data name="SlowJam" xml:space="preserve">
     <value>Slow Jam</value>
   </data>
-  <data name="Genre_Club" xml:space="preserve">
+  <data name="Club" xml:space="preserve">
     <value>Club</value>
   </data>
-  <data name="Genre_Tango" xml:space="preserve">
+  <data name="Tango" xml:space="preserve">
     <value>Tango</value>
   </data>
-  <data name="Genre_Samba" xml:space="preserve">
+  <data name="Samba" xml:space="preserve">
     <value>Samba</value>
   </data>
-  <data name="Genre_Folklore" xml:space="preserve">
+  <data name="Folklore" xml:space="preserve">
     <value>Folklore</value>
   </data>
-  <data name="Genre_Ballad" xml:space="preserve">
+  <data name="Ballad" xml:space="preserve">
     <value>Ballad</value>
   </data>
-  <data name="Genre_PowerBallad" xml:space="preserve">
+  <data name="PowerBallad" xml:space="preserve">
     <value>Power Ballad</value>
   </data>
-  <data name="Genre_RhythmicSoul" xml:space="preserve">
+  <data name="RhythmicSoul" xml:space="preserve">
     <value>Rhythmic Soul</value>
   </data>
-  <data name="Genre_Freestyle" xml:space="preserve">
+  <data name="Freestyle" xml:space="preserve">
     <value>Freestyle</value>
   </data>
-  <data name="Genre_Duet" xml:space="preserve">
+  <data name="Duet" xml:space="preserve">
     <value>Duet</value>
   </data>
-  <data name="Genre_PunkRock" xml:space="preserve">
+  <data name="PunkRock" xml:space="preserve">
     <value>Punk Rock</value>
   </data>
-  <data name="Genre_DrumSolo" xml:space="preserve">
+  <data name="DrumSolo" xml:space="preserve">
     <value>Drum Solo</value>
   </data>
-  <data name="Genre_ACapella" xml:space="preserve">
+  <data name="ACapella" xml:space="preserve">
     <value>A Capella</value>
   </data>
-  <data name="Genre_EuroHouse" xml:space="preserve">
+  <data name="EuroHouse" xml:space="preserve">
     <value>Euro-House</value>
   </data>
-  <data name="Genre_DanceHall" xml:space="preserve">
+  <data name="DanceHall" xml:space="preserve">
     <value>Dance Hall</value>
   </data>
-  <data name="Genre_Goa" xml:space="preserve">
+  <data name="Goa" xml:space="preserve">
     <value>Goa</value>
   </data>
-  <data name="Genre_DrumBass" xml:space="preserve">
+  <data name="DrumBass" xml:space="preserve">
     <value>Drum &amp; Bass</value>
   </data>
-  <data name="Genre_ClubHouse" xml:space="preserve">
+  <data name="ClubHouse" xml:space="preserve">
     <value>Club-House</value>
   </data>
-  <data name="Genre_Hardcore" xml:space="preserve">
+  <data name="Hardcore" xml:space="preserve">
     <value>Hardcore</value>
   </data>
-  <data name="Genre_Terror" xml:space="preserve">
+  <data name="Terror" xml:space="preserve">
     <value>Terror</value>
   </data>
-  <data name="Genre_Indie" xml:space="preserve">
+  <data name="Indie" xml:space="preserve">
     <value>Indie</value>
   </data>
-  <data name="Genre_BritPop" xml:space="preserve">
+  <data name="BritPop" xml:space="preserve">
     <value>BritPop</value>
   </data>
-  <data name="Genre_AfroPunk" xml:space="preserve">
+  <data name="AfroPunk" xml:space="preserve">
     <value>Afro-Punk</value>
   </data>
-  <data name="Genre_PolskPunk" xml:space="preserve">
+  <data name="PolskPunk" xml:space="preserve">
     <value>Polsk Punk</value>
   </data>
-  <data name="Genre_Beat" xml:space="preserve">
+  <data name="Beat" xml:space="preserve">
     <value>Beat</value>
   </data>
-  <data name="Genre_ChristianGangstaRap" xml:space="preserve">
+  <data name="ChristianGangstaRap" xml:space="preserve">
     <value>Christian Gangsta Rap</value>
   </data>
-  <data name="Genre_HeavyMetal" xml:space="preserve">
+  <data name="HeavyMetal" xml:space="preserve">
     <value>Heavy Metal</value>
   </data>
-  <data name="Genre_BlackMetal" xml:space="preserve">
+  <data name="BlackMetal" xml:space="preserve">
     <value>Black Metal</value>
   </data>
-  <data name="Genre_Crossover" xml:space="preserve">
+  <data name="Crossover" xml:space="preserve">
     <value>Crossover</value>
   </data>
-  <data name="Genre_ContempChristian" xml:space="preserve">
+  <data name="ContempChristian" xml:space="preserve">
     <value>Contemporary Christian</value>
   </data>
-  <data name="Genre_ChristianRock" xml:space="preserve">
+  <data name="ChristianRock" xml:space="preserve">
     <value>Christian Rock</value>
   </data>
-  <data name="Genre_Merengue" xml:space="preserve">
+  <data name="Merengue" xml:space="preserve">
     <value>Merengue</value>
   </data>
-  <data name="Genre_Salsa" xml:space="preserve">
+  <data name="Salsa" xml:space="preserve">
     <value>Salsa</value>
   </data>
-  <data name="Genre_ThrashMetal" xml:space="preserve">
+  <data name="ThrashMetal" xml:space="preserve">
     <value>Thrash Metal</value>
   </data>
-  <data name="Genre_Anime" xml:space="preserve">
+  <data name="Anime" xml:space="preserve">
     <value>Anime</value>
   </data>
-  <data name="Genre_JPop" xml:space="preserve">
+  <data name="JPop" xml:space="preserve">
     <value>JPop</value>
   </data>
-  <data name="Genre_Synthpop" xml:space="preserve">
+  <data name="Synthpop" xml:space="preserve">
     <value>Synthpop</value>
   </data>
-  <data name="Genre_Abstract" xml:space="preserve">
+  <data name="Abstract" xml:space="preserve">
     <value>Abstract</value>
   </data>
-  <data name="Genre_ArtRock" xml:space="preserve">
+  <data name="ArtRock" xml:space="preserve">
     <value>Art Rock</value>
   </data>
-  <data name="Genre_Baroque" xml:space="preserve">
+  <data name="Baroque" xml:space="preserve">
     <value>Baroque</value>
   </data>
-  <data name="Genre_Bhangra" xml:space="preserve">
+  <data name="Bhangra" xml:space="preserve">
     <value>Bhangra</value>
   </data>
-  <data name="Genre_BigBeat" xml:space="preserve">
+  <data name="BigBeat" xml:space="preserve">
     <value>Big Beat</value>
   </data>
-  <data name="Genre_Breakbeat" xml:space="preserve">
+  <data name="Breakbeat" xml:space="preserve">
     <value>Breakbeat</value>
   </data>
-  <data name="Genre_Chillout" xml:space="preserve">
+  <data name="Chillout" xml:space="preserve">
     <value>Chillout</value>
   </data>
-  <data name="Genre_Downtempo" xml:space="preserve">
+  <data name="Downtempo" xml:space="preserve">
     <value>Downtempo</value>
   </data>
-  <data name="Genre_Dub" xml:space="preserve">
+  <data name="Dub" xml:space="preserve">
     <value>Dub</value>
   </data>
-  <data name="Genre_EBM" xml:space="preserve">
+  <data name="EBM" xml:space="preserve">
     <value>EBM</value>
   </data>
-  <data name="Genre_Eclectic" xml:space="preserve">
+  <data name="Eclectic" xml:space="preserve">
     <value>Eclectic</value>
   </data>
-  <data name="Genre_Electro" xml:space="preserve">
+  <data name="Electro" xml:space="preserve">
     <value>Electro</value>
   </data>
-  <data name="Genre_Electroclash" xml:space="preserve">
+  <data name="Electroclash" xml:space="preserve">
     <value>Electroclash</value>
   </data>
-  <data name="Genre_Emo" xml:space="preserve">
+  <data name="Emo" xml:space="preserve">
     <value>Emo</value>
   </data>
-  <data name="Genre_Experimental" xml:space="preserve">
+  <data name="Experimental" xml:space="preserve">
     <value>Experimental</value>
   </data>
-  <data name="Genre_Garage" xml:space="preserve">
+  <data name="Garage" xml:space="preserve">
     <value>Garage</value>
   </data>
-  <data name="Genre_Global" xml:space="preserve">
+  <data name="Global" xml:space="preserve">
     <value>Global</value>
   </data>
-  <data name="Genre_IDM" xml:space="preserve">
+  <data name="IDM" xml:space="preserve">
     <value>IDM</value>
   </data>
-  <data name="Genre_Illbient" xml:space="preserve">
+  <data name="Illbient" xml:space="preserve">
     <value>Illbient</value>
   </data>
-  <data name="Genre_IndustroGoth" xml:space="preserve">
+  <data name="IndustroGoth" xml:space="preserve">
     <value>Industro-Goth</value>
   </data>
-  <data name="Genre_JamBand" xml:space="preserve">
+  <data name="JamBand" xml:space="preserve">
     <value>Jam Band</value>
   </data>
-  <data name="Genre_Krautrock" xml:space="preserve">
+  <data name="Krautrock" xml:space="preserve">
     <value>Krautrock</value>
   </data>
-  <data name="Genre_Leftfield" xml:space="preserve">
+  <data name="Leftfield" xml:space="preserve">
     <value>Leftfield</value>
   </data>
-  <data name="Genre_Lounge" xml:space="preserve">
+  <data name="Lounge" xml:space="preserve">
     <value>Lounge</value>
   </data>
-  <data name="Genre_MathRock" xml:space="preserve">
+  <data name="MathRock" xml:space="preserve">
     <value>Math Rock</value>
   </data>
-  <data name="Genre_NewRomantic" xml:space="preserve">
+  <data name="NewRomantic" xml:space="preserve">
     <value>New Romantic</value>
   </data>
-  <data name="Genre_NuBreakz" xml:space="preserve">
+  <data name="NuBreakz" xml:space="preserve">
     <value>Nu-Breakz</value>
   </data>
-  <data name="Genre_PostPunk" xml:space="preserve">
+  <data name="PostPunk" xml:space="preserve">
     <value>Post-Punk</value>
   </data>
-  <data name="Genre_PostRock" xml:space="preserve">
+  <data name="PostRock" xml:space="preserve">
     <value>Post-Rock</value>
   </data>
-  <data name="Genre_Psytrance" xml:space="preserve">
+  <data name="Psytrance" xml:space="preserve">
     <value>Psytrance</value>
   </data>
-  <data name="Genre_Shoegaze" xml:space="preserve">
+  <data name="Shoegaze" xml:space="preserve">
     <value>Shoegaze</value>
   </data>
-  <data name="Genre_SpaceRock" xml:space="preserve">
+  <data name="SpaceRock" xml:space="preserve">
     <value>Space Rock</value>
   </data>
-  <data name="Genre_TropRock" xml:space="preserve">
+  <data name="TropRock" xml:space="preserve">
     <value>Trop Rock</value>
   </data>
-  <data name="Genre_WorldMusic" xml:space="preserve">
+  <data name="WorldMusic" xml:space="preserve">
     <value>World Music</value>
   </data>
-  <data name="Genre_Neoclassical" xml:space="preserve">
+  <data name="Neoclassical" xml:space="preserve">
     <value>Neoclassical</value>
   </data>
-  <data name="Genre_Audiobook" xml:space="preserve">
+  <data name="Audiobook" xml:space="preserve">
     <value>Audiobook</value>
   </data>
-  <data name="Genre_AudioTheatre" xml:space="preserve">
+  <data name="AudioTheatre" xml:space="preserve">
     <value>Audio Theatre</value>
   </data>
-  <data name="Genre_NeueDeutscheWelle" xml:space="preserve">
+  <data name="NeueDeutscheWelle" xml:space="preserve">
     <value>Neue Deutsche Welle</value>
   </data>
-  <data name="Genre_Podcast" xml:space="preserve">
+  <data name="Podcast" xml:space="preserve">
     <value>Podcast</value>
   </data>
-  <data name="Genre_IndieRock" xml:space="preserve">
+  <data name="IndieRock" xml:space="preserve">
     <value>Indie Rock</value>
   </data>
-  <data name="Genre_GFunk" xml:space="preserve">
+  <data name="GFunk" xml:space="preserve">
     <value>G-Funk</value>
   </data>
-  <data name="Genre_Dubstep" xml:space="preserve">
+  <data name="Dubstep" xml:space="preserve">
     <value>Dubstep</value>
   </data>
-  <data name="Genre_GarageRock" xml:space="preserve">
+  <data name="GarageRock" xml:space="preserve">
     <value>Garage Rock</value>
   </data>
-  <data name="Genre_Psybient" xml:space="preserve">
+  <data name="Psybient" xml:space="preserve">
     <value>Psybient</value>
   </data>
-  <data name="Genre_None" xml:space="preserve">
+  <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
 </root>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ID3v2 {
+    public class Images {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ID3v2() {
+        internal Images() {
         }
         
         /// <summary>
@@ -40,7 +40,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2", typeof(ID3v2).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.Images", typeof(Images).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,227 +62,200 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to reverse ID3v2 unsynchronization on a stream with an invalid byte following 0xFF.
-        /// </summary>
-        public static string Exception_NotUnsynchronized {
-            get {
-                return ResourceManager.GetString("Exception_NotUnsynchronized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Attempting to read a larger integer from ID3 stream than supported by the storage type.
-        /// </summary>
-        public static string Exception_ParsedIntTooLarge {
-            get {
-                return ResourceManager.GetString("Exception_ParsedIntTooLarge", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reached end of ID3v2 stream while trying to read {0} unsynchronized bytes.
-        /// </summary>
-        public static string Exception_StreamEnded {
-            get {
-                return ResourceManager.GetString("Exception_StreamEnded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Artist portrait.
         /// </summary>
-        public static string Image_Artist {
+        public static string Artist {
             get {
-                return ResourceManager.GetString("Image_Artist", resourceCulture);
+                return ResourceManager.GetString("Artist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lead artist portrait.
         /// </summary>
-        public static string Image_ArtistMain {
+        public static string ArtistMain {
             get {
-                return ResourceManager.GetString("Image_ArtistMain", resourceCulture);
+                return ResourceManager.GetString("ArtistMain", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Group picture.
         /// </summary>
-        public static string Image_Band {
+        public static string Band {
             get {
-                return ResourceManager.GetString("Image_Band", resourceCulture);
+                return ResourceManager.GetString("Band", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Booklet page.
         /// </summary>
-        public static string Image_Booklet {
+        public static string Booklet {
             get {
-                return ResourceManager.GetString("Image_Booklet", resourceCulture);
+                return ResourceManager.GetString("Booklet", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A brightly-colored fish.
         /// </summary>
-        public static string Image_BrightFish {
+        public static string BrightFish {
             get {
-                return ResourceManager.GetString("Image_BrightFish", resourceCulture);
+                return ResourceManager.GetString("BrightFish", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Composer portrait.
         /// </summary>
-        public static string Image_Composer {
+        public static string Composer {
             get {
-                return ResourceManager.GetString("Image_Composer", resourceCulture);
+                return ResourceManager.GetString("Composer", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Conductor portrait.
         /// </summary>
-        public static string Image_Conductor {
+        public static string Conductor {
             get {
-                return ResourceManager.GetString("Image_Conductor", resourceCulture);
+                return ResourceManager.GetString("Conductor", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Back cover.
         /// </summary>
-        public static string Image_CoverBack {
+        public static string CoverBack {
             get {
-                return ResourceManager.GetString("Image_CoverBack", resourceCulture);
+                return ResourceManager.GetString("CoverBack", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Front cover.
         /// </summary>
-        public static string Image_CoverFront {
+        public static string CoverFront {
             get {
-                return ResourceManager.GetString("Image_CoverFront", resourceCulture);
+                return ResourceManager.GetString("CoverFront", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to File icon.
         /// </summary>
-        public static string Image_FileIcon {
+        public static string FileIcon {
             get {
-                return ResourceManager.GetString("Image_FileIcon", resourceCulture);
+                return ResourceManager.GetString("FileIcon", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Illustration.
         /// </summary>
-        public static string Image_Illustration {
+        public static string Illustration {
             get {
-                return ResourceManager.GetString("Image_Illustration", resourceCulture);
+                return ResourceManager.GetString("Illustration", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Location image.
         /// </summary>
-        public static string Image_Location {
+        public static string Location {
             get {
-                return ResourceManager.GetString("Image_Location", resourceCulture);
+                return ResourceManager.GetString("Location", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist logo.
         /// </summary>
-        public static string Image_LogoArtist {
+        public static string LogoArtist {
             get {
-                return ResourceManager.GetString("Image_LogoArtist", resourceCulture);
+                return ResourceManager.GetString("LogoArtist", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Publisher logo.
         /// </summary>
-        public static string Image_LogoPublisher {
+        public static string LogoPublisher {
             get {
-                return ResourceManager.GetString("Image_LogoPublisher", resourceCulture);
+                return ResourceManager.GetString("LogoPublisher", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Medium image.
         /// </summary>
-        public static string Image_Medium {
+        public static string Medium {
             get {
-                return ResourceManager.GetString("Image_Medium", resourceCulture);
+                return ResourceManager.GetString("Medium", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Other image.
         /// </summary>
-        public static string Image_Other {
+        public static string Other {
             get {
-                return ResourceManager.GetString("Image_Other", resourceCulture);
+                return ResourceManager.GetString("Other", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Other icon.
         /// </summary>
-        public static string Image_OtherIcon {
+        public static string OtherIcon {
             get {
-                return ResourceManager.GetString("Image_OtherIcon", resourceCulture);
+                return ResourceManager.GetString("OtherIcon", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Performance image.
         /// </summary>
-        public static string Image_Performance {
+        public static string Performance {
             get {
-                return ResourceManager.GetString("Image_Performance", resourceCulture);
+                return ResourceManager.GetString("Performance", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Screen capture.
         /// </summary>
-        public static string Image_ScreenCapture {
+        public static string ScreenCapture {
             get {
-                return ResourceManager.GetString("Image_ScreenCapture", resourceCulture);
+                return ResourceManager.GetString("ScreenCapture", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Production image.
         /// </summary>
-        public static string Image_Session {
+        public static string Session {
             get {
-                return ResourceManager.GetString("Image_Session", resourceCulture);
+                return ResourceManager.GetString("Session", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown image.
         /// </summary>
-        public static string Image_Unknown {
+        public static string Unknown {
             get {
-                return ResourceManager.GetString("Image_Unknown", resourceCulture);
+                return ResourceManager.GetString("Unknown", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Author or lyricist portrait.
         /// </summary>
-        public static string Image_Writer {
+        public static string Writer {
             get {
-                return ResourceManager.GetString("Image_Writer", resourceCulture);
+                return ResourceManager.GetString("Writer", resourceCulture);
             }
         }
     }

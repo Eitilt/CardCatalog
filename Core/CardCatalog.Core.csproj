@@ -38,17 +38,35 @@ All format support is provided by the dependent packages.</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Strings\Base.Designer.cs">
+    <Compile Update="Strings\Exceptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Base.resx</DependentUpon>
+      <DependentUpon>Exceptions.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\Fields.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fields.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\Logger.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Logger.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Strings\Base.resx">
+    <EmbeddedResource Update="Strings\Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\Fields.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Base.Designer.cs</LastGenOutput>
+      <LastGenOutput>Fields.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\Logger.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Logger.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

@@ -386,7 +386,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="resources">
 				/// The resources to use when looking up dynamic strings, or
 				/// <c>null</c> to use the default
-				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// <see cref="Strings.ID3v2.Fields.ResourceManager"/>.
 				/// </param>
 				internal TextFrame(byte[] header, ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
 					: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }
@@ -549,9 +549,9 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 							if (v is GenreText t) {
 								switch (t) {
 									case GenreText.Remix:
-										return Strings.ID3v23Plus.Field_TCON_RX;
+										return Strings.ID3v2.Fields.TCON_RX;
 									case GenreText.Cover:
-										return Strings.ID3v23Plus.Field_TCON_CR;
+										return Strings.ID3v2.Fields.TCON_CR;
 								}
 							} else if (v is ID3v1.Genre g) {
 								return g.PrintableName();
@@ -667,7 +667,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// 
 				/// <param name="header">The binary header to parse.</param>
 				public TimeFrame(byte[] header)
-					: base(header, (() => Strings.ID3v23Plus.Field_DefaultName_Time), Strings.ID3v24.ResourceManager) { }
+					: base(header, (() => Strings.ID3v2.Fields.DefaultName_Time), Strings.ID3v24.ResourceManager) { }
 
 				/// <summary>
 				/// All values contained within this field.

@@ -40,53 +40,80 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Strings\ID3v1.Designer.cs">
+    <Compile Update="Strings\ID3v1\Genres.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ID3v1.resx</DependentUpon>
+      <DependentUpon>Genres.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v2.Designer.cs">
+    <Compile Update="Strings\ID3v2\Exceptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ID3v2.resx</DependentUpon>
+      <DependentUpon>Exceptions.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v23.Designer.cs">
+    <Compile Update="Strings\ID3v2\Images.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ID3v23.resx</DependentUpon>
+      <DependentUpon>Images.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v24.Designer.cs">
+    <Compile Update="Strings\ID3v2\3\Exceptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ID3v24.resx</DependentUpon>
+      <DependentUpon>Exceptions.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v23Plus.Designer.cs">
+    <Compile Update="Strings\ID3v2\4\Fields.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ID3v23Plus.resx</DependentUpon>
+      <DependentUpon>Fields.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v2\Fields.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fields.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v2\Logger.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Logger.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v2\4\Exceptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Exceptions.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Strings\ID3v1.resx">
+    <EmbeddedResource Update="Strings\ID3v1\Genres.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ID3v1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Genres.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v2.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ID3v2.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Strings\ID3v2\Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v23.resx">
+    <EmbeddedResource Update="Strings\ID3v2\Images.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ID3v23.Designer.cs</LastGenOutput>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v24.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ID3v24.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Strings\ID3v2\3\Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v23Plus.resx">
+    <EmbeddedResource Update="Strings\ID3v2\4\Fields.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ID3v23Plus.Designer.cs</LastGenOutput>
+      <LastGenOutput>Fields.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v2\Fields.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Fields.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v2\Logger.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Logger.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v2\4\Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

@@ -70,7 +70,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// unsynchronization.
 		/// </returns>
 		protected async Task<byte[]> ReadExtHeaderWithTagAsync(Stream stream, uint tagSize, bool useUnsync, bool extendedHeaderPresent) {
-			logger?.LogDebug(Strings.ID3v23Plus.Logger_ParseExtHeader);
+			logger?.LogDebug(Strings.ID3v2.Logger.ParseExtHeader);
 
 			if (extendedHeaderPresent == false)
 				return await ReadBytesAsync(stream, tagSize, useUnsync).ConfigureAwait(false);

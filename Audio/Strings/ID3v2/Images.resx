@@ -117,86 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Exception_ExtendFieldType" xml:space="preserve">
-    <value>Metadata tag field types must extend TagField</value>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist portrait</value>
   </data>
-  <data name="Exception_NoFieldEnclosingFormatName" xml:space="preserve">
-    <value>If a TagFieldAttribute does not declare a Format, at least one enclosing type must have an associated MetadataFormatAttribute</value>
+  <data name="ArtistMain" xml:space="preserve">
+    <value>Lead artist portrait</value>
   </data>
-  <data name="Exception_NoFormatName" xml:space="preserve">
-    <value>No explicit format name was passed, and the type has no attribute to infer it from</value>
+  <data name="Band" xml:space="preserve">
+    <value>Group picture</value>
   </data>
-  <data name="Exception_ParseFunctionAbstract" xml:space="preserve">
-    <value>Metadata header-parsing functions must not be abstract</value>
+  <data name="Booklet" xml:space="preserve">
+    <value>Booklet page</value>
   </data>
-  <data name="Exception_ParseFunctionNonstatic" xml:space="preserve">
-    <value>Metadata header-parsing functions must be static</value>
+  <data name="BrightFish" xml:space="preserve">
+    <value>A brightly-colored fish</value>
   </data>
-  <data name="Exception_ParseFunctionParameters" xml:space="preserve">
-    <value>Metadata header-parsing functions must be able to take only an IEnumerable&lt;byte&gt;</value>
+  <data name="Composer" xml:space="preserve">
+    <value>Composer portrait</value>
   </data>
-  <data name="Exception_ParseFunctionPrivate" xml:space="preserve">
-    <value>Metadata header-parsing functions must not be private</value>
+  <data name="Conductor" xml:space="preserve">
+    <value>Conductor portrait</value>
   </data>
-  <data name="Exception_ParseFunctionReturn" xml:space="preserve">
-    <value>Metadata header-parsing functions must return an empty instance of their type</value>
+  <data name="CoverBack" xml:space="preserve">
+    <value>Back cover</value>
   </data>
-  <data name="Field_DefaultName" xml:space="preserve">
-    <value>{{ {0} }}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 is replaced with the binary header rendered in UTF-8</comment>
+  <data name="CoverFront" xml:space="preserve">
+    <value>Front cover</value>
   </data>
-  <data name="Field_DefaultValue" xml:space="preserve">
-    <value>{{ {0} }}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 is replaced with the binary data rendered in hexadecimal or the string value</comment>
+  <data name="FileIcon" xml:space="preserve">
+    <value>File icon</value>
   </data>
-  <data name="Logger_Field_Parse" xml:space="preserve">
-    <value>Parsing field "{Name}" according to generic logic</value>
+  <data name="Illustration" xml:space="preserve">
+    <value>Illustration</value>
   </data>
-  <data name="Logger_GenericParse" xml:space="preserve">
-    <value>Parsing type {Type} from stream</value>
+  <data name="Location" xml:space="preserve">
+    <value>Location image</value>
   </data>
-  <data name="Logger_GenericParse_Bound" xml:space="preserve">
-    <value>Calling Parse for object of length {Length}</value>
+  <data name="LogoArtist" xml:space="preserve">
+    <value>Artist logo</value>
   </data>
-  <data name="Logger_GenericParse_Bound_Unknown" xml:space="preserve">
-    <value>Calling Parse for object of unknown length</value>
+  <data name="LogoPublisher" xml:space="preserve">
+    <value>Publisher logo</value>
   </data>
-  <data name="Logger_GenericParse_Found" xml:space="preserve">
-    <value>Found header matching type {Type}</value>
+  <data name="Medium" xml:space="preserve">
+    <value>Medium image</value>
   </data>
-  <data name="Logger_GenericParse_Header" xml:space="preserve">
-    <value>Reading additional bytes into header</value>
+  <data name="Other" xml:space="preserve">
+    <value>Other image</value>
   </data>
-  <data name="Logger_RegisterAll" xml:space="preserve">
-    <value>Registering all formats in assembly {Assembly}</value>
+  <data name="OtherIcon" xml:space="preserve">
+    <value>Other icon</value>
   </data>
-  <data name="Logger_RegisterAll_PrevAssembly" xml:space="preserve">
-    <value>Formats in assembly have already been registered</value>
+  <data name="Performance" xml:space="preserve">
+    <value>Performance image</value>
   </data>
-  <data name="Logger_RegisterAll_TypeList" xml:space="preserve">
-    <value>Checking type {Type} for registration</value>
+  <data name="ScreenCapture" xml:space="preserve">
+    <value>Screen capture</value>
   </data>
-  <data name="Logger_RegisterField" xml:space="preserve">
-    <value>Registering type {Type} as a field within {Format}</value>
+  <data name="Session" xml:space="preserve">
+    <value>Production image</value>
   </data>
-  <data name="Logger_RegisterFieldParser" xml:space="preserve">
-    <value>Registering {Method} as a generator for {Field} within {Format}</value>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown image</value>
   </data>
-  <data name="Logger_RegisterField_NoFormat" xml:space="preserve">
-    <value>Scanning for format attribute(s) on enclosing types</value>
-  </data>
-  <data name="Logger_RegisterField_ScanHeaders" xml:space="preserve">
-    <value>Scanning for additional field headers</value>
-  </data>
-  <data name="Logger_RegisterFormat" xml:space="preserve">
-    <value>Registering type {Type} as {Format}</value>
-  </data>
-  <data name="Logger_RegisterFormatParser" xml:space="preserve">
-    <value>Registering {Method} as a generator for {Format}</value>
-  </data>
-  <data name="Logger_RegisterFormat_EmptyGeneric" xml:space="preserve">
-    <value>Scanning for format attribute(s) on type {Type}</value>
+  <data name="Writer" xml:space="preserve">
+    <value>Author or lyricist portrait</value>
   </data>
 </root>

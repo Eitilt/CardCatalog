@@ -235,11 +235,11 @@ namespace AgEitilt.CardCatalog.Audio {
 
 			// If `str` is purely digits, the lookup has failed
 			if (str.All(char.IsDigit) == false) {
-				var genre = Strings.ID3v1.ResourceManager.GetString("Genre_" + str);
+				var genre = Strings.ID3v1.Genres.ResourceManager.GetString(str);
 				if (genre != null)
 					return genre;
 			}
-			return String.Format(Strings.ID3v1.Genre_Unknown, str);
+			return String.Format(Strings.ID3v1.Genres.Unknown, str);
 		}
 	}
 }

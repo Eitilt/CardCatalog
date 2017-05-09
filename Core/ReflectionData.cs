@@ -60,7 +60,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <returns>The generated objects.</returns>
 		internal static async Task<IEnumerable<T>> ParseAsync(Stream stream, IEnumerable<ReflectionData<T>> types) {
-			logger?.LogDebug(Strings.Base.Logger_GenericParse, typeof(T).FullName);
+			logger?.LogDebug(Strings.Logger.GenericParse, typeof(T).FullName);
 
 			var tasks = new List<Task>();
 			var ret = new List<T>();
@@ -77,7 +77,7 @@ namespace AgEitilt.CardCatalog {
 				foreach (var v in types.SelectMany(t => t.ValidationFunctions)) {
 					// Make sure we have enough bytes to check the header
 					if (readBytes.Count < v.length) {
-						logger?.LogDebug(Strings.Base.Logger_GenericParse_Header);
+						logger?.LogDebug(Strings.Logger.GenericParse_Header);
 
 						var buffer = new byte[v.length - readBytes.Count];
 						var readCount = stream.ReadAll(buffer, 0, buffer.Length);
@@ -97,12 +97,12 @@ namespace AgEitilt.CardCatalog {
 						// the correct type to parse next
 						continue;
 					else
-						logger?.LogDebug(Strings.Base.Logger_GenericParse_Found, tag.GetType().FullName);
+						logger?.LogDebug(Strings.Logger.GenericParse_Found, tag.GetType().FullName);
 
 					ret.Add(tag);
 
 					if (tag.Length == 0) {
-						logger?.LogDebug(Strings.Base.Logger_GenericParse_Bound_Unknown);
+						logger?.LogDebug(Strings.Logger.GenericParse_Bound_Unknown);
 
 						/* The header doesn't contain length data, so we need
 						 * to read the stream directly until whatever end-of-
@@ -112,7 +112,7 @@ namespace AgEitilt.CardCatalog {
 						// the header
 						tag.Parse(stream);
 					} else {
-						logger?.LogDebug(Strings.Base.Logger_GenericParse_Bound, tag.Length);
+						logger?.LogDebug(Strings.Logger.GenericParse_Bound, tag.Length);
 
 						// Read all data from the stream before parsing the
 						// next object along

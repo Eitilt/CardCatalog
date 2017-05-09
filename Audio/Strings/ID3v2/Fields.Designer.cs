@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ID3v23Plus {
+    public class Fields {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ID3v23Plus() {
+        internal Fields() {
         }
         
         /// <summary>
@@ -40,7 +40,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v23Plus", typeof(ID3v23Plus).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.Fields", typeof(Fields).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,1433 +62,1406 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attempted to access the value of an ID3v2 header from a FieldBase class.
-        /// </summary>
-        public static string Exception_FieldBaseHeaderFlag {
-            get {
-                return ResourceManager.GetString("Exception_FieldBaseHeaderFlag", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
-        public static string Field_COMM {
+        public static string COMM {
             get {
-                return ResourceManager.GetString("Field_COMM", resourceCulture);
+                return ResourceManager.GetString("COMM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown length.
         /// </summary>
-        public static string Field_DefaultName_Length {
+        public static string DefaultName_Length {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Length", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Length", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown number.
         /// </summary>
-        public static string Field_DefaultName_Number {
+        public static string DefaultName_Number {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Number", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Number", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown text.
         /// </summary>
-        public static string Field_DefaultName_Text {
+        public static string DefaultName_Text {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Text", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Text", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown time.
         /// </summary>
-        public static string Field_DefaultName_Time {
+        public static string DefaultName_Time {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Time", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Time", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown URL.
         /// </summary>
-        public static string Field_DefaultName_Url {
+        public static string DefaultName_Url {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Url", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Url", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Play count.
         /// </summary>
-        public static string Field_PCNT {
+        public static string PCNT {
             get {
-                return ResourceManager.GetString("Field_PCNT", resourceCulture);
+                return ResourceManager.GetString("PCNT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} ({1}).
         /// </summary>
-        public static string Field_Subtitle_Language {
+        public static string Subtitle_Language {
             get {
-                return ResourceManager.GetString("Field_Subtitle_Language", resourceCulture);
+                return ResourceManager.GetString("Subtitle_Language", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album.
         /// </summary>
-        public static string Field_TALB {
+        public static string TALB {
             get {
-                return ResourceManager.GetString("Field_TALB", resourceCulture);
+                return ResourceManager.GetString("TALB", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Beats per minute.
         /// </summary>
-        public static string Field_TBPM {
+        public static string TBPM {
             get {
-                return ResourceManager.GetString("Field_TBPM", resourceCulture);
+                return ResourceManager.GetString("TBPM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Category.
         /// </summary>
-        public static string Field_TCAT {
+        public static string TCAT {
             get {
-                return ResourceManager.GetString("Field_TCAT", resourceCulture);
+                return ResourceManager.GetString("TCAT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compilation (iTunes).
         /// </summary>
-        public static string Field_TCMP {
+        public static string TCMP {
             get {
-                return ResourceManager.GetString("Field_TCMP", resourceCulture);
+                return ResourceManager.GetString("TCMP", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Not part of a compilation.
         /// </summary>
-        public static string Field_TCMP_0 {
+        public static string TCMP_0 {
             get {
-                return ResourceManager.GetString("Field_TCMP_0", resourceCulture);
+                return ResourceManager.GetString("TCMP_0", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to From a compilation album.
         /// </summary>
-        public static string Field_TCMP_1 {
+        public static string TCMP_1 {
             get {
-                return ResourceManager.GetString("Field_TCMP_1", resourceCulture);
+                return ResourceManager.GetString("TCMP_1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Composer.
         /// </summary>
-        public static string Field_TCOM {
+        public static string TCOM {
             get {
-                return ResourceManager.GetString("Field_TCOM", resourceCulture);
+                return ResourceManager.GetString("TCOM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Genre.
         /// </summary>
-        public static string Field_TCON {
+        public static string TCON {
             get {
-                return ResourceManager.GetString("Field_TCON", resourceCulture);
+                return ResourceManager.GetString("TCON", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Cover.
         /// </summary>
-        public static string Field_TCON_CR {
+        public static string TCON_CR {
             get {
-                return ResourceManager.GetString("Field_TCON_CR", resourceCulture);
+                return ResourceManager.GetString("TCON_CR", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Remix.
         /// </summary>
-        public static string Field_TCON_RX {
+        public static string TCON_RX {
             get {
-                return ResourceManager.GetString("Field_TCON_RX", resourceCulture);
+                return ResourceManager.GetString("TCON_RX", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Copyright.
         /// </summary>
-        public static string Field_TCOP {
+        public static string TCOP {
             get {
-                return ResourceManager.GetString("Field_TCOP", resourceCulture);
+                return ResourceManager.GetString("TCOP", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to \u00A9 {0}.
         /// </summary>
-        public static string Field_TCOP_Value {
+        public static string TCOP_Value {
             get {
-                return ResourceManager.GetString("Field_TCOP_Value", resourceCulture);
+                return ResourceManager.GetString("TCOP_Value", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
-        public static string Field_TDES {
+        public static string TDES {
             get {
-                return ResourceManager.GetString("Field_TDES", resourceCulture);
+                return ResourceManager.GetString("TDES", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Playlist delay.
         /// </summary>
-        public static string Field_TDLY {
+        public static string TDLY {
             get {
-                return ResourceManager.GetString("Field_TDLY", resourceCulture);
+                return ResourceManager.GetString("TDLY", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Encoder.
         /// </summary>
-        public static string Field_TENC {
+        public static string TENC {
             get {
-                return ResourceManager.GetString("Field_TENC", resourceCulture);
+                return ResourceManager.GetString("TENC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Author.
         /// </summary>
-        public static string Field_TEXT {
+        public static string TEXT {
             get {
-                return ResourceManager.GetString("Field_TEXT", resourceCulture);
+                return ResourceManager.GetString("TEXT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Audio encoding.
         /// </summary>
-        public static string Field_TFLT {
+        public static string TFLT {
             get {
-                return ResourceManager.GetString("Field_TFLT", resourceCulture);
+                return ResourceManager.GetString("TFLT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MPEG audio.
         /// </summary>
-        public static string Field_TFLT_MPG {
+        public static string TFLT_MPG {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MPEG 1/2 layer I.
         /// </summary>
-        public static string Field_TFLT_MPG_1 {
+        public static string TFLT_MPG_1 {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG_1", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG_1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MPEG 1/2 layer II.
         /// </summary>
-        public static string Field_TFLT_MPG_2 {
+        public static string TFLT_MPG_2 {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG_2", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG_2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MPEG 2.5.
         /// </summary>
-        public static string Field_TFLT_MPG_2_5 {
+        public static string TFLT_MPG_2_5 {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG_2_5", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG_2_5", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MPEG 1/2 layer III.
         /// </summary>
-        public static string Field_TFLT_MPG_3 {
+        public static string TFLT_MPG_3 {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG_3", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG_3", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Advanced audio compression (MPEG).
         /// </summary>
-        public static string Field_TFLT_MPG_AAC {
+        public static string TFLT_MPG_AAC {
             get {
-                return ResourceManager.GetString("Field_TFLT_MPG_AAC", resourceCulture);
+                return ResourceManager.GetString("TFLT_MPG_AAC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pulse code modulated audio.
         /// </summary>
-        public static string Field_TFLT_PCM {
+        public static string TFLT_PCM {
             get {
-                return ResourceManager.GetString("Field_TFLT_PCM", resourceCulture);
+                return ResourceManager.GetString("TFLT_PCM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Transform-domain weighted interleave vector quantisation.
         /// </summary>
-        public static string Field_TFLT_VQF {
+        public static string TFLT_VQF {
             get {
-                return ResourceManager.GetString("Field_TFLT_VQF", resourceCulture);
+                return ResourceManager.GetString("TFLT_VQF", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album ID.
         /// </summary>
-        public static string Field_TGID {
+        public static string TGID {
             get {
-                return ResourceManager.GetString("Field_TGID", resourceCulture);
+                return ResourceManager.GetString("TGID", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0}\u2013{1}.
         /// </summary>
-        public static string Field_Time_Range {
+        public static string Time_Range {
             get {
-                return ResourceManager.GetString("Field_Time_Range", resourceCulture);
+                return ResourceManager.GetString("Time_Range", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0}.
         /// </summary>
-        public static string Field_Time_Single {
+        public static string Time_Single {
             get {
-                return ResourceManager.GetString("Field_Time_Single", resourceCulture);
+                return ResourceManager.GetString("Time_Single", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown.
         /// </summary>
-        public static string Field_Time_Unknown {
+        public static string Time_Unknown {
             get {
-                return ResourceManager.GetString("Field_Time_Unknown", resourceCulture);
+                return ResourceManager.GetString("Time_Unknown", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Work.
         /// </summary>
-        public static string Field_TIT1 {
+        public static string TIT1 {
             get {
-                return ResourceManager.GetString("Field_TIT1", resourceCulture);
+                return ResourceManager.GetString("TIT1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
-        public static string Field_TIT2 {
+        public static string TIT2 {
             get {
-                return ResourceManager.GetString("Field_TIT2", resourceCulture);
+                return ResourceManager.GetString("TIT2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Subtitle.
         /// </summary>
-        public static string Field_TIT3 {
+        public static string TIT3 {
             get {
-                return ResourceManager.GetString("Field_TIT3", resourceCulture);
+                return ResourceManager.GetString("TIT3", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Key.
         /// </summary>
-        public static string Field_TKEY {
+        public static string TKEY {
             get {
-                return ResourceManager.GetString("Field_TKEY", resourceCulture);
+                return ResourceManager.GetString("TKEY", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Off key.
         /// </summary>
-        public static string Field_TKEY_OffKey {
+        public static string TKEY_OffKey {
             get {
-                return ResourceManager.GetString("Field_TKEY_OffKey", resourceCulture);
+                return ResourceManager.GetString("TKEY_OffKey", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Keywords.
         /// </summary>
-        public static string Field_TKWD {
+        public static string TKWD {
             get {
-                return ResourceManager.GetString("Field_TKWD", resourceCulture);
+                return ResourceManager.GetString("TKWD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
-        public static string Field_TLAN {
+        public static string TLAN {
             get {
-                return ResourceManager.GetString("Field_TLAN", resourceCulture);
+                return ResourceManager.GetString("TLAN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Length.
         /// </summary>
-        public static string Field_TLEN {
+        public static string TLEN {
             get {
-                return ResourceManager.GetString("Field_TLEN", resourceCulture);
+                return ResourceManager.GetString("TLEN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original medium.
         /// </summary>
-        public static string Field_TMED {
+        public static string TMED {
             get {
-                return ResourceManager.GetString("Field_TMED", resourceCulture);
+                return ResourceManager.GetString("TMED", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown analog source.
         /// </summary>
-        public static string Field_TMED_ANA {
+        public static string TMED_ANA {
             get {
-                return ResourceManager.GetString("Field_TMED_ANA", resourceCulture);
+                return ResourceManager.GetString("TMED_ANA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 8-track tape cassette.
         /// </summary>
-        public static string Field_TMED_ANA_8CA {
+        public static string TMED_ANA_8CA {
             get {
-                return ResourceManager.GetString("Field_TMED_ANA_8CA", resourceCulture);
+                return ResourceManager.GetString("TMED_ANA_8CA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Wax cylinder.
         /// </summary>
-        public static string Field_TMED_ANA_WAC {
+        public static string TMED_ANA_WAC {
             get {
-                return ResourceManager.GetString("Field_TMED_ANA_WAC", resourceCulture);
+                return ResourceManager.GetString("TMED_ANA_WAC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk.
         /// </summary>
-        public static string Field_TMED_CD {
+        public static string TMED_CD {
             get {
-                return ResourceManager.GetString("Field_TMED_CD", resourceCulture);
+                return ResourceManager.GetString("TMED_CD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from CD.
         /// </summary>
-        public static string Field_TMED_CD_A {
+        public static string TMED_CD_A {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_A", resourceCulture);
+                return ResourceManager.GetString("TMED_CD_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS AAD).
         /// </summary>
-        public static string Field_TMED_CD_AA {
+        public static string TMED_CD_AA {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_AA", resourceCulture);
+                return ResourceManager.GetString("TMED_CD_AA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS ADD).
         /// </summary>
-        public static string Field_TMED_CD_AD {
+        public static string TMED_CD_AD {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_AD", resourceCulture);
+                return ResourceManager.GetString("TMED_CD_AD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Compact disk (SPARS DDD).
         /// </summary>
-        public static string Field_TMED_CD_DD {
+        public static string TMED_CD_DD {
             get {
-                return ResourceManager.GetString("Field_TMED_CD_DD", resourceCulture);
+                return ResourceManager.GetString("TMED_CD_DD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT cassette.
         /// </summary>
-        public static string Field_TMED_DAT {
+        public static string TMED_DAT {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT standard: 48 kHz/16 bits, linear.
         /// </summary>
-        public static string Field_TMED_DAT_1 {
+        public static string TMED_DAT_1 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_1", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT mode 2: 32 kHz/16 bits, linear.
         /// </summary>
-        public static string Field_TMED_DAT_2 {
+        public static string TMED_DAT_2 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_2", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT mode 3: 32 kHz/12 bits, non-linear, low speed.
         /// </summary>
-        public static string Field_TMED_DAT_3 {
+        public static string TMED_DAT_3 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_3", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_3", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT mode 4: 32 kHz/12 bits, 4 channels.
         /// </summary>
-        public static string Field_TMED_DAT_4 {
+        public static string TMED_DAT_4 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_4", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_4", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT mode 5: 44.1 kHz/16 bits, linear.
         /// </summary>
-        public static string Field_TMED_DAT_5 {
+        public static string TMED_DAT_5 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_5", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_5", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DAT mode 6: 44.1 kHz/16 bits, &apos;wide track&apos; play.
         /// </summary>
-        public static string Field_TMED_DAT_6 {
+        public static string TMED_DAT_6 {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_6", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_6", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from DAT cassette.
         /// </summary>
-        public static string Field_TMED_DAT_A {
+        public static string TMED_DAT_A {
             get {
-                return ResourceManager.GetString("Field_TMED_DAT_A", resourceCulture);
+                return ResourceManager.GetString("TMED_DAT_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DCC cassette.
         /// </summary>
-        public static string Field_TMED_DCC {
+        public static string TMED_DCC {
             get {
-                return ResourceManager.GetString("Field_TMED_DCC", resourceCulture);
+                return ResourceManager.GetString("TMED_DCC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from DCC cassette.
         /// </summary>
-        public static string Field_TMED_DCC_A {
+        public static string TMED_DCC_A {
             get {
-                return ResourceManager.GetString("Field_TMED_DCC_A", resourceCulture);
+                return ResourceManager.GetString("TMED_DCC_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown digital source.
         /// </summary>
-        public static string Field_TMED_DIG {
+        public static string TMED_DIG {
             get {
-                return ResourceManager.GetString("Field_TMED_DIG", resourceCulture);
+                return ResourceManager.GetString("TMED_DIG", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from digital.
         /// </summary>
-        public static string Field_TMED_DIG_A {
+        public static string TMED_DIG_A {
             get {
-                return ResourceManager.GetString("Field_TMED_DIG_A", resourceCulture);
+                return ResourceManager.GetString("TMED_DIG_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to DVD.
         /// </summary>
-        public static string Field_TMED_DVD {
+        public static string TMED_DVD {
             get {
-                return ResourceManager.GetString("Field_TMED_DVD", resourceCulture);
+                return ResourceManager.GetString("TMED_DVD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from DVD.
         /// </summary>
-        public static string Field_TMED_DVD_A {
+        public static string TMED_DVD_A {
             get {
-                return ResourceManager.GetString("Field_TMED_DVD_A", resourceCulture);
+                return ResourceManager.GetString("TMED_DVD_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ISDN telephone.
         /// </summary>
-        public static string Field_TMED_I {
+        public static string TMED_I {
             get {
-                return ResourceManager.GetString("Field_TMED_I", resourceCulture);
+                return ResourceManager.GetString("TMED_I", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Laserdisk.
         /// </summary>
-        public static string Field_TMED_LD {
+        public static string TMED_LD {
             get {
-                return ResourceManager.GetString("Field_TMED_LD", resourceCulture);
+                return ResourceManager.GetString("TMED_LD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from laserdisk.
         /// </summary>
-        public static string Field_TMED_LD_A {
+        public static string TMED_LD_A {
             get {
-                return ResourceManager.GetString("Field_TMED_LD_A", resourceCulture);
+                return ResourceManager.GetString("TMED_LD_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Tape cassette.
         /// </summary>
-        public static string Field_TMED_MC {
+        public static string TMED_MC {
             get {
-                return ResourceManager.GetString("Field_TMED_MC", resourceCulture);
+                return ResourceManager.GetString("TMED_MC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 4.75 cm/s cassette (standard).
         /// </summary>
-        public static string Field_TMED_MC_4 {
+        public static string TMED_MC_4 {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_4", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_4", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 9.5 cm/s cassette.
         /// </summary>
-        public static string Field_TMED_MC_9 {
+        public static string TMED_MC_9 {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_9", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_9", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type I (standard, ferric) cassette.
         /// </summary>
-        public static string Field_TMED_MC_I {
+        public static string TMED_MC_I {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_I", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_I", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type II (chrome) cassette.
         /// </summary>
-        public static string Field_TMED_MC_II {
+        public static string TMED_MC_II {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_II", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_II", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type III (ferric chrome) cassette.
         /// </summary>
-        public static string Field_TMED_MC_III {
+        public static string TMED_MC_III {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_III", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_III", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type IV (metal) cassette.
         /// </summary>
-        public static string Field_TMED_MC_IV {
+        public static string TMED_MC_IV {
             get {
-                return ResourceManager.GetString("Field_TMED_MC_IV", resourceCulture);
+                return ResourceManager.GetString("TMED_MC_IV", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MiniDisc.
         /// </summary>
-        public static string Field_TMED_MD {
+        public static string TMED_MD {
             get {
-                return ResourceManager.GetString("Field_TMED_MD", resourceCulture);
+                return ResourceManager.GetString("TMED_MD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Analog transfer from MiniDisc.
         /// </summary>
-        public static string Field_TMED_MD_A {
+        public static string TMED_MD_A {
             get {
-                return ResourceManager.GetString("Field_TMED_MD_A", resourceCulture);
+                return ResourceManager.GetString("TMED_MD_A", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Radio.
         /// </summary>
-        public static string Field_TMED_RAD {
+        public static string TMED_RAD {
             get {
-                return ResourceManager.GetString("Field_TMED_RAD", resourceCulture);
+                return ResourceManager.GetString("TMED_RAD", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to AM radio.
         /// </summary>
-        public static string Field_TMED_RAD_AM {
+        public static string TMED_RAD_AM {
             get {
-                return ResourceManager.GetString("Field_TMED_RAD_AM", resourceCulture);
+                return ResourceManager.GetString("TMED_RAD_AM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to FM radio.
         /// </summary>
-        public static string Field_TMED_RAD_FM {
+        public static string TMED_RAD_FM {
             get {
-                return ResourceManager.GetString("Field_TMED_RAD_FM", resourceCulture);
+                return ResourceManager.GetString("TMED_RAD_FM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Longwave radio.
         /// </summary>
-        public static string Field_TMED_RAD_LW {
+        public static string TMED_RAD_LW {
             get {
-                return ResourceManager.GetString("Field_TMED_RAD_LW", resourceCulture);
+                return ResourceManager.GetString("TMED_RAD_LW", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Medium wave radio.
         /// </summary>
-        public static string Field_TMED_RAD_MW {
+        public static string TMED_RAD_MW {
             get {
-                return ResourceManager.GetString("Field_TMED_RAD_MW", resourceCulture);
+                return ResourceManager.GetString("TMED_RAD_MW", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Tape cassette reel.
         /// </summary>
-        public static string Field_TMED_REE {
+        public static string TMED_REE {
             get {
-                return ResourceManager.GetString("Field_TMED_REE", resourceCulture);
+                return ResourceManager.GetString("TMED_REE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 19 cm/s cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_19 {
+        public static string TMED_REE_19 {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_19", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_19", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 38 cm/s cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_38 {
+        public static string TMED_REE_38 {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_38", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_38", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 76 cm/s cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_76 {
+        public static string TMED_REE_76 {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_76", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_76", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 9.5 cm/s cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_9 {
+        public static string TMED_REE_9 {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_9", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_9", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type I (standard, ferric) cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_I {
+        public static string TMED_REE_I {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_I", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_I", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type II (chrome) cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_II {
+        public static string TMED_REE_II {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_II", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_II", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type III (ferric chrome) cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_III {
+        public static string TMED_REE_III {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_III", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_III", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Type IV (metal) cassette reel.
         /// </summary>
-        public static string Field_TMED_REE_IV {
+        public static string TMED_REE_IV {
             get {
-                return ResourceManager.GetString("Field_TMED_REE_IV", resourceCulture);
+                return ResourceManager.GetString("TMED_REE_IV", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Telephone.
         /// </summary>
-        public static string Field_TMED_TEL {
+        public static string TMED_TEL {
             get {
-                return ResourceManager.GetString("Field_TMED_TEL", resourceCulture);
+                return ResourceManager.GetString("TMED_TEL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ISDN telephone.
         /// </summary>
-        public static string Field_TMED_TEL_I {
+        public static string TMED_TEL_I {
             get {
-                return ResourceManager.GetString("Field_TMED_TEL_I", resourceCulture);
+                return ResourceManager.GetString("TMED_TEL_I", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Turntable record.
         /// </summary>
-        public static string Field_TMED_TT {
+        public static string TMED_TT {
             get {
-                return ResourceManager.GetString("Field_TMED_TT", resourceCulture);
+                return ResourceManager.GetString("TMED_TT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 33.33 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_33 {
+        public static string TMED_TT_33 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_33", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_33", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 45 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_45 {
+        public static string TMED_TT_45 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_45", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_45", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 71.29 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_71 {
+        public static string TMED_TT_71 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_71", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_71", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 76.59 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_76 {
+        public static string TMED_TT_76 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_76", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_76", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 78.26 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_78 {
+        public static string TMED_TT_78 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_78", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_78", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 80 rpm record.
         /// </summary>
-        public static string Field_TMED_TT_80 {
+        public static string TMED_TT_80 {
             get {
-                return ResourceManager.GetString("Field_TMED_TT_80", resourceCulture);
+                return ResourceManager.GetString("TMED_TT_80", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Television.
         /// </summary>
-        public static string Field_TMED_TV {
+        public static string TMED_TV {
             get {
-                return ResourceManager.GetString("Field_TMED_TV", resourceCulture);
+                return ResourceManager.GetString("TMED_TV", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Television (NTSC).
         /// </summary>
-        public static string Field_TMED_TV_NTSC {
+        public static string TMED_TV_NTSC {
             get {
-                return ResourceManager.GetString("Field_TMED_TV_NTSC", resourceCulture);
+                return ResourceManager.GetString("TMED_TV_NTSC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Television (PAL).
         /// </summary>
-        public static string Field_TMED_TV_PAL {
+        public static string TMED_TV_PAL {
             get {
-                return ResourceManager.GetString("Field_TMED_TV_PAL", resourceCulture);
+                return ResourceManager.GetString("TMED_TV_PAL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Television (SECAM).
         /// </summary>
-        public static string Field_TMED_TV_SECAM {
+        public static string TMED_TV_SECAM {
             get {
-                return ResourceManager.GetString("Field_TMED_TV_SECAM", resourceCulture);
+                return ResourceManager.GetString("TMED_TV_SECAM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Video.
         /// </summary>
-        public static string Field_TMED_VID {
+        public static string TMED_VID {
             get {
-                return ResourceManager.GetString("Field_TMED_VID", resourceCulture);
+                return ResourceManager.GetString("TMED_VID", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to BETAMAX tape.
         /// </summary>
-        public static string Field_TMED_VID_BETA {
+        public static string TMED_VID_BETA {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_BETA", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_BETA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Video (NTSC).
         /// </summary>
-        public static string Field_TMED_VID_NTSC {
+        public static string TMED_VID_NTSC {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_NTSC", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_NTSC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Video (PAL).
         /// </summary>
-        public static string Field_TMED_VID_PAL {
+        public static string TMED_VID_PAL {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_PAL", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_PAL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Video (SECAM).
         /// </summary>
-        public static string Field_TMED_VID_SECAM {
+        public static string TMED_VID_SECAM {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_SECAM", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_SECAM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to S-VHS tape.
         /// </summary>
-        public static string Field_TMED_VID_SVHS {
+        public static string TMED_VID_SVHS {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_SVHS", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_SVHS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to VHS tape.
         /// </summary>
-        public static string Field_TMED_VID_VHS {
+        public static string TMED_VID_VHS {
             get {
-                return ResourceManager.GetString("Field_TMED_VID_VHS", resourceCulture);
+                return ResourceManager.GetString("TMED_VID_VHS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Mood.
         /// </summary>
-        public static string Field_TMOO {
+        public static string TMOO {
             get {
-                return ResourceManager.GetString("Field_TMOO", resourceCulture);
+                return ResourceManager.GetString("TMOO", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original album.
         /// </summary>
-        public static string Field_TOAL {
+        public static string TOAL {
             get {
-                return ResourceManager.GetString("Field_TOAL", resourceCulture);
+                return ResourceManager.GetString("TOAL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original filename.
         /// </summary>
-        public static string Field_TOFN {
+        public static string TOFN {
             get {
-                return ResourceManager.GetString("Field_TOFN", resourceCulture);
+                return ResourceManager.GetString("TOFN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original author.
         /// </summary>
-        public static string Field_TOLY {
+        public static string TOLY {
             get {
-                return ResourceManager.GetString("Field_TOLY", resourceCulture);
+                return ResourceManager.GetString("TOLY", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original artist.
         /// </summary>
-        public static string Field_TOPE {
+        public static string TOPE {
             get {
-                return ResourceManager.GetString("Field_TOPE", resourceCulture);
+                return ResourceManager.GetString("TOPE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Owner.
         /// </summary>
-        public static string Field_TOWN {
+        public static string TOWN {
             get {
-                return ResourceManager.GetString("Field_TOWN", resourceCulture);
+                return ResourceManager.GetString("TOWN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist.
         /// </summary>
-        public static string Field_TPE1 {
+        public static string TPE1 {
             get {
-                return ResourceManager.GetString("Field_TPE1", resourceCulture);
+                return ResourceManager.GetString("TPE1", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album artist.
         /// </summary>
-        public static string Field_TPE2 {
+        public static string TPE2 {
             get {
-                return ResourceManager.GetString("Field_TPE2", resourceCulture);
+                return ResourceManager.GetString("TPE2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Conductor.
         /// </summary>
-        public static string Field_TPE3 {
+        public static string TPE3 {
             get {
-                return ResourceManager.GetString("Field_TPE3", resourceCulture);
+                return ResourceManager.GetString("TPE3", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Remixer.
         /// </summary>
-        public static string Field_TPE4 {
+        public static string TPE4 {
             get {
-                return ResourceManager.GetString("Field_TPE4", resourceCulture);
+                return ResourceManager.GetString("TPE4", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Disk number.
         /// </summary>
-        public static string Field_TPOS {
+        public static string TPOS {
             get {
-                return ResourceManager.GetString("Field_TPOS", resourceCulture);
+                return ResourceManager.GetString("TPOS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Production copyright.
         /// </summary>
-        public static string Field_TPRO {
+        public static string TPRO {
             get {
-                return ResourceManager.GetString("Field_TPRO", resourceCulture);
+                return ResourceManager.GetString("TPRO", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to \u2117 {0}.
         /// </summary>
-        public static string Field_TPRO_Value {
+        public static string TPRO_Value {
             get {
-                return ResourceManager.GetString("Field_TPRO_Value", resourceCulture);
+                return ResourceManager.GetString("TPRO_Value", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Publisher.
         /// </summary>
-        public static string Field_TPUB {
+        public static string TPUB {
             get {
-                return ResourceManager.GetString("Field_TPUB", resourceCulture);
+                return ResourceManager.GetString("TPUB", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Track number.
         /// </summary>
-        public static string Field_TRCK {
+        public static string TRCK {
             get {
-                return ResourceManager.GetString("Field_TRCK", resourceCulture);
+                return ResourceManager.GetString("TRCK", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Station name.
         /// </summary>
-        public static string Field_TRSN {
+        public static string TRSN {
             get {
-                return ResourceManager.GetString("Field_TRSN", resourceCulture);
+                return ResourceManager.GetString("TRSN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Station owner.
         /// </summary>
-        public static string Field_TRSO {
+        public static string TRSO {
             get {
-                return ResourceManager.GetString("Field_TRSO", resourceCulture);
+                return ResourceManager.GetString("TRSO", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album artist sort order.
         /// </summary>
-        public static string Field_TSO2 {
+        public static string TSO2 {
             get {
-                return ResourceManager.GetString("Field_TSO2", resourceCulture);
+                return ResourceManager.GetString("TSO2", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album sort order.
         /// </summary>
-        public static string Field_TSOA {
+        public static string TSOA {
             get {
-                return ResourceManager.GetString("Field_TSOA", resourceCulture);
+                return ResourceManager.GetString("TSOA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Composer sort order.
         /// </summary>
-        public static string Field_TSOC {
+        public static string TSOC {
             get {
-                return ResourceManager.GetString("Field_TSOC", resourceCulture);
+                return ResourceManager.GetString("TSOC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist sort order.
         /// </summary>
-        public static string Field_TSOP {
+        public static string TSOP {
             get {
-                return ResourceManager.GetString("Field_TSOP", resourceCulture);
+                return ResourceManager.GetString("TSOP", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Title sort order.
         /// </summary>
-        public static string Field_TSOT {
+        public static string TSOT {
             get {
-                return ResourceManager.GetString("Field_TSOT", resourceCulture);
+                return ResourceManager.GetString("TSOT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Recording ISRC.
         /// </summary>
-        public static string Field_TSRC {
+        public static string TSRC {
             get {
-                return ResourceManager.GetString("Field_TSRC", resourceCulture);
+                return ResourceManager.GetString("TSRC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Encoding settings.
         /// </summary>
-        public static string Field_TSSE {
+        public static string TSSE {
             get {
-                return ResourceManager.GetString("Field_TSSE", resourceCulture);
+                return ResourceManager.GetString("TSSE", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Disk title.
         /// </summary>
-        public static string Field_TSST {
+        public static string TSST {
             get {
-                return ResourceManager.GetString("Field_TSST", resourceCulture);
+                return ResourceManager.GetString("TSST", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Other text.
         /// </summary>
-        public static string Field_TXXX {
+        public static string TXXX {
             get {
-                return ResourceManager.GetString("Field_TXXX", resourceCulture);
+                return ResourceManager.GetString("TXXX", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unique ID.
         /// </summary>
-        public static string Field_UFID {
+        public static string UFID {
             get {
-                return ResourceManager.GetString("Field_UFID", resourceCulture);
+                return ResourceManager.GetString("UFID", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lyrics.
         /// </summary>
-        public static string Field_USLT {
+        public static string USLT {
             get {
-                return ResourceManager.GetString("Field_USLT", resourceCulture);
+                return ResourceManager.GetString("USLT", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} of {1}.
         /// </summary>
-        public static string Field_ValueFormat_NumberOf {
+        public static string ValueFormat_NumberOf {
             get {
-                return ResourceManager.GetString("Field_ValueFormat_NumberOf", resourceCulture);
+                return ResourceManager.GetString("ValueFormat_NumberOf", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Purchasing information.
         /// </summary>
-        public static string Field_WCOM {
+        public static string WCOM {
             get {
-                return ResourceManager.GetString("Field_WCOM", resourceCulture);
+                return ResourceManager.GetString("WCOM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Copyright information.
         /// </summary>
-        public static string Field_WCOP {
+        public static string WCOP {
             get {
-                return ResourceManager.GetString("Field_WCOP", resourceCulture);
+                return ResourceManager.GetString("WCOP", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Feed.
         /// </summary>
-        public static string Field_WFED {
+        public static string WFED {
             get {
-                return ResourceManager.GetString("Field_WFED", resourceCulture);
+                return ResourceManager.GetString("WFED", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Official website.
         /// </summary>
-        public static string Field_WOAF {
+        public static string WOAF {
             get {
-                return ResourceManager.GetString("Field_WOAF", resourceCulture);
+                return ResourceManager.GetString("WOAF", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist homepage.
         /// </summary>
-        public static string Field_WOAR {
+        public static string WOAR {
             get {
-                return ResourceManager.GetString("Field_WOAR", resourceCulture);
+                return ResourceManager.GetString("WOAR", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Source website.
         /// </summary>
-        public static string Field_WOAS {
+        public static string WOAS {
             get {
-                return ResourceManager.GetString("Field_WOAS", resourceCulture);
+                return ResourceManager.GetString("WOAS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Radio station homepage.
         /// </summary>
-        public static string Field_WORS {
+        public static string WORS {
             get {
-                return ResourceManager.GetString("Field_WORS", resourceCulture);
+                return ResourceManager.GetString("WORS", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Payment website.
         /// </summary>
-        public static string Field_WPAY {
+        public static string WPAY {
             get {
-                return ResourceManager.GetString("Field_WPAY", resourceCulture);
+                return ResourceManager.GetString("WPAY", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Publisher homepage.
         /// </summary>
-        public static string Field_WPUB {
+        public static string WPUB {
             get {
-                return ResourceManager.GetString("Field_WPUB", resourceCulture);
+                return ResourceManager.GetString("WPUB", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Other URL.
         /// </summary>
-        public static string Field_WXXX {
+        public static string WXXX {
             get {
-                return ResourceManager.GetString("Field_WXXX", resourceCulture);
+                return ResourceManager.GetString("WXXX", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Album sort order (alternate).
         /// </summary>
-        public static string Field_XSOA {
+        public static string XSOA {
             get {
-                return ResourceManager.GetString("Field_XSOA", resourceCulture);
+                return ResourceManager.GetString("XSOA", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist sort order (alternate).
         /// </summary>
-        public static string Field_XSOP {
+        public static string XSOP {
             get {
-                return ResourceManager.GetString("Field_XSOP", resourceCulture);
+                return ResourceManager.GetString("XSOP", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Title sort order (alternate).
         /// </summary>
-        public static string Field_XSOT {
+        public static string XSOT {
             get {
-                return ResourceManager.GetString("Field_XSOT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parsing common code for ID3v2 extended headers.
-        /// </summary>
-        public static string Logger_ParseExtHeader {
-            get {
-                return ResourceManager.GetString("Logger_ParseExtHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parsing extended header for {Format} tag.
-        /// </summary>
-        public static string Logger_ParseExtHeader_Version {
-            get {
-                return ResourceManager.GetString("Logger_ParseExtHeader_Version", resourceCulture);
+                return ResourceManager.GetString("XSOT", resourceCulture);
             }
         }
     }

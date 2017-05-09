@@ -117,76 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Exception_HeaderCrcTooShort" xml:space="preserve">
+  <data name="HeaderCrcTooShort" xml:space="preserve">
     <value>Invalid length ({0}) given for ID3v2.4 'CRC data present' data (must be 5)</value>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the length of data stated in the file</comment>
   </data>
-  <data name="Exception_HeaderRestrictionsTooShort" xml:space="preserve">
+  <data name="HeaderRestrictionsTooShort" xml:space="preserve">
     <value>Invalid length ({0}) given for ID3v2.4 'Tag restrictions' data (must be 1)</value>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the length of data stated in the file</comment>
   </data>
-  <data name="Exception_HeaderTooShort" xml:space="preserve">
+  <data name="HeaderTooShort" xml:space="preserve">
     <value>Extended header too short to be valid for ID3v2.4</value>
   </data>
-  <data name="Exception_HeaderUpdateTooShort" xml:space="preserve">
+  <data name="HeaderUpdateTooShort" xml:space="preserve">
     <value>Invalid length ({0}) given for ID3v2.4 'Tag is an update' data (must be 0)</value>
     <comment>Must be formatted as a format string
 Parameter 0 will be replaced by the length of data stated in the file</comment>
-  </data>
-  <data name="Field_DefaultName_Credits" xml:space="preserve">
-    <value>Other credits</value>
-  </data>
-  <data name="Field_TDEN" xml:space="preserve">
-    <value>Encoding date</value>
-  </data>
-  <data name="Field_TDOR" xml:space="preserve">
-    <value>Original release date</value>
-  </data>
-  <data name="Field_TDRC" xml:space="preserve">
-    <value>Recording date</value>
-  </data>
-  <data name="Field_TDRL" xml:space="preserve">
-    <value>Release date</value>
-  </data>
-  <data name="Field_TDTG" xml:space="preserve">
-    <value>Tagging date</value>
-  </data>
-  <data name="Field_TFLT_MIME" xml:space="preserve">
-    <value>MIME type as follows</value>
-  </data>
-  <data name="Field_Time_End" xml:space="preserve">
-    <value>???? \u2013 {1}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the end time</comment>
-  </data>
-  <data name="Field_Time_Span" xml:space="preserve">
-    <value>{0} \u2013 {1}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the start time
-Parameter 1 will be replaced by the end time</comment>
-  </data>
-  <data name="Field_Time_Start" xml:space="preserve">
-    <value>{0} \u2013 ????</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the start time</comment>
-  </data>
-  <data name="Field_TIPL" xml:space="preserve">
-    <value>Production credits</value>
-  </data>
-  <data name="Field_TMCL" xml:space="preserve">
-    <value>Artist credits</value>
-  </data>
-  <data name="Field_Value_Credits" xml:space="preserve">
-    <value>{0}: {1}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the role performed
-Parameter 1 will be replaced by the name of the person</comment>
-  </data>
-  <data name="Field_Value_Credits_EmptyRole" xml:space="preserve">
-    <value>{0}</value>
-    <comment>Must be formatted as a format string
-Parameter 0 will be replaced by the name of the person</comment>
   </data>
 </root>

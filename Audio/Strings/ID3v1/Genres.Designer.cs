@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v1 {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ID3v1 {
+    public class Genres {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ID3v1() {
+        internal Genres() {
         }
         
         /// <summary>
@@ -40,7 +40,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v1", typeof(ID3v1).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v1.Genres", typeof(Genres).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -64,1746 +64,1746 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Abstract.
         /// </summary>
-        public static string Genre_Abstract {
+        public static string Abstract {
             get {
-                return ResourceManager.GetString("Genre_Abstract", resourceCulture);
+                return ResourceManager.GetString("Abstract", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A Capella.
         /// </summary>
-        public static string Genre_ACapella {
+        public static string ACapella {
             get {
-                return ResourceManager.GetString("Genre_ACapella", resourceCulture);
+                return ResourceManager.GetString("ACapella", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Acid.
         /// </summary>
-        public static string Genre_Acid {
+        public static string Acid {
             get {
-                return ResourceManager.GetString("Genre_Acid", resourceCulture);
+                return ResourceManager.GetString("Acid", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Acid Jazz.
         /// </summary>
-        public static string Genre_AcidJazz {
+        public static string AcidJazz {
             get {
-                return ResourceManager.GetString("Genre_AcidJazz", resourceCulture);
+                return ResourceManager.GetString("AcidJazz", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Acid Punk.
         /// </summary>
-        public static string Genre_AcidPunk {
+        public static string AcidPunk {
             get {
-                return ResourceManager.GetString("Genre_AcidPunk", resourceCulture);
+                return ResourceManager.GetString("AcidPunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Acoustic.
         /// </summary>
-        public static string Genre_Acoustic {
+        public static string Acoustic {
             get {
-                return ResourceManager.GetString("Genre_Acoustic", resourceCulture);
+                return ResourceManager.GetString("Acoustic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Afro-Punk.
         /// </summary>
-        public static string Genre_AfroPunk {
+        public static string AfroPunk {
             get {
-                return ResourceManager.GetString("Genre_AfroPunk", resourceCulture);
+                return ResourceManager.GetString("AfroPunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Alternative.
         /// </summary>
-        public static string Genre_Alternative {
+        public static string Alternative {
             get {
-                return ResourceManager.GetString("Genre_Alternative", resourceCulture);
+                return ResourceManager.GetString("Alternative", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to AlternRock.
         /// </summary>
-        public static string Genre_AlternRock {
+        public static string AlternRock {
             get {
-                return ResourceManager.GetString("Genre_AlternRock", resourceCulture);
+                return ResourceManager.GetString("AlternRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ambient.
         /// </summary>
-        public static string Genre_Ambient {
+        public static string Ambient {
             get {
-                return ResourceManager.GetString("Genre_Ambient", resourceCulture);
+                return ResourceManager.GetString("Ambient", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Anime.
         /// </summary>
-        public static string Genre_Anime {
+        public static string Anime {
             get {
-                return ResourceManager.GetString("Genre_Anime", resourceCulture);
+                return ResourceManager.GetString("Anime", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Art Rock.
         /// </summary>
-        public static string Genre_ArtRock {
+        public static string ArtRock {
             get {
-                return ResourceManager.GetString("Genre_ArtRock", resourceCulture);
+                return ResourceManager.GetString("ArtRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Audiobook.
         /// </summary>
-        public static string Genre_Audiobook {
+        public static string Audiobook {
             get {
-                return ResourceManager.GetString("Genre_Audiobook", resourceCulture);
+                return ResourceManager.GetString("Audiobook", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Audio Theatre.
         /// </summary>
-        public static string Genre_AudioTheatre {
+        public static string AudioTheatre {
             get {
-                return ResourceManager.GetString("Genre_AudioTheatre", resourceCulture);
+                return ResourceManager.GetString("AudioTheatre", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Avant-garde.
         /// </summary>
-        public static string Genre_Avantgarde {
+        public static string Avantgarde {
             get {
-                return ResourceManager.GetString("Genre_Avantgarde", resourceCulture);
+                return ResourceManager.GetString("Avantgarde", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ballad.
         /// </summary>
-        public static string Genre_Ballad {
+        public static string Ballad {
             get {
-                return ResourceManager.GetString("Genre_Ballad", resourceCulture);
+                return ResourceManager.GetString("Ballad", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Baroque.
         /// </summary>
-        public static string Genre_Baroque {
+        public static string Baroque {
             get {
-                return ResourceManager.GetString("Genre_Baroque", resourceCulture);
+                return ResourceManager.GetString("Baroque", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Bass.
         /// </summary>
-        public static string Genre_Bass {
+        public static string Bass {
             get {
-                return ResourceManager.GetString("Genre_Bass", resourceCulture);
+                return ResourceManager.GetString("Bass", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Beat.
         /// </summary>
-        public static string Genre_Beat {
+        public static string Beat {
             get {
-                return ResourceManager.GetString("Genre_Beat", resourceCulture);
+                return ResourceManager.GetString("Beat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Bebop.
         /// </summary>
-        public static string Genre_Bebop {
+        public static string Bebop {
             get {
-                return ResourceManager.GetString("Genre_Bebop", resourceCulture);
+                return ResourceManager.GetString("Bebop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Bhangra.
         /// </summary>
-        public static string Genre_Bhangra {
+        public static string Bhangra {
             get {
-                return ResourceManager.GetString("Genre_Bhangra", resourceCulture);
+                return ResourceManager.GetString("Bhangra", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Big Band.
         /// </summary>
-        public static string Genre_BigBand {
+        public static string BigBand {
             get {
-                return ResourceManager.GetString("Genre_BigBand", resourceCulture);
+                return ResourceManager.GetString("BigBand", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Big Beat.
         /// </summary>
-        public static string Genre_BigBeat {
+        public static string BigBeat {
             get {
-                return ResourceManager.GetString("Genre_BigBeat", resourceCulture);
+                return ResourceManager.GetString("BigBeat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Black Metal.
         /// </summary>
-        public static string Genre_BlackMetal {
+        public static string BlackMetal {
             get {
-                return ResourceManager.GetString("Genre_BlackMetal", resourceCulture);
+                return ResourceManager.GetString("BlackMetal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Bluegrass.
         /// </summary>
-        public static string Genre_Bluegrass {
+        public static string Bluegrass {
             get {
-                return ResourceManager.GetString("Genre_Bluegrass", resourceCulture);
+                return ResourceManager.GetString("Bluegrass", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Blues.
         /// </summary>
-        public static string Genre_Blues {
+        public static string Blues {
             get {
-                return ResourceManager.GetString("Genre_Blues", resourceCulture);
+                return ResourceManager.GetString("Blues", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Booty Bass.
         /// </summary>
-        public static string Genre_BootyBass {
+        public static string BootyBass {
             get {
-                return ResourceManager.GetString("Genre_BootyBass", resourceCulture);
+                return ResourceManager.GetString("BootyBass", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Breakbeat.
         /// </summary>
-        public static string Genre_Breakbeat {
+        public static string Breakbeat {
             get {
-                return ResourceManager.GetString("Genre_Breakbeat", resourceCulture);
+                return ResourceManager.GetString("Breakbeat", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to BritPop.
         /// </summary>
-        public static string Genre_BritPop {
+        public static string BritPop {
             get {
-                return ResourceManager.GetString("Genre_BritPop", resourceCulture);
+                return ResourceManager.GetString("BritPop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Cabaret.
         /// </summary>
-        public static string Genre_Cabaret {
+        public static string Cabaret {
             get {
-                return ResourceManager.GetString("Genre_Cabaret", resourceCulture);
+                return ResourceManager.GetString("Cabaret", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Celtic.
         /// </summary>
-        public static string Genre_Celtic {
+        public static string Celtic {
             get {
-                return ResourceManager.GetString("Genre_Celtic", resourceCulture);
+                return ResourceManager.GetString("Celtic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chamber Music.
         /// </summary>
-        public static string Genre_ChamberMusic {
+        public static string ChamberMusic {
             get {
-                return ResourceManager.GetString("Genre_ChamberMusic", resourceCulture);
+                return ResourceManager.GetString("ChamberMusic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chanson.
         /// </summary>
-        public static string Genre_Chanson {
+        public static string Chanson {
             get {
-                return ResourceManager.GetString("Genre_Chanson", resourceCulture);
+                return ResourceManager.GetString("Chanson", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chillout.
         /// </summary>
-        public static string Genre_Chillout {
+        public static string Chillout {
             get {
-                return ResourceManager.GetString("Genre_Chillout", resourceCulture);
+                return ResourceManager.GetString("Chillout", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Chorus.
         /// </summary>
-        public static string Genre_Chorus {
+        public static string Chorus {
             get {
-                return ResourceManager.GetString("Genre_Chorus", resourceCulture);
+                return ResourceManager.GetString("Chorus", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Christian Gangsta Rap.
         /// </summary>
-        public static string Genre_ChristianGangstaRap {
+        public static string ChristianGangstaRap {
             get {
-                return ResourceManager.GetString("Genre_ChristianGangstaRap", resourceCulture);
+                return ResourceManager.GetString("ChristianGangstaRap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Christian Rap.
         /// </summary>
-        public static string Genre_ChristianRap {
+        public static string ChristianRap {
             get {
-                return ResourceManager.GetString("Genre_ChristianRap", resourceCulture);
+                return ResourceManager.GetString("ChristianRap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Christian Rock.
         /// </summary>
-        public static string Genre_ChristianRock {
+        public static string ChristianRock {
             get {
-                return ResourceManager.GetString("Genre_ChristianRock", resourceCulture);
+                return ResourceManager.GetString("ChristianRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Classical.
         /// </summary>
-        public static string Genre_Classical {
+        public static string Classical {
             get {
-                return ResourceManager.GetString("Genre_Classical", resourceCulture);
+                return ResourceManager.GetString("Classical", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Classic Rock.
         /// </summary>
-        public static string Genre_ClassicRock {
+        public static string ClassicRock {
             get {
-                return ResourceManager.GetString("Genre_ClassicRock", resourceCulture);
+                return ResourceManager.GetString("ClassicRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Club.
         /// </summary>
-        public static string Genre_Club {
+        public static string Club {
             get {
-                return ResourceManager.GetString("Genre_Club", resourceCulture);
+                return ResourceManager.GetString("Club", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Club-House.
         /// </summary>
-        public static string Genre_ClubHouse {
+        public static string ClubHouse {
             get {
-                return ResourceManager.GetString("Genre_ClubHouse", resourceCulture);
+                return ResourceManager.GetString("ClubHouse", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Comedy.
         /// </summary>
-        public static string Genre_Comedy {
+        public static string Comedy {
             get {
-                return ResourceManager.GetString("Genre_Comedy", resourceCulture);
+                return ResourceManager.GetString("Comedy", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Contemporary Christian.
         /// </summary>
-        public static string Genre_ContempChristian {
+        public static string ContempChristian {
             get {
-                return ResourceManager.GetString("Genre_ContempChristian", resourceCulture);
+                return ResourceManager.GetString("ContempChristian", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Country.
         /// </summary>
-        public static string Genre_Country {
+        public static string Country {
             get {
-                return ResourceManager.GetString("Genre_Country", resourceCulture);
+                return ResourceManager.GetString("Country", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Crossover.
         /// </summary>
-        public static string Genre_Crossover {
+        public static string Crossover {
             get {
-                return ResourceManager.GetString("Genre_Crossover", resourceCulture);
+                return ResourceManager.GetString("Crossover", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Cult.
         /// </summary>
-        public static string Genre_Cult {
+        public static string Cult {
             get {
-                return ResourceManager.GetString("Genre_Cult", resourceCulture);
+                return ResourceManager.GetString("Cult", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dance.
         /// </summary>
-        public static string Genre_Dance {
+        public static string Dance {
             get {
-                return ResourceManager.GetString("Genre_Dance", resourceCulture);
+                return ResourceManager.GetString("Dance", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dance Hall.
         /// </summary>
-        public static string Genre_DanceHall {
+        public static string DanceHall {
             get {
-                return ResourceManager.GetString("Genre_DanceHall", resourceCulture);
+                return ResourceManager.GetString("DanceHall", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Darkwave.
         /// </summary>
-        public static string Genre_Darkwave {
+        public static string Darkwave {
             get {
-                return ResourceManager.GetString("Genre_Darkwave", resourceCulture);
+                return ResourceManager.GetString("Darkwave", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Death Metal.
         /// </summary>
-        public static string Genre_DeathMetal {
+        public static string DeathMetal {
             get {
-                return ResourceManager.GetString("Genre_DeathMetal", resourceCulture);
+                return ResourceManager.GetString("DeathMetal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Disco.
         /// </summary>
-        public static string Genre_Disco {
+        public static string Disco {
             get {
-                return ResourceManager.GetString("Genre_Disco", resourceCulture);
+                return ResourceManager.GetString("Disco", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Downtempo.
         /// </summary>
-        public static string Genre_Downtempo {
+        public static string Downtempo {
             get {
-                return ResourceManager.GetString("Genre_Downtempo", resourceCulture);
+                return ResourceManager.GetString("Downtempo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dream.
         /// </summary>
-        public static string Genre_Dream {
+        public static string Dream {
             get {
-                return ResourceManager.GetString("Genre_Dream", resourceCulture);
+                return ResourceManager.GetString("Dream", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Drum &amp; Bass.
         /// </summary>
-        public static string Genre_DrumBass {
+        public static string DrumBass {
             get {
-                return ResourceManager.GetString("Genre_DrumBass", resourceCulture);
+                return ResourceManager.GetString("DrumBass", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Drum Solo.
         /// </summary>
-        public static string Genre_DrumSolo {
+        public static string DrumSolo {
             get {
-                return ResourceManager.GetString("Genre_DrumSolo", resourceCulture);
+                return ResourceManager.GetString("DrumSolo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dub.
         /// </summary>
-        public static string Genre_Dub {
+        public static string Dub {
             get {
-                return ResourceManager.GetString("Genre_Dub", resourceCulture);
+                return ResourceManager.GetString("Dub", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Dubstep.
         /// </summary>
-        public static string Genre_Dubstep {
+        public static string Dubstep {
             get {
-                return ResourceManager.GetString("Genre_Dubstep", resourceCulture);
+                return ResourceManager.GetString("Dubstep", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Duet.
         /// </summary>
-        public static string Genre_Duet {
+        public static string Duet {
             get {
-                return ResourceManager.GetString("Genre_Duet", resourceCulture);
+                return ResourceManager.GetString("Duet", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Easy Listening.
         /// </summary>
-        public static string Genre_EasyListening {
+        public static string EasyListening {
             get {
-                return ResourceManager.GetString("Genre_EasyListening", resourceCulture);
+                return ResourceManager.GetString("EasyListening", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to EBM.
         /// </summary>
-        public static string Genre_EBM {
+        public static string EBM {
             get {
-                return ResourceManager.GetString("Genre_EBM", resourceCulture);
+                return ResourceManager.GetString("EBM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eclectic.
         /// </summary>
-        public static string Genre_Eclectic {
+        public static string Eclectic {
             get {
-                return ResourceManager.GetString("Genre_Eclectic", resourceCulture);
+                return ResourceManager.GetString("Eclectic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Electro.
         /// </summary>
-        public static string Genre_Electro {
+        public static string Electro {
             get {
-                return ResourceManager.GetString("Genre_Electro", resourceCulture);
+                return ResourceManager.GetString("Electro", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Electroclash.
         /// </summary>
-        public static string Genre_Electroclash {
+        public static string Electroclash {
             get {
-                return ResourceManager.GetString("Genre_Electroclash", resourceCulture);
+                return ResourceManager.GetString("Electroclash", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Electronic.
         /// </summary>
-        public static string Genre_Electronic {
+        public static string Electronic {
             get {
-                return ResourceManager.GetString("Genre_Electronic", resourceCulture);
+                return ResourceManager.GetString("Electronic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Emo.
         /// </summary>
-        public static string Genre_Emo {
+        public static string Emo {
             get {
-                return ResourceManager.GetString("Genre_Emo", resourceCulture);
+                return ResourceManager.GetString("Emo", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ethnic.
         /// </summary>
-        public static string Genre_Ethnic {
+        public static string Ethnic {
             get {
-                return ResourceManager.GetString("Genre_Ethnic", resourceCulture);
+                return ResourceManager.GetString("Ethnic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Eurodance.
         /// </summary>
-        public static string Genre_Eurodance {
+        public static string Eurodance {
             get {
-                return ResourceManager.GetString("Genre_Eurodance", resourceCulture);
+                return ResourceManager.GetString("Eurodance", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Euro-House.
         /// </summary>
-        public static string Genre_EuroHouse {
+        public static string EuroHouse {
             get {
-                return ResourceManager.GetString("Genre_EuroHouse", resourceCulture);
+                return ResourceManager.GetString("EuroHouse", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Euro-Techno.
         /// </summary>
-        public static string Genre_EuroTechno {
+        public static string EuroTechno {
             get {
-                return ResourceManager.GetString("Genre_EuroTechno", resourceCulture);
+                return ResourceManager.GetString("EuroTechno", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Experimental.
         /// </summary>
-        public static string Genre_Experimental {
+        public static string Experimental {
             get {
-                return ResourceManager.GetString("Genre_Experimental", resourceCulture);
+                return ResourceManager.GetString("Experimental", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Fast-Fusion.
         /// </summary>
-        public static string Genre_FastFusion {
+        public static string FastFusion {
             get {
-                return ResourceManager.GetString("Genre_FastFusion", resourceCulture);
+                return ResourceManager.GetString("FastFusion", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Folk.
         /// </summary>
-        public static string Genre_Folk {
+        public static string Folk {
             get {
-                return ResourceManager.GetString("Genre_Folk", resourceCulture);
+                return ResourceManager.GetString("Folk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Folklore.
         /// </summary>
-        public static string Genre_Folklore {
+        public static string Folklore {
             get {
-                return ResourceManager.GetString("Genre_Folklore", resourceCulture);
+                return ResourceManager.GetString("Folklore", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Folk-Rock.
         /// </summary>
-        public static string Genre_FolkRock {
+        public static string FolkRock {
             get {
-                return ResourceManager.GetString("Genre_FolkRock", resourceCulture);
+                return ResourceManager.GetString("FolkRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Freestyle.
         /// </summary>
-        public static string Genre_Freestyle {
+        public static string Freestyle {
             get {
-                return ResourceManager.GetString("Genre_Freestyle", resourceCulture);
+                return ResourceManager.GetString("Freestyle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Funk.
         /// </summary>
-        public static string Genre_Funk {
+        public static string Funk {
             get {
-                return ResourceManager.GetString("Genre_Funk", resourceCulture);
+                return ResourceManager.GetString("Funk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Fusion.
         /// </summary>
-        public static string Genre_Fusion {
+        public static string Fusion {
             get {
-                return ResourceManager.GetString("Genre_Fusion", resourceCulture);
+                return ResourceManager.GetString("Fusion", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Game.
         /// </summary>
-        public static string Genre_Game {
+        public static string Game {
             get {
-                return ResourceManager.GetString("Genre_Game", resourceCulture);
+                return ResourceManager.GetString("Game", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Gangsta.
         /// </summary>
-        public static string Genre_Gangsta {
+        public static string Gangsta {
             get {
-                return ResourceManager.GetString("Genre_Gangsta", resourceCulture);
+                return ResourceManager.GetString("Gangsta", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Garage.
         /// </summary>
-        public static string Genre_Garage {
+        public static string Garage {
             get {
-                return ResourceManager.GetString("Genre_Garage", resourceCulture);
+                return ResourceManager.GetString("Garage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Garage Rock.
         /// </summary>
-        public static string Genre_GarageRock {
+        public static string GarageRock {
             get {
-                return ResourceManager.GetString("Genre_GarageRock", resourceCulture);
+                return ResourceManager.GetString("GarageRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to G-Funk.
         /// </summary>
-        public static string Genre_GFunk {
+        public static string GFunk {
             get {
-                return ResourceManager.GetString("Genre_GFunk", resourceCulture);
+                return ResourceManager.GetString("GFunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Global.
         /// </summary>
-        public static string Genre_Global {
+        public static string Global {
             get {
-                return ResourceManager.GetString("Genre_Global", resourceCulture);
+                return ResourceManager.GetString("Global", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Goa.
         /// </summary>
-        public static string Genre_Goa {
+        public static string Goa {
             get {
-                return ResourceManager.GetString("Genre_Goa", resourceCulture);
+                return ResourceManager.GetString("Goa", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Gospel.
         /// </summary>
-        public static string Genre_Gospel {
+        public static string Gospel {
             get {
-                return ResourceManager.GetString("Genre_Gospel", resourceCulture);
+                return ResourceManager.GetString("Gospel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Gothic.
         /// </summary>
-        public static string Genre_Gothic {
+        public static string Gothic {
             get {
-                return ResourceManager.GetString("Genre_Gothic", resourceCulture);
+                return ResourceManager.GetString("Gothic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Gothic Rock.
         /// </summary>
-        public static string Genre_GothicRock {
+        public static string GothicRock {
             get {
-                return ResourceManager.GetString("Genre_GothicRock", resourceCulture);
+                return ResourceManager.GetString("GothicRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Grunge.
         /// </summary>
-        public static string Genre_Grunge {
+        public static string Grunge {
             get {
-                return ResourceManager.GetString("Genre_Grunge", resourceCulture);
+                return ResourceManager.GetString("Grunge", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Hardcore.
         /// </summary>
-        public static string Genre_Hardcore {
+        public static string Hardcore {
             get {
-                return ResourceManager.GetString("Genre_Hardcore", resourceCulture);
+                return ResourceManager.GetString("Hardcore", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Hard Rock.
         /// </summary>
-        public static string Genre_HardRock {
+        public static string HardRock {
             get {
-                return ResourceManager.GetString("Genre_HardRock", resourceCulture);
+                return ResourceManager.GetString("HardRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Heavy Metal.
         /// </summary>
-        public static string Genre_HeavyMetal {
+        public static string HeavyMetal {
             get {
-                return ResourceManager.GetString("Genre_HeavyMetal", resourceCulture);
+                return ResourceManager.GetString("HeavyMetal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Hip-Hop.
         /// </summary>
-        public static string Genre_HipHop {
+        public static string HipHop {
             get {
-                return ResourceManager.GetString("Genre_HipHop", resourceCulture);
+                return ResourceManager.GetString("HipHop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to House.
         /// </summary>
-        public static string Genre_House {
+        public static string House {
             get {
-                return ResourceManager.GetString("Genre_House", resourceCulture);
+                return ResourceManager.GetString("House", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Humor.
         /// </summary>
-        public static string Genre_Humor {
+        public static string Humor {
             get {
-                return ResourceManager.GetString("Genre_Humor", resourceCulture);
+                return ResourceManager.GetString("Humor", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to IDM.
         /// </summary>
-        public static string Genre_IDM {
+        public static string IDM {
             get {
-                return ResourceManager.GetString("Genre_IDM", resourceCulture);
+                return ResourceManager.GetString("IDM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Illbient.
         /// </summary>
-        public static string Genre_Illbient {
+        public static string Illbient {
             get {
-                return ResourceManager.GetString("Genre_Illbient", resourceCulture);
+                return ResourceManager.GetString("Illbient", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Indie.
         /// </summary>
-        public static string Genre_Indie {
+        public static string Indie {
             get {
-                return ResourceManager.GetString("Genre_Indie", resourceCulture);
+                return ResourceManager.GetString("Indie", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Indie Rock.
         /// </summary>
-        public static string Genre_IndieRock {
+        public static string IndieRock {
             get {
-                return ResourceManager.GetString("Genre_IndieRock", resourceCulture);
+                return ResourceManager.GetString("IndieRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Industrial.
         /// </summary>
-        public static string Genre_Industrial {
+        public static string Industrial {
             get {
-                return ResourceManager.GetString("Genre_Industrial", resourceCulture);
+                return ResourceManager.GetString("Industrial", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Industro-Goth.
         /// </summary>
-        public static string Genre_IndustroGoth {
+        public static string IndustroGoth {
             get {
-                return ResourceManager.GetString("Genre_IndustroGoth", resourceCulture);
+                return ResourceManager.GetString("IndustroGoth", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Instrumental Pop.
         /// </summary>
-        public static string Genre_InstrPop {
+        public static string InstrPop {
             get {
-                return ResourceManager.GetString("Genre_InstrPop", resourceCulture);
+                return ResourceManager.GetString("InstrPop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Instrumental Rock.
         /// </summary>
-        public static string Genre_InstrRock {
+        public static string InstrRock {
             get {
-                return ResourceManager.GetString("Genre_InstrRock", resourceCulture);
+                return ResourceManager.GetString("InstrRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Instrumental.
         /// </summary>
-        public static string Genre_Instrumental {
+        public static string Instrumental {
             get {
-                return ResourceManager.GetString("Genre_Instrumental", resourceCulture);
+                return ResourceManager.GetString("Instrumental", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Jam Band.
         /// </summary>
-        public static string Genre_JamBand {
+        public static string JamBand {
             get {
-                return ResourceManager.GetString("Genre_JamBand", resourceCulture);
+                return ResourceManager.GetString("JamBand", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Jazz.
         /// </summary>
-        public static string Genre_Jazz {
+        public static string Jazz {
             get {
-                return ResourceManager.GetString("Genre_Jazz", resourceCulture);
+                return ResourceManager.GetString("Jazz", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Jazz+Funk.
         /// </summary>
-        public static string Genre_JazzFunk {
+        public static string JazzFunk {
             get {
-                return ResourceManager.GetString("Genre_JazzFunk", resourceCulture);
+                return ResourceManager.GetString("JazzFunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to JPop.
         /// </summary>
-        public static string Genre_JPop {
+        public static string JPop {
             get {
-                return ResourceManager.GetString("Genre_JPop", resourceCulture);
+                return ResourceManager.GetString("JPop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Jungle.
         /// </summary>
-        public static string Genre_Jungle {
+        public static string Jungle {
             get {
-                return ResourceManager.GetString("Genre_Jungle", resourceCulture);
+                return ResourceManager.GetString("Jungle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Krautrock.
         /// </summary>
-        public static string Genre_Krautrock {
+        public static string Krautrock {
             get {
-                return ResourceManager.GetString("Genre_Krautrock", resourceCulture);
+                return ResourceManager.GetString("Krautrock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Latin.
         /// </summary>
-        public static string Genre_Latin {
+        public static string Latin {
             get {
-                return ResourceManager.GetString("Genre_Latin", resourceCulture);
+                return ResourceManager.GetString("Latin", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Leftfield.
         /// </summary>
-        public static string Genre_Leftfield {
+        public static string Leftfield {
             get {
-                return ResourceManager.GetString("Genre_Leftfield", resourceCulture);
+                return ResourceManager.GetString("Leftfield", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lo-Fi.
         /// </summary>
-        public static string Genre_LoFi {
+        public static string LoFi {
             get {
-                return ResourceManager.GetString("Genre_LoFi", resourceCulture);
+                return ResourceManager.GetString("LoFi", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Lounge.
         /// </summary>
-        public static string Genre_Lounge {
+        public static string Lounge {
             get {
-                return ResourceManager.GetString("Genre_Lounge", resourceCulture);
+                return ResourceManager.GetString("Lounge", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Math Rock.
         /// </summary>
-        public static string Genre_MathRock {
+        public static string MathRock {
             get {
-                return ResourceManager.GetString("Genre_MathRock", resourceCulture);
+                return ResourceManager.GetString("MathRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Meditative.
         /// </summary>
-        public static string Genre_Meditative {
+        public static string Meditative {
             get {
-                return ResourceManager.GetString("Genre_Meditative", resourceCulture);
+                return ResourceManager.GetString("Meditative", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Merengue.
         /// </summary>
-        public static string Genre_Merengue {
+        public static string Merengue {
             get {
-                return ResourceManager.GetString("Genre_Merengue", resourceCulture);
+                return ResourceManager.GetString("Merengue", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Metal.
         /// </summary>
-        public static string Genre_Metal {
+        public static string Metal {
             get {
-                return ResourceManager.GetString("Genre_Metal", resourceCulture);
+                return ResourceManager.GetString("Metal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Musical.
         /// </summary>
-        public static string Genre_Musical {
+        public static string Musical {
             get {
-                return ResourceManager.GetString("Genre_Musical", resourceCulture);
+                return ResourceManager.GetString("Musical", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to National Folk.
         /// </summary>
-        public static string Genre_NationalFolk {
+        public static string NationalFolk {
             get {
-                return ResourceManager.GetString("Genre_NationalFolk", resourceCulture);
+                return ResourceManager.GetString("NationalFolk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Native American.
         /// </summary>
-        public static string Genre_NativeAm {
+        public static string NativeAm {
             get {
-                return ResourceManager.GetString("Genre_NativeAm", resourceCulture);
+                return ResourceManager.GetString("NativeAm", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Neoclassical.
         /// </summary>
-        public static string Genre_Neoclassical {
+        public static string Neoclassical {
             get {
-                return ResourceManager.GetString("Genre_Neoclassical", resourceCulture);
+                return ResourceManager.GetString("Neoclassical", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Neue Deutsche Welle.
         /// </summary>
-        public static string Genre_NeueDeutscheWelle {
+        public static string NeueDeutscheWelle {
             get {
-                return ResourceManager.GetString("Genre_NeueDeutscheWelle", resourceCulture);
+                return ResourceManager.GetString("NeueDeutscheWelle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to New Age.
         /// </summary>
-        public static string Genre_NewAge {
+        public static string NewAge {
             get {
-                return ResourceManager.GetString("Genre_NewAge", resourceCulture);
+                return ResourceManager.GetString("NewAge", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to New Romantic.
         /// </summary>
-        public static string Genre_NewRomantic {
+        public static string NewRomantic {
             get {
-                return ResourceManager.GetString("Genre_NewRomantic", resourceCulture);
+                return ResourceManager.GetString("NewRomantic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to New Wave.
         /// </summary>
-        public static string Genre_NewWave {
+        public static string NewWave {
             get {
-                return ResourceManager.GetString("Genre_NewWave", resourceCulture);
+                return ResourceManager.GetString("NewWave", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Noise.
         /// </summary>
-        public static string Genre_Noise {
+        public static string Noise {
             get {
-                return ResourceManager.GetString("Genre_Noise", resourceCulture);
+                return ResourceManager.GetString("Noise", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
-        public static string Genre_None {
+        public static string None {
             get {
-                return ResourceManager.GetString("Genre_None", resourceCulture);
+                return ResourceManager.GetString("None", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Nu-Breakz.
         /// </summary>
-        public static string Genre_NuBreakz {
+        public static string NuBreakz {
             get {
-                return ResourceManager.GetString("Genre_NuBreakz", resourceCulture);
+                return ResourceManager.GetString("NuBreakz", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Oldies.
         /// </summary>
-        public static string Genre_Oldies {
+        public static string Oldies {
             get {
-                return ResourceManager.GetString("Genre_Oldies", resourceCulture);
+                return ResourceManager.GetString("Oldies", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Opera.
         /// </summary>
-        public static string Genre_Opera {
+        public static string Opera {
             get {
-                return ResourceManager.GetString("Genre_Opera", resourceCulture);
+                return ResourceManager.GetString("Opera", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Other genre.
         /// </summary>
-        public static string Genre_Other {
+        public static string Other {
             get {
-                return ResourceManager.GetString("Genre_Other", resourceCulture);
+                return ResourceManager.GetString("Other", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Podcast.
         /// </summary>
-        public static string Genre_Podcast {
+        public static string Podcast {
             get {
-                return ResourceManager.GetString("Genre_Podcast", resourceCulture);
+                return ResourceManager.GetString("Podcast", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Polka.
         /// </summary>
-        public static string Genre_Polka {
+        public static string Polka {
             get {
-                return ResourceManager.GetString("Genre_Polka", resourceCulture);
+                return ResourceManager.GetString("Polka", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Polsk Punk.
         /// </summary>
-        public static string Genre_PolskPunk {
+        public static string PolskPunk {
             get {
-                return ResourceManager.GetString("Genre_PolskPunk", resourceCulture);
+                return ResourceManager.GetString("PolskPunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pop.
         /// </summary>
-        public static string Genre_Pop {
+        public static string Pop {
             get {
-                return ResourceManager.GetString("Genre_Pop", resourceCulture);
+                return ResourceManager.GetString("Pop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pop-Folk.
         /// </summary>
-        public static string Genre_PopFolk {
+        public static string PopFolk {
             get {
-                return ResourceManager.GetString("Genre_PopFolk", resourceCulture);
+                return ResourceManager.GetString("PopFolk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pop-Funk.
         /// </summary>
-        public static string Genre_PopFunk {
+        public static string PopFunk {
             get {
-                return ResourceManager.GetString("Genre_PopFunk", resourceCulture);
+                return ResourceManager.GetString("PopFunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Porn Groove.
         /// </summary>
-        public static string Genre_PornGroove {
+        public static string PornGroove {
             get {
-                return ResourceManager.GetString("Genre_PornGroove", resourceCulture);
+                return ResourceManager.GetString("PornGroove", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Post-Punk.
         /// </summary>
-        public static string Genre_PostPunk {
+        public static string PostPunk {
             get {
-                return ResourceManager.GetString("Genre_PostPunk", resourceCulture);
+                return ResourceManager.GetString("PostPunk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Post-Rock.
         /// </summary>
-        public static string Genre_PostRock {
+        public static string PostRock {
             get {
-                return ResourceManager.GetString("Genre_PostRock", resourceCulture);
+                return ResourceManager.GetString("PostRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Power Ballad.
         /// </summary>
-        public static string Genre_PowerBallad {
+        public static string PowerBallad {
             get {
-                return ResourceManager.GetString("Genre_PowerBallad", resourceCulture);
+                return ResourceManager.GetString("PowerBallad", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Pranks.
         /// </summary>
-        public static string Genre_Pranks {
+        public static string Pranks {
             get {
-                return ResourceManager.GetString("Genre_Pranks", resourceCulture);
+                return ResourceManager.GetString("Pranks", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Primus.
         /// </summary>
-        public static string Genre_Primus {
+        public static string Primus {
             get {
-                return ResourceManager.GetString("Genre_Primus", resourceCulture);
+                return ResourceManager.GetString("Primus", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Progressive Rock.
         /// </summary>
-        public static string Genre_ProgRock {
+        public static string ProgRock {
             get {
-                return ResourceManager.GetString("Genre_ProgRock", resourceCulture);
+                return ResourceManager.GetString("ProgRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psybient.
         /// </summary>
-        public static string Genre_Psybient {
+        public static string Psybient {
             get {
-                return ResourceManager.GetString("Genre_Psybient", resourceCulture);
+                return ResourceManager.GetString("Psybient", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psychedelic.
         /// </summary>
-        public static string Genre_Psychedelic {
+        public static string Psychedelic {
             get {
-                return ResourceManager.GetString("Genre_Psychedelic", resourceCulture);
+                return ResourceManager.GetString("Psychedelic", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psychedelic Rock.
         /// </summary>
-        public static string Genre_PsychRock {
+        public static string PsychRock {
             get {
-                return ResourceManager.GetString("Genre_PsychRock", resourceCulture);
+                return ResourceManager.GetString("PsychRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Psytrance.
         /// </summary>
-        public static string Genre_Psytrance {
+        public static string Psytrance {
             get {
-                return ResourceManager.GetString("Genre_Psytrance", resourceCulture);
+                return ResourceManager.GetString("Psytrance", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Punk.
         /// </summary>
-        public static string Genre_Punk {
+        public static string Punk {
             get {
-                return ResourceManager.GetString("Genre_Punk", resourceCulture);
+                return ResourceManager.GetString("Punk", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Punk Rock.
         /// </summary>
-        public static string Genre_PunkRock {
+        public static string PunkRock {
             get {
-                return ResourceManager.GetString("Genre_PunkRock", resourceCulture);
+                return ResourceManager.GetString("PunkRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rap.
         /// </summary>
-        public static string Genre_Rap {
+        public static string Rap {
             get {
-                return ResourceManager.GetString("Genre_Rap", resourceCulture);
+                return ResourceManager.GetString("Rap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rave.
         /// </summary>
-        public static string Genre_Rave {
+        public static string Rave {
             get {
-                return ResourceManager.GetString("Genre_Rave", resourceCulture);
+                return ResourceManager.GetString("Rave", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to R&amp;B.
         /// </summary>
-        public static string Genre_RB {
+        public static string RB {
             get {
-                return ResourceManager.GetString("Genre_RB", resourceCulture);
+                return ResourceManager.GetString("RB", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Reggae.
         /// </summary>
-        public static string Genre_Reggae {
+        public static string Reggae {
             get {
-                return ResourceManager.GetString("Genre_Reggae", resourceCulture);
+                return ResourceManager.GetString("Reggae", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Retro.
         /// </summary>
-        public static string Genre_Retro {
+        public static string Retro {
             get {
-                return ResourceManager.GetString("Genre_Retro", resourceCulture);
+                return ResourceManager.GetString("Retro", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Revival.
         /// </summary>
-        public static string Genre_Revival {
+        public static string Revival {
             get {
-                return ResourceManager.GetString("Genre_Revival", resourceCulture);
+                return ResourceManager.GetString("Revival", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rhythmic Soul.
         /// </summary>
-        public static string Genre_RhythmicSoul {
+        public static string RhythmicSoul {
             get {
-                return ResourceManager.GetString("Genre_RhythmicSoul", resourceCulture);
+                return ResourceManager.GetString("RhythmicSoul", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rock.
         /// </summary>
-        public static string Genre_Rock {
+        public static string Rock {
             get {
-                return ResourceManager.GetString("Genre_Rock", resourceCulture);
+                return ResourceManager.GetString("Rock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Rock &amp; Roll.
         /// </summary>
-        public static string Genre_RockRoll {
+        public static string RockRoll {
             get {
-                return ResourceManager.GetString("Genre_RockRoll", resourceCulture);
+                return ResourceManager.GetString("RockRoll", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Salsa.
         /// </summary>
-        public static string Genre_Salsa {
+        public static string Salsa {
             get {
-                return ResourceManager.GetString("Genre_Salsa", resourceCulture);
+                return ResourceManager.GetString("Salsa", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Samba.
         /// </summary>
-        public static string Genre_Samba {
+        public static string Samba {
             get {
-                return ResourceManager.GetString("Genre_Samba", resourceCulture);
+                return ResourceManager.GetString("Samba", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Satire.
         /// </summary>
-        public static string Genre_Satire {
+        public static string Satire {
             get {
-                return ResourceManager.GetString("Genre_Satire", resourceCulture);
+                return ResourceManager.GetString("Satire", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Shoegaze.
         /// </summary>
-        public static string Genre_Shoegaze {
+        public static string Shoegaze {
             get {
-                return ResourceManager.GetString("Genre_Shoegaze", resourceCulture);
+                return ResourceManager.GetString("Shoegaze", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Showtunes.
         /// </summary>
-        public static string Genre_Showtunes {
+        public static string Showtunes {
             get {
-                return ResourceManager.GetString("Genre_Showtunes", resourceCulture);
+                return ResourceManager.GetString("Showtunes", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ska.
         /// </summary>
-        public static string Genre_Ska {
+        public static string Ska {
             get {
-                return ResourceManager.GetString("Genre_Ska", resourceCulture);
+                return ResourceManager.GetString("Ska", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Slow Jam.
         /// </summary>
-        public static string Genre_SlowJam {
+        public static string SlowJam {
             get {
-                return ResourceManager.GetString("Genre_SlowJam", resourceCulture);
+                return ResourceManager.GetString("SlowJam", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Slow Rock.
         /// </summary>
-        public static string Genre_SlowRock {
+        public static string SlowRock {
             get {
-                return ResourceManager.GetString("Genre_SlowRock", resourceCulture);
+                return ResourceManager.GetString("SlowRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Sonata.
         /// </summary>
-        public static string Genre_Sonata {
+        public static string Sonata {
             get {
-                return ResourceManager.GetString("Genre_Sonata", resourceCulture);
+                return ResourceManager.GetString("Sonata", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Soul.
         /// </summary>
-        public static string Genre_Soul {
+        public static string Soul {
             get {
-                return ResourceManager.GetString("Genre_Soul", resourceCulture);
+                return ResourceManager.GetString("Soul", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Sound Clip.
         /// </summary>
-        public static string Genre_SoundClip {
+        public static string SoundClip {
             get {
-                return ResourceManager.GetString("Genre_SoundClip", resourceCulture);
+                return ResourceManager.GetString("SoundClip", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Soundtrack.
         /// </summary>
-        public static string Genre_Soundtrack {
+        public static string Soundtrack {
             get {
-                return ResourceManager.GetString("Genre_Soundtrack", resourceCulture);
+                return ResourceManager.GetString("Soundtrack", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Southern Rock.
         /// </summary>
-        public static string Genre_SouthernRock {
+        public static string SouthernRock {
             get {
-                return ResourceManager.GetString("Genre_SouthernRock", resourceCulture);
+                return ResourceManager.GetString("SouthernRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Space.
         /// </summary>
-        public static string Genre_Space {
+        public static string Space {
             get {
-                return ResourceManager.GetString("Genre_Space", resourceCulture);
+                return ResourceManager.GetString("Space", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Space Rock.
         /// </summary>
-        public static string Genre_SpaceRock {
+        public static string SpaceRock {
             get {
-                return ResourceManager.GetString("Genre_SpaceRock", resourceCulture);
+                return ResourceManager.GetString("SpaceRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Speech.
         /// </summary>
-        public static string Genre_Speech {
+        public static string Speech {
             get {
-                return ResourceManager.GetString("Genre_Speech", resourceCulture);
+                return ResourceManager.GetString("Speech", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Swing.
         /// </summary>
-        public static string Genre_Swing {
+        public static string Swing {
             get {
-                return ResourceManager.GetString("Genre_Swing", resourceCulture);
+                return ResourceManager.GetString("Swing", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Symphony.
         /// </summary>
-        public static string Genre_Symphony {
+        public static string Symphony {
             get {
-                return ResourceManager.GetString("Genre_Symphony", resourceCulture);
+                return ResourceManager.GetString("Symphony", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Symphonic Rock.
         /// </summary>
-        public static string Genre_SymphRock {
+        public static string SymphRock {
             get {
-                return ResourceManager.GetString("Genre_SymphRock", resourceCulture);
+                return ResourceManager.GetString("SymphRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Synthpop.
         /// </summary>
-        public static string Genre_Synthpop {
+        public static string Synthpop {
             get {
-                return ResourceManager.GetString("Genre_Synthpop", resourceCulture);
+                return ResourceManager.GetString("Synthpop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Tango.
         /// </summary>
-        public static string Genre_Tango {
+        public static string Tango {
             get {
-                return ResourceManager.GetString("Genre_Tango", resourceCulture);
+                return ResourceManager.GetString("Tango", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Techno.
         /// </summary>
-        public static string Genre_Techno {
+        public static string Techno {
             get {
-                return ResourceManager.GetString("Genre_Techno", resourceCulture);
+                return ResourceManager.GetString("Techno", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Techno-Industrial.
         /// </summary>
-        public static string Genre_TechnoIndustr {
+        public static string TechnoIndustr {
             get {
-                return ResourceManager.GetString("Genre_TechnoIndustr", resourceCulture);
+                return ResourceManager.GetString("TechnoIndustr", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Terror.
         /// </summary>
-        public static string Genre_Terror {
+        public static string Terror {
             get {
-                return ResourceManager.GetString("Genre_Terror", resourceCulture);
+                return ResourceManager.GetString("Terror", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Thrash Metal.
         /// </summary>
-        public static string Genre_ThrashMetal {
+        public static string ThrashMetal {
             get {
-                return ResourceManager.GetString("Genre_ThrashMetal", resourceCulture);
+                return ResourceManager.GetString("ThrashMetal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Top 40.
         /// </summary>
-        public static string Genre_Top40 {
+        public static string Top40 {
             get {
-                return ResourceManager.GetString("Genre_Top40", resourceCulture);
+                return ResourceManager.GetString("Top40", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Trailer.
         /// </summary>
-        public static string Genre_Trailer {
+        public static string Trailer {
             get {
-                return ResourceManager.GetString("Genre_Trailer", resourceCulture);
+                return ResourceManager.GetString("Trailer", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Trance.
         /// </summary>
-        public static string Genre_Trance {
+        public static string Trance {
             get {
-                return ResourceManager.GetString("Genre_Trance", resourceCulture);
+                return ResourceManager.GetString("Trance", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Tribal.
         /// </summary>
-        public static string Genre_Tribal {
+        public static string Tribal {
             get {
-                return ResourceManager.GetString("Genre_Tribal", resourceCulture);
+                return ResourceManager.GetString("Tribal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Trip-Hop.
         /// </summary>
-        public static string Genre_TripHop {
+        public static string TripHop {
             get {
-                return ResourceManager.GetString("Genre_TripHop", resourceCulture);
+                return ResourceManager.GetString("TripHop", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Trop Rock.
         /// </summary>
-        public static string Genre_TropRock {
+        public static string TropRock {
             get {
-                return ResourceManager.GetString("Genre_TropRock", resourceCulture);
+                return ResourceManager.GetString("TropRock", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Unknown genre: {0}.
         /// </summary>
-        public static string Genre_Unknown {
+        public static string Unknown {
             get {
-                return ResourceManager.GetString("Genre_Unknown", resourceCulture);
+                return ResourceManager.GetString("Unknown", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Vocal.
         /// </summary>
-        public static string Genre_Vocal {
+        public static string Vocal {
             get {
-                return ResourceManager.GetString("Genre_Vocal", resourceCulture);
+                return ResourceManager.GetString("Vocal", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to World Music.
         /// </summary>
-        public static string Genre_WorldMusic {
+        public static string WorldMusic {
             get {
-                return ResourceManager.GetString("Genre_WorldMusic", resourceCulture);
+                return ResourceManager.GetString("WorldMusic", resourceCulture);
             }
         }
     }

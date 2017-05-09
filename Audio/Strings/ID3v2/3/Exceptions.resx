@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Exception_HeaderTooShort" xml:space="preserve">
+  <data name="HeaderTooShort" xml:space="preserve">
     <value>Extended header too short to be valid for ID3v2.3</value>
   </data>
-  <data name="Exception_HeaderTooShortCRC" xml:space="preserve">
+  <data name="HeaderTooShortCRC" xml:space="preserve">
     <value>Extended header too short to contain a valid ID3v2.3 CRC</value>
   </data>
 </root>

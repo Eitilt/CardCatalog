@@ -86,7 +86,7 @@ namespace AgEitilt.CardCatalog {
 		/// not suitable, the method should be overridden.
 		/// </remarks>
 		public virtual string Name =>
-			String.Format(Strings.Base.Field_DefaultName, System.Text.Encoding.UTF8.GetString(SystemName));
+			String.Format(Strings.Fields.DefaultName, System.Text.Encoding.UTF8.GetString(SystemName));
 
 		/// <summary>
 		/// Extra human-readable information describing the field, such as the
@@ -146,7 +146,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="stream">The data to read.</param>
 		public virtual void Parse(Stream stream) {
-			logger?.LogInformation(Strings.Base.Logger_Field_Parse, Name);
+			logger?.LogInformation(Strings.Logger.Field_Parse, Name);
 
 			var data = new byte[Length];
 

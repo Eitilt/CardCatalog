@@ -642,148 +642,180 @@
             
             <returns>The generated objects.</returns>
         </member>
-        <member name="T:AgEitilt.CardCatalog.Strings.Base">
+        <member name="T:AgEitilt.CardCatalog.Strings.Exceptions">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.ResourceManager">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ResourceManager">
             <summary>
               Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Culture">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.Culture">
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ExtendFieldType">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ExtendFieldType">
             <summary>
               Looks up a localized string similar to Metadata tag field types must extend TagField.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_NoFieldEnclosingFormatName">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.NoFieldEnclosingFormatName">
             <summary>
               Looks up a localized string similar to If a TagFieldAttribute does not declare a Format, at least one enclosing type must have an associated MetadataFormatAttribute.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_NoFormatName">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.NoFormatName">
             <summary>
               Looks up a localized string similar to No explicit format name was passed, and the type has no attribute to infer it from.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ParseFunctionAbstract">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ParseFunctionAbstract">
             <summary>
               Looks up a localized string similar to Metadata header-parsing functions must not be abstract.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ParseFunctionNonstatic">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ParseFunctionNonstatic">
             <summary>
               Looks up a localized string similar to Metadata header-parsing functions must be static.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ParseFunctionParameters">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ParseFunctionParameters">
             <summary>
               Looks up a localized string similar to Metadata header-parsing functions must be able to take only an IEnumerable&lt;byte&gt;.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ParseFunctionPrivate">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ParseFunctionPrivate">
             <summary>
               Looks up a localized string similar to Metadata header-parsing functions must not be private.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Exception_ParseFunctionReturn">
+        <member name="P:AgEitilt.CardCatalog.Strings.Exceptions.ParseFunctionReturn">
             <summary>
               Looks up a localized string similar to Metadata header-parsing functions must return an empty instance of their type.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Field_DefaultName">
+        <member name="T:AgEitilt.CardCatalog.Strings.Fields">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Fields.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Fields.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Fields.DefaultName">
             <summary>
               Looks up a localized string similar to {{ {0} }}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Field_DefaultValue">
+        <member name="P:AgEitilt.CardCatalog.Strings.Fields.DefaultValue">
             <summary>
               Looks up a localized string similar to {{ {0} }}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_Field_Parse">
+        <member name="T:AgEitilt.CardCatalog.Strings.Logger">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.Field_Parse">
             <summary>
               Looks up a localized string similar to Parsing field &quot;{Name}&quot; according to generic logic.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse">
             <summary>
               Looks up a localized string similar to Parsing type {Type} from stream.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Bound">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Bound">
             <summary>
               Looks up a localized string similar to Calling Parse for object of length {Length}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Bound_Unknown">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Bound_Unknown">
             <summary>
               Looks up a localized string similar to Calling Parse for object of unknown length.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Found">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Found">
             <summary>
               Looks up a localized string similar to Found header matching type {Type}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Header">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Header">
             <summary>
               Looks up a localized string similar to Reading additional bytes into header.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterAll">
             <summary>
               Looks up a localized string similar to Registering all formats in assembly {Assembly}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll_PrevAssembly">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterAll_PrevAssembly">
             <summary>
               Looks up a localized string similar to Formats in assembly have already been registered.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll_TypeList">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterAll_TypeList">
             <summary>
               Looks up a localized string similar to Checking type {Type} for registration.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterField">
             <summary>
               Looks up a localized string similar to Registering type {Type} as a field within {Format}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField_NoFormat">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterField_NoFormat">
             <summary>
               Looks up a localized string similar to Scanning for format attribute(s) on enclosing types.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField_ScanHeaders">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterField_ScanHeaders">
             <summary>
               Looks up a localized string similar to Scanning for additional field headers.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFieldParser">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterFieldParser">
             <summary>
               Looks up a localized string similar to Registering {Method} as a generator for {Field} within {Format}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormat">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterFormat">
             <summary>
               Looks up a localized string similar to Registering type {Type} as {Format}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormat_EmptyGeneric">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterFormat_EmptyGeneric">
             <summary>
               Looks up a localized string similar to Scanning for format attribute(s) on type {Type}.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormatParser">
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterFormatParser">
             <summary>
               Looks up a localized string similar to Registering {Method} as a generator for {Format}.
             </summary>

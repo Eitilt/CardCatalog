@@ -137,7 +137,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The de-unsynchronized byte array to parse.
 		/// </param>
 		protected override void ParseExtendedHeader(byte[] extHeader) {
-			logger?.LogInformation(Strings.ID3v23Plus.Logger_ParseExtHeader_Version, Format);
+			logger?.LogInformation(Strings.ID3v2.Logger.ParseExtHeader_Version, Format);
 
 			//TODO: Doesn't ensure that the length is enough for the flag data
 			// and so array index out-of-bounds exceptions may be thrown.
