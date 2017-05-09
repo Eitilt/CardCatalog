@@ -11,6 +11,12 @@ using AgEitilt.Common.Dictionary;
 namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
+	/// proper format for keys to <see cref="TagField"/> objects.
+	/// </summary>
+	public interface IReadOnlyFieldDictionary : IReadOnlyDictionary<byte[], IEnumerable<TagField>> { }
+
+	/// <summary>
+	/// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
 	/// proper equality of keys to <see cref="TagField"/> objects.
 	/// </summary>
 	public class FieldDictionary : Dictionary<byte[], IEnumerable<TagField>>, IReadOnlyFieldDictionary {
@@ -96,10 +102,4 @@ namespace AgEitilt.CardCatalog {
 		/// </param>
 		public FieldDictionary(Dictionary<byte[], IEnumerable<TagField>> dictionary) : base(dictionary, keyComparer) { }
 	}
-
-	/// <summary>
-	/// An alias for <see cref="Dictionary{TKey, TValue}"/> to ensure the
-	/// proper format for keys to <see cref="TagField"/> objects.
-	/// </summary>
-	public interface IReadOnlyFieldDictionary : IReadOnlyDictionary<byte[], IEnumerable<TagField>> { }
 }

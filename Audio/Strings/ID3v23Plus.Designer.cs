@@ -1473,5 +1473,23 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
                 return ResourceManager.GetString("Field_XSOT", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing common code for ID3v2 extended headers.
+        /// </summary>
+        public static string Logger_ParseExtHeader {
+            get {
+                return ResourceManager.GetString("Logger_ParseExtHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing extended header for {Format} tag.
+        /// </summary>
+        public static string Logger_ParseExtHeader_Version {
+            get {
+                return ResourceManager.GetString("Logger_ParseExtHeader_Version", resourceCulture);
+            }
+        }
     }
 }

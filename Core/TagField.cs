@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 
 using AgEitilt.Common.Stream.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
@@ -29,6 +30,19 @@ namespace AgEitilt.CardCatalog {
 	/// implementations.
 	/// </summary>
 	public abstract class TagField : IParsable {
+		/// <summary>
+		/// The specific logger instance used for methods within this or
+		/// derived types.
+		/// </summary>
+		protected readonly ILogger logger;
+
+		/// <summary>
+		/// Initialize the fields common to all derived instances.
+		/// </summary>
+		public TagField() {
+			logger = FormatRegistry.LoggerFactory?.CreateLogger(GetType().FullName);
+		}
+
 		/// <summary>
 		/// The raw data making up this field's header.
 		/// </summary>
@@ -132,6 +146,8 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <param name="stream">The data to read.</param>
 		public virtual void Parse(Stream stream) {
+			logger?.LogInformation(Strings.Base.Logger_Field_Parse, Name);
+
 			var data = new byte[Length];
 
 			var read = stream.ReadAll(data, 0, Length);

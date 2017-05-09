@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Microsoft.Extensions.Logging;
+
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	/// <summary>
 	/// An implementation of the ID3v2.3 standard as described at
@@ -19,7 +21,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The short name used to represent ID3v2.3 metadata.
 		/// </summary>
 		/// 
-		/// <seealso cref="FormatRegistry.Register{T}(string)"/>
+		/// <seealso cref="FormatRegistry.RegisterFormat{T}(string)"/>
 		public const string format = "ID3v2.3";
 		/// <summary>
 		/// The display name of the tag format.
@@ -85,7 +87,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// <summary>
 		/// The size of the empty padding at the end of the tag.
 		/// </summary>
-		private uint PaddingSize { get; set; }
+		private uint PaddingSize { get; set; } = 0;
 
 		/// <summary>
 		/// Parse a stream according the proper version of the ID3v2
@@ -99,8 +101,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// 
 		/// <param name="header">The stream to parse.</param>
 		V3(IEnumerable<byte> header) {
-			PaddingSize = 0;
-
 			var flags = ParseBaseHeader(header);
 
 			bool useUnsync = flags[0];
@@ -125,6 +125,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The de-unsynchronized byte array to parse.
 		/// </param>
 		protected override void ParseExtendedHeader(byte[] extHeader) {
+			logger?.LogInformation(Strings.ID3v23Plus.Logger_ParseExtHeader_Version, Format);
+
 			if (extHeader.Length < 6)
 				throw new InvalidDataException(Strings.ID3v23.Exception_HeaderTooShort);
 

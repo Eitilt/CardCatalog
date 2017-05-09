@@ -5,12 +5,26 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// Common properties to retrieve info from multiple tag formats.
 	/// </summary>
 	public abstract class MetadataTag : IParsable {
+		/// <summary>
+		/// The specific logger instance used for methods within this or
+		/// derived types.
+		/// </summary>
+		protected readonly ILogger logger;
+
+		/// <summary>
+		/// Initialize the fields common to all derived instances.
+		/// </summary>
+		public MetadataTag() {
+			logger = FormatRegistry.LoggerFactory?.CreateLogger(GetType().FullName);
+		}
+
 		/// <summary>
 		/// The display name of the tag format.
 		/// </summary>

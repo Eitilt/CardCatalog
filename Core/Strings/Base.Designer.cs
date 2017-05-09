@@ -150,5 +150,149 @@ namespace AgEitilt.CardCatalog.Strings {
                 return ResourceManager.GetString("Field_DefaultValue", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing field &quot;{Name}&quot; according to generic logic.
+        /// </summary>
+        public static string Logger_Field_Parse {
+            get {
+                return ResourceManager.GetString("Logger_Field_Parse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing type {Type} from stream.
+        /// </summary>
+        public static string Logger_GenericParse {
+            get {
+                return ResourceManager.GetString("Logger_GenericParse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calling Parse for object of length {Length}.
+        /// </summary>
+        public static string Logger_GenericParse_Bound {
+            get {
+                return ResourceManager.GetString("Logger_GenericParse_Bound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calling Parse for object of unknown length.
+        /// </summary>
+        public static string Logger_GenericParse_Bound_Unknown {
+            get {
+                return ResourceManager.GetString("Logger_GenericParse_Bound_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found header matching type {Type}.
+        /// </summary>
+        public static string Logger_GenericParse_Found {
+            get {
+                return ResourceManager.GetString("Logger_GenericParse_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading additional bytes into header.
+        /// </summary>
+        public static string Logger_GenericParse_Header {
+            get {
+                return ResourceManager.GetString("Logger_GenericParse_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering all formats in assembly {Assembly}.
+        /// </summary>
+        public static string Logger_RegisterAll {
+            get {
+                return ResourceManager.GetString("Logger_RegisterAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formats in assembly have already been registered.
+        /// </summary>
+        public static string Logger_RegisterAll_PrevAssembly {
+            get {
+                return ResourceManager.GetString("Logger_RegisterAll_PrevAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking type {Type} for registration.
+        /// </summary>
+        public static string Logger_RegisterAll_TypeList {
+            get {
+                return ResourceManager.GetString("Logger_RegisterAll_TypeList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering type {Type} as a field within {Format}.
+        /// </summary>
+        public static string Logger_RegisterField {
+            get {
+                return ResourceManager.GetString("Logger_RegisterField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning for format attribute(s) on enclosing types.
+        /// </summary>
+        public static string Logger_RegisterField_NoFormat {
+            get {
+                return ResourceManager.GetString("Logger_RegisterField_NoFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning for additional field headers.
+        /// </summary>
+        public static string Logger_RegisterField_ScanHeaders {
+            get {
+                return ResourceManager.GetString("Logger_RegisterField_ScanHeaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering {Method} as a generator for {Field} within {Format}.
+        /// </summary>
+        public static string Logger_RegisterFieldParser {
+            get {
+                return ResourceManager.GetString("Logger_RegisterFieldParser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering type {Type} as {Format}.
+        /// </summary>
+        public static string Logger_RegisterFormat {
+            get {
+                return ResourceManager.GetString("Logger_RegisterFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning for format attribute(s) on type {Type}.
+        /// </summary>
+        public static string Logger_RegisterFormat_EmptyGeneric {
+            get {
+                return ResourceManager.GetString("Logger_RegisterFormat_EmptyGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registering {Method} as a generator for {Format}.
+        /// </summary>
+        public static string Logger_RegisterFormatParser {
+            get {
+                return ResourceManager.GetString("Logger_RegisterFormatParser", resourceCulture);
+            }
+        }
     }
 }

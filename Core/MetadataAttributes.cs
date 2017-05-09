@@ -17,7 +17,7 @@ namespace AgEitilt.CardCatalog {
 	/// The class must implement <see cref="MetadataTag"/>.
 	/// </remarks>
 	/// 
-	/// <seealso cref="FormatRegistry.Register{T}(string)"/>
+	/// <seealso cref="FormatRegistry.RegisterFormat{T}(string)"/>
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
 	public sealed class MetadataFormatAttribute : Attribute {
 		/// <summary>
@@ -57,7 +57,7 @@ namespace AgEitilt.CardCatalog {
 	/// TODO: Add discussion of required signature according to exceptions in
 	/// method Register(...)
 	/// 
-	/// <seealso cref="FormatRegistry.Register(string, uint, System.Reflection.MethodInfo)"/>
+	/// <seealso cref="FormatRegistry.RegisterFormatParser(string, uint, System.Reflection.MethodInfo)"/>
 	[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 	public sealed class HeaderParserAttribute : Attribute {
 		/// <summary>
@@ -115,7 +115,7 @@ namespace AgEitilt.CardCatalog {
 		/// If this is `null` (the default), the immediately-enclosing type
 		/// <em>must</em>  have a <see cref="MetadataFormatAttribute"/>
 		/// attribute, or an exception will be thrown on the call to
-		/// <see cref="FormatRegistry.Register{T}(string, byte[])"/>.
+		/// <see cref="FormatRegistry.RegisterField{T}(string, byte[])"/>.
 		/// </remarks>
 		/// 
 		/// <seealso cref="MetadataFormatAttribute.Name"/>

@@ -12,15 +12,53 @@ using System.Threading.Tasks;
 
 using AgEitilt.Common.Dictionary.Extensions;
 
+using Microsoft.Extensions.Logging;
+
 namespace AgEitilt.CardCatalog {
 	/// <summary>
 	/// A data-free class providing a common means to work with multiple
 	/// metadata formats.
 	/// </summary>
+	/// 
+	/// <remarks>
+	/// TODO: Document/handle (and log?) exceptions.
+	/// </remarks>
 	public static class FormatRegistry {
 		internal class FormatData : ReflectionData<MetadataTag> {
 			public Dictionary<byte[], ReflectionData<TagField>> fields = new Dictionary<byte[], ReflectionData<TagField>>(FieldDictionary.KeyComparer);
 		}
+
+		/// <summary>
+		/// Gets or sets the factory used to create <see cref="ILogger"/>
+		/// instances for all <c>CardCatalog</c> classes.
+		/// </summary>
+		/// 
+		/// <remarks>
+		/// If this is <c>null</c> (the default value), then no logging is
+		/// preformed. In order to ensure that all relevant messages are
+		/// properly logged, this should be set <em>before</em> any other
+		/// methods from this and contained namespaces are called (including
+		/// class constructors and, for example, <see cref="RegisterFormat{T}()"/>.
+		/// <para/>
+		/// Changing this value only affects instances created after that
+		/// change.
+		/// </remarks>
+		public static ILoggerFactory LoggerFactory {
+			get => loggerFactory;
+			set {
+				loggerFactory = value;
+				logger = loggerFactory.CreateLogger(typeof(FormatRegistry));
+			}
+		}
+		/// <summary>
+		/// The instance underlying <see cref="LoggerFactory"/>.
+		/// </summary>
+		static ILoggerFactory loggerFactory = null;
+		/// <summary>
+		/// The specific logger instance used for methods within
+		/// <see cref="FormatRegistry"/>.
+		/// </summary>
+		static ILogger logger = null;
 
 		/// <summary>
 		/// The class encapsulating each registered metadata format.
@@ -62,9 +100,8 @@ namespace AgEitilt.CardCatalog {
 		/// <typeparam name="T">
 		/// Any type from the assembly to scan.
 		/// </typeparam>
-		public static void RegisterAll<T>() {
+		public static void RegisterAll<T>() =>
 			RegisterAll(typeof(T).GetTypeInfo().Assembly);
-		}
 
 		/// <summary>
 		/// Scan the given assembly for all types marked as implementing a
@@ -78,13 +115,19 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <seealso cref="MetadataFormatAttribute"/>
 		public static void RegisterAll(Assembly assembly) {
+			logger?.LogInformation(Strings.Base.Logger_RegisterAll, assembly.FullName);
+
 			// Avoid searching assemblies multiple times to cut down on the
 			// performance hit of reflection
-			if (assemblies.Contains(assembly.FullName))
+			if (assemblies.Contains(assembly.FullName)) {
+				logger?.LogDebug(Strings.Base.Logger_RegisterAll_PrevAssembly);
 				return;
+			}
 
 			foreach (Type t in assembly.ExportedTypes) {
-				// Provide cache for if it becomes necessary
+				logger?.LogTrace(Strings.Base.Logger_RegisterAll_TypeList, t.FullName);
+
+				// Provide cache variable for if we need it
 				MethodInfo tagRegisterFunction = null;
 				MethodInfo fieldRegisterFunction = null;
 
@@ -147,13 +190,15 @@ namespace AgEitilt.CardCatalog {
 		/// </exception>
 		/// 
 		/// <seealso cref="HeaderParserAttribute"/>
-		public static void Register<T>() where T : MetadataTag {
+		public static void RegisterFormat<T>() where T : MetadataTag {
+			logger?.LogDebug(Strings.Base.Logger_RegisterFormat_EmptyGeneric);
+
 			var attrs = typeof(T).GetTypeInfo().GetCustomAttributes<MetadataFormatAttribute>(false);
 			if (attrs.Count() == 0)
 				throw new TypeLoadException(Strings.Base.Exception_NoFormatName);
 
 			foreach (MetadataFormatAttribute attr in attrs)
-				Register<T>(attr.Name);
+				RegisterFormat<T>(attr.Name);
 		}
 
 		/// <summary>
@@ -180,8 +225,9 @@ namespace AgEitilt.CardCatalog {
 		/// <para/>
 		/// It is recommended that this also be exposed as a constant.
 		/// </param>
-		public static void Register<T>(string format) where T : MetadataTag {
+		public static void RegisterFormat<T>(string format) where T : MetadataTag {
 			var formatType = typeof(T);
+			logger.LogInformation(Strings.Base.Logger_RegisterFormat, formatType.FullName, format);
 
 			tagFormats.GetOrAdd(format).Type = formatType;
 
@@ -190,7 +236,7 @@ namespace AgEitilt.CardCatalog {
 			foreach (var m in from method in formatType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
 							  where method.IsDefined(typeof(HeaderParserAttribute))
 							  select method)
-				Register(format, m.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, m);
+				RegisterFormatParser(format, m.GetCustomAttribute<HeaderParserAttribute>(true).HeaderLength, m);
 		}
 
 		/// <summary>
@@ -209,14 +255,18 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="header">
 		/// The unique specifier of this field.
 		/// </param>
-		public static void Register<T>(string format, byte[] header) where T : TagField {
-			Register<T>(format, new byte[1][] { header });
-		}
+		public static void RegisterField<T>(string format, byte[] header) where T : TagField =>
+			RegisterField<T>(format, new byte[1][] { header });
 
 		/// <summary>
 		/// Add the given tag field type to the lookup tables under the proper
 		/// format specifier.
 		/// </summary>
+		/// 
+		/// <remarks>
+		/// TODO: Allow specifying multiple formats on calling, as multiple
+		/// formats are allowed via attribute.
+		/// </remarks>
 		/// 
 		/// <typeparam name="T">
 		/// The <see cref="TagField"/> class implementing the field.
@@ -229,12 +279,15 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="headerList">
 		/// The unique specifiers of this field.
 		/// </param>
-		public static void Register<T>(string format, IEnumerable<byte[]> headerList) where T : TagField {
+		public static void RegisterField<T>(string format, IEnumerable<byte[]> headerList) where T : TagField {
 			var fieldType = typeof(T);
+			logger?.LogInformation(Strings.Base.Logger_RegisterField, fieldType.FullName, format);
 
 			IEnumerable<string> formatAttrs = Array.Empty<string>();
 			// Detect associated format from context
 			if (format == null) {
+				logger?.LogDebug(Strings.Base.Logger_RegisterField_NoFormat);
+
 				// Find the innermost enclosing type with a format attribute
 				for (Type enclosingType = fieldType.DeclaringType;
 						(formatAttrs.Count() == 0) && (enclosingType != null);
@@ -256,6 +309,8 @@ namespace AgEitilt.CardCatalog {
 			var headers = new List<byte[]>();
 			// Detect applicable field headers from contained generators
 			if ((headerList == null) || (headerList.Contains(null))) {
+				logger?.LogDebug(Strings.Base.Logger_RegisterField_ScanHeaders);
+
 				headers.AddRange(from field in fieldType.GetFields(BindingFlags.Static | BindingFlags.Public)
 								 where field.IsDefined(typeof(FieldNamesAttribute))
 								 from name in field.GetValue(null) as IEnumerable<byte[]>
@@ -266,7 +321,7 @@ namespace AgEitilt.CardCatalog {
 								 select name);
 				headers.AddRange(from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public)
 								 where method.IsDefined(typeof(FieldNamesAttribute))
-								 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>).Invoke()
+								 from name in (method.CreateDelegate(typeof(Func<IEnumerable<byte[]>>)) as Func<IEnumerable<byte[]>>)?.Invoke()
 								 select name);
 			// Use the headers passed at method invocation
 			} else if (headerList != null) {
@@ -304,7 +359,7 @@ namespace AgEitilt.CardCatalog {
 		/// The method fails some requirement for it to be a functional header
 		/// validation function.
 		/// </exception>
-		private static void MethodSanityChecks<T>(MethodInfo method) {
+		static void MethodSanityChecks<T>(MethodInfo method) {
 			if (method.IsPrivate)
 				throw new NotSupportedException(Strings.Base.Exception_ParseFunctionPrivate);
 			if (method.IsAbstract)
@@ -329,7 +384,7 @@ namespace AgEitilt.CardCatalog {
 		/// 
 		/// <remarks>
 		/// This should almost purely be called via
-		/// <see cref="Register{T}(string)"/>, and has been separated
+		/// <see cref="RegisterFormat{T}(string)"/>, and has been separated
 		/// primarily for code clarity.
 		/// </remarks>
 		/// 
@@ -342,7 +397,9 @@ namespace AgEitilt.CardCatalog {
 		/// header.
 		/// </param>
 		/// <param name="method">The method to add.</param>
-		private static void Register(string format, uint headerLength, MethodInfo method) {
+		static void RegisterFormatParser(string format, uint headerLength, MethodInfo method) {
+			logger?.LogDebug(Strings.Base.Logger_RegisterFormatParser, method.Name, format);
+
 			MethodSanityChecks<MetadataTag>(method);
 
 			try {
@@ -369,7 +426,7 @@ namespace AgEitilt.CardCatalog {
 		/// any later registrations will override the previous.
 		/// <para/>
 		/// This should almost purely be called via
-		/// <see cref="Register{T}(string)"/>, and has been separated
+		/// <see cref="RegisterFormat{T}(string)"/>, and has been separated
 		/// primarily for code clarity.
 		/// </remarks>
 		/// 
@@ -385,7 +442,9 @@ namespace AgEitilt.CardCatalog {
 		/// header.
 		/// </param>
 		/// <param name="method">The method to add.</param>
-		private static void Register(string format, byte[] field, uint headerLength, MethodInfo method) {
+		static void Register(string format, byte[] field, uint headerLength, MethodInfo method) {
+			logger?.LogDebug(Strings.Base.Logger_RegisterFieldParser, method.Name, field, format);
+
 			MethodSanityChecks<TagField>(method);
 
 			try {
@@ -408,8 +467,7 @@ namespace AgEitilt.CardCatalog {
 		/// <param name="stream">The stream to parse.</param>
 		/// 
 		/// <returns>The resulting <see cref="MetadataTag"/>s.</returns>
-		public async static Task<IEnumerable<MetadataTag>> ParseAsync(Stream stream) {
-			return await ReflectionData<MetadataTag>.ParseAsync(stream, tagFormats.Values);
-		}
+		public async static Task<IEnumerable<MetadataTag>> ParseAsync(Stream stream) =>
+			await ReflectionData<MetadataTag>.ParseAsync(stream, tagFormats.Values);
 	}
 }

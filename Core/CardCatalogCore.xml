@@ -4,6 +4,12 @@
         <name>AgEitilt.CardCatalog.Core</name>
     </assembly>
     <members>
+        <member name="T:AgEitilt.CardCatalog.IReadOnlyFieldDictionary">
+            <summary>
+            An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
+            proper format for keys to <see cref="T:AgEitilt.CardCatalog.TagField"/> objects.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.FieldDictionary">
             <summary>
             An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
@@ -93,16 +99,42 @@
             new <see cref="T:AgEitilt.CardCatalog.FieldDictionary"/>.
             </param>
         </member>
-        <member name="T:AgEitilt.CardCatalog.IReadOnlyFieldDictionary">
-            <summary>
-            An alias for <see cref="T:System.Collections.Generic.Dictionary`2"/> to ensure the
-            proper format for keys to <see cref="T:AgEitilt.CardCatalog.TagField"/> objects.
-            </summary>
-        </member>
         <member name="T:AgEitilt.CardCatalog.FormatRegistry">
             <summary>
             A data-free class providing a common means to work with multiple
             metadata formats.
+            </summary>
+            
+            <remarks>
+            TODO: Document/handle (and log?) exceptions.
+            </remarks>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.FormatRegistry.LoggerFactory">
+            <summary>
+            Gets or sets the factory used to create <see cref="T:Microsoft.Extensions.Logging.ILogger"/>
+            instances for all <c>CardCatalog</c> classes.
+            </summary>
+            
+            <remarks>
+            If this is <c>null</c> (the default value), then no logging is
+            preformed. In order to ensure that all relevant messages are
+            properly logged, this should be set <em>before</em> any other
+            methods from this and contained namespaces are called (including
+            class constructors and, for example, <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1"/>.
+            <para/>
+            Changing this value only affects instances created after that
+            change.
+            </remarks>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.loggerFactory">
+            <summary>
+            The instance underlying <see cref="P:AgEitilt.CardCatalog.FormatRegistry.LoggerFactory"/>.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.FormatRegistry.logger">
+            <summary>
+            The specific logger instance used for methods within
+            <see cref="T:AgEitilt.CardCatalog.FormatRegistry"/>.
             </summary>
         </member>
         <member name="F:AgEitilt.CardCatalog.FormatRegistry.tagFormats">
@@ -177,7 +209,7 @@
             generic type via a <see cref="T:System.Type"/> variable.
             </remarks>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1">
             <summary>
             Add the single given metadata format type to the lookup tables
             according to the descriptor specified in each of its
@@ -200,7 +232,7 @@
             
             <seealso cref="T:AgEitilt.CardCatalog.HeaderParserAttribute"/>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1(System.String)">
             <summary>
             Add the given metadata format type to the lookup tables under the
             specified custom descriptor, even if it does not have any
@@ -226,7 +258,7 @@
             It is recommended that this also be exposed as a constant.
             </param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Byte[])">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterField``1(System.String,System.Byte[])">
             <summary>
             Add the given tag field type to the lookup tables under the proper
             format specifier.
@@ -244,11 +276,16 @@
             The unique specifier of this field.
             </param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterField``1(System.String,System.Collections.Generic.IEnumerable{System.Byte[]})">
             <summary>
             Add the given tag field type to the lookup tables under the proper
             format specifier.
             </summary>
+            
+            <remarks>
+            TODO: Allow specifying multiple formats on calling, as multiple
+            formats are allowed via attribute.
+            </remarks>
             
             <typeparam name="T">
             The <see cref="T:AgEitilt.CardCatalog.TagField"/> class implementing the field.
@@ -279,7 +316,7 @@
             validation function.
             </exception>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.UInt32,System.Reflection.MethodInfo)">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormatParser(System.String,System.UInt32,System.Reflection.MethodInfo)">
             <summary>
             Add the given format initialization method to the lookup tables
             under the specified custom descriptor.
@@ -287,7 +324,7 @@
             
             <remarks>
             This should almost purely be called via
-            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>, and has been separated
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1(System.String)"/>, and has been separated
             primarily for code clarity.
             </remarks>
             
@@ -313,7 +350,7 @@
             any later registrations will override the previous.
             <para/>
             This should almost purely be called via
-            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>, and has been separated
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1(System.String)"/>, and has been separated
             primarily for code clarity.
             </remarks>
             
@@ -344,20 +381,12 @@
             A wrapper around raw image data to distinguish it as such.
             </summary>
         </member>
-        <member name="M:AgEitilt.CardCatalog.ImageData.#ctor(System.Byte[],System.String)">
-            <summary>
-            Wrap the given data as an image.
-            </summary>
-            
-            <param name="data">The raw, binary data.</param>
-            <param name="mime">The MIME type of the image.</param>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.ImageData.Type">
+        <member name="F:AgEitilt.CardCatalog.ImageData.Type">
             <summary>
             The encoding of this image, as a standard MIME type string.
             </summary>
         </member>
-        <member name="P:AgEitilt.CardCatalog.ImageData.Data">
+        <member name="F:AgEitilt.CardCatalog.ImageData.Data">
             <summary>
             The raw binary data describing the image.
             </summary>
@@ -373,7 +402,7 @@
             The class must implement <see cref="T:AgEitilt.CardCatalog.MetadataTag"/>.
             </remarks>
             
-            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String)"/>
+            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormat``1(System.String)"/>
         </member>
         <member name="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name">
             <summary>
@@ -410,7 +439,7 @@
             TODO: Add discussion of required signature according to exceptions in
             method Register(...)
             
-            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
+            <seealso cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFormatParser(System.String,System.UInt32,System.Reflection.MethodInfo)"/>
         </member>
         <member name="P:AgEitilt.CardCatalog.HeaderParserAttribute.HeaderLength">
             <summary>
@@ -465,7 +494,7 @@
             If this is `null` (the default), the immediately-enclosing type
             <em>must</em>  have a <see cref="T:AgEitilt.CardCatalog.MetadataFormatAttribute"/>
             attribute, or an exception will be thrown on the call to
-            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.Register``1(System.String,System.Byte[])"/>.
+            <see cref="M:AgEitilt.CardCatalog.FormatRegistry.RegisterField``1(System.String,System.Byte[])"/>.
             </remarks>
             
             <seealso cref="P:AgEitilt.CardCatalog.MetadataFormatAttribute.Name"/>
@@ -528,6 +557,17 @@
             Common properties to retrieve info from multiple tag formats.
             </summary>
         </member>
+        <member name="F:AgEitilt.CardCatalog.MetadataTag.logger">
+            <summary>
+            The specific logger instance used for methods within this or
+            derived types.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.MetadataTag.#ctor">
+            <summary>
+            Initialize the fields common to all derived instances.
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.MetadataTag.Format">
             <summary>
             The display name of the tag format.
@@ -567,6 +607,12 @@
             </remarks>
             
             <param name="stream">The stream to read.</param>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.ReflectionData`1.logger">
+            <summary>
+            The specific logger instance used for methods within
+            <see cref="T:AgEitilt.CardCatalog.ReflectionData`1"/>.
+            </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.ReflectionData`1.ValidationFunctions">
             <summary>
@@ -662,6 +708,86 @@
               Looks up a localized string similar to {{ {0} }}.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_Field_Parse">
+            <summary>
+              Looks up a localized string similar to Parsing field &quot;{Name}&quot; according to generic logic.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse">
+            <summary>
+              Looks up a localized string similar to Parsing type {Type} from stream.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Bound">
+            <summary>
+              Looks up a localized string similar to Calling Parse for object of length {Length}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Bound_Unknown">
+            <summary>
+              Looks up a localized string similar to Calling Parse for object of unknown length.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Found">
+            <summary>
+              Looks up a localized string similar to Found header matching type {Type}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_GenericParse_Header">
+            <summary>
+              Looks up a localized string similar to Reading additional bytes into header.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll">
+            <summary>
+              Looks up a localized string similar to Registering all formats in assembly {Assembly}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll_PrevAssembly">
+            <summary>
+              Looks up a localized string similar to Formats in assembly have already been registered.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterAll_TypeList">
+            <summary>
+              Looks up a localized string similar to Checking type {Type} for registration.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField">
+            <summary>
+              Looks up a localized string similar to Registering type {Type} as a field within {Format}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField_NoFormat">
+            <summary>
+              Looks up a localized string similar to Scanning for format attribute(s) on enclosing types.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterField_ScanHeaders">
+            <summary>
+              Looks up a localized string similar to Scanning for additional field headers.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFieldParser">
+            <summary>
+              Looks up a localized string similar to Registering {Method} as a generator for {Field} within {Format}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormat">
+            <summary>
+              Looks up a localized string similar to Registering type {Type} as {Format}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormat_EmptyGeneric">
+            <summary>
+              Looks up a localized string similar to Scanning for format attribute(s) on type {Type}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Base.Logger_RegisterFormatParser">
+            <summary>
+              Looks up a localized string similar to Registering {Method} as a generator for {Format}.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.ITagAttributes">
             <summary>
             Common format-agnostic attributes mapping to different fields
@@ -679,6 +805,17 @@
             <summary>
             A single point of data saved in the tag, with default helper
             implementations.
+            </summary>
+        </member>
+        <member name="F:AgEitilt.CardCatalog.TagField.logger">
+            <summary>
+            The specific logger instance used for methods within this or
+            derived types.
+            </summary>
+        </member>
+        <member name="M:AgEitilt.CardCatalog.TagField.#ctor">
+            <summary>
+            Initialize the fields common to all derived instances.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.TagField.Header">

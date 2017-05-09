@@ -1496,7 +1496,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// All values contained within this field.
 				/// </summary>
 				public override IEnumerable<object> Values =>
-					new object[1] { new ImageData(Data.Skip(imageStart).ToArray(), mime) };
+					new object[1] { new ImageData() {
+						Data = Data.Skip(imageStart).ToArray(),
+						Type = mime
+					} };
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common

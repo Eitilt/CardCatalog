@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 using AgEitilt.Common.Stream.Extensions;
 
+using Microsoft.Extensions.Logging;
+
 namespace AgEitilt.CardCatalog {
 	internal interface IParsable {
 		int Length { get; }
@@ -24,6 +26,12 @@ namespace AgEitilt.CardCatalog {
 	}
 
 	internal class ReflectionData<T> where T : IParsable {
+		/// <summary>
+		/// The specific logger instance used for methods within
+		/// <see cref="ReflectionData{T}"/>.
+		/// </summary>
+		static readonly ILogger<ReflectionData<T>> logger = FormatRegistry.LoggerFactory?.CreateLogger<ReflectionData<T>>();
+
 		public Type Type { get; set; }
 		/// <summary>
 		/// All functions that might return an instance of <c>T</c> when given
@@ -51,7 +59,9 @@ namespace AgEitilt.CardCatalog {
 		/// </param>
 		/// 
 		/// <returns>The generated objects.</returns>
-		public static async Task<IEnumerable<T>> ParseAsync(Stream stream, IEnumerable<ReflectionData<T>> types) {
+		internal static async Task<IEnumerable<T>> ParseAsync(Stream stream, IEnumerable<ReflectionData<T>> types) {
+			logger?.LogDebug(Strings.Base.Logger_GenericParse, typeof(T).FullName);
+
 			var tasks = new List<Task>();
 			var ret = new List<T>();
 
@@ -66,10 +76,9 @@ namespace AgEitilt.CardCatalog {
 				bool found = false;
 				foreach (var v in types.SelectMany(t => t.ValidationFunctions)) {
 					// Make sure we have enough bytes to check the header
-					/* Automatically leaves the stream untouched if we've
-					 * already read enough of a header
-					 */
 					if (readBytes.Count < v.length) {
+						logger?.LogDebug(Strings.Base.Logger_GenericParse_Header);
+
 						var buffer = new byte[v.length - readBytes.Count];
 						var readCount = stream.ReadAll(buffer, 0, buffer.Length);
 
@@ -87,10 +96,14 @@ namespace AgEitilt.CardCatalog {
 						// The header was invalid, and so this function isn't
 						// the correct type to parse next
 						continue;
+					else
+						logger?.LogDebug(Strings.Base.Logger_GenericParse_Found, tag.GetType().FullName);
 
 					ret.Add(tag);
 
 					if (tag.Length == 0) {
+						logger?.LogDebug(Strings.Base.Logger_GenericParse_Bound_Unknown);
+
 						/* The header doesn't contain length data, so we need
 						 * to read the stream directly until whatever end-of-
 						 * data the format uses is reached
@@ -99,6 +112,8 @@ namespace AgEitilt.CardCatalog {
 						// the header
 						tag.Parse(stream);
 					} else {
+						logger?.LogDebug(Strings.Base.Logger_GenericParse_Bound, tag.Length);
+
 						// Read all data from the stream before parsing the
 						// next object along
 						var bytes = new byte[tag.Length];

@@ -151,4 +151,52 @@ Parameter 0 is replaced with the binary header rendered in UTF-8</comment>
     <comment>Must be formatted as a format string
 Parameter 0 is replaced with the binary data rendered in hexadecimal or the string value</comment>
   </data>
+  <data name="Logger_Field_Parse" xml:space="preserve">
+    <value>Parsing field "{Name}" according to generic logic</value>
+  </data>
+  <data name="Logger_GenericParse" xml:space="preserve">
+    <value>Parsing type {Type} from stream</value>
+  </data>
+  <data name="Logger_GenericParse_Bound" xml:space="preserve">
+    <value>Calling Parse for object of length {Length}</value>
+  </data>
+  <data name="Logger_GenericParse_Bound_Unknown" xml:space="preserve">
+    <value>Calling Parse for object of unknown length</value>
+  </data>
+  <data name="Logger_GenericParse_Found" xml:space="preserve">
+    <value>Found header matching type {Type}</value>
+  </data>
+  <data name="Logger_GenericParse_Header" xml:space="preserve">
+    <value>Reading additional bytes into header</value>
+  </data>
+  <data name="Logger_RegisterAll" xml:space="preserve">
+    <value>Registering all formats in assembly {Assembly}</value>
+  </data>
+  <data name="Logger_RegisterAll_PrevAssembly" xml:space="preserve">
+    <value>Formats in assembly have already been registered</value>
+  </data>
+  <data name="Logger_RegisterAll_TypeList" xml:space="preserve">
+    <value>Checking type {Type} for registration</value>
+  </data>
+  <data name="Logger_RegisterField" xml:space="preserve">
+    <value>Registering type {Type} as a field within {Format}</value>
+  </data>
+  <data name="Logger_RegisterFieldParser" xml:space="preserve">
+    <value>Registering {Method} as a generator for {Field} within {Format}</value>
+  </data>
+  <data name="Logger_RegisterField_NoFormat" xml:space="preserve">
+    <value>Scanning for format attribute(s) on enclosing types</value>
+  </data>
+  <data name="Logger_RegisterField_ScanHeaders" xml:space="preserve">
+    <value>Scanning for additional field headers</value>
+  </data>
+  <data name="Logger_RegisterFormat" xml:space="preserve">
+    <value>Registering type {Type} as {Format}</value>
+  </data>
+  <data name="Logger_RegisterFormatParser" xml:space="preserve">
+    <value>Registering {Method} as a generator for {Format}</value>
+  </data>
+  <data name="Logger_RegisterFormat_EmptyGeneric" xml:space="preserve">
+    <value>Scanning for format attribute(s) on type {Type}</value>
+  </data>
 </root>

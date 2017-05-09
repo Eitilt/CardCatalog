@@ -603,4 +603,10 @@ Parameter 0 will be replaced by the production copyright string</comment>
   <data name="Exception_FieldBaseHeaderFlag" xml:space="preserve">
     <value>Attempted to access the value of an ID3v2 header from a FieldBase class</value>
   </data>
+  <data name="Logger_ParseExtHeader" xml:space="preserve">
+    <value>Parsing common code for ID3v2 extended headers</value>
+  </data>
+  <data name="Logger_ParseExtHeader_Version" xml:space="preserve">
+    <value>Parsing extended header for {Format} tag</value>
+  </data>
 </root>

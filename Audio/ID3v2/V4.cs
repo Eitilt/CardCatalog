@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Microsoft.Extensions.Logging;
+
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	/// <summary>
 	/// An implementation of the ID3v2.4 standard as described at
@@ -24,7 +26,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The short name used to represent ID3v2.4 metadata.
 		/// </summary>
 		/// 
-		/// <seealso cref="FormatRegistry.Register{T}(string)"/>
+		/// <seealso cref="FormatRegistry.RegisterFormat{T}(string)"/>
 		public const string format = "ID3v2.4";
 		/// <summary>
 		/// The display name of the tag format.
@@ -135,6 +137,8 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The de-unsynchronized byte array to parse.
 		/// </param>
 		protected override void ParseExtendedHeader(byte[] extHeader) {
+			logger?.LogInformation(Strings.ID3v23Plus.Logger_ParseExtHeader_Version, Format);
+
 			//TODO: Doesn't ensure that the length is enough for the flag data
 			// and so array index out-of-bounds exceptions may be thrown.
 			if (extHeader.Length < 2)
