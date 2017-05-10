@@ -338,7 +338,7 @@
             </param>
             <param name="method">The method to add.</param>
         </member>
-        <member name="M:AgEitilt.CardCatalog.FormatRegistry.Register(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
+        <member name="M:AgEitilt.CardCatalog.FormatRegistry.RegisterFieldParser(System.String,System.Byte[],System.UInt32,System.Reflection.MethodInfo)">
             <summary>
             Add the given field initialization method to the lookup tables
             under the specified custom descriptor.

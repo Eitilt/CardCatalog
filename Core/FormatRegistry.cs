@@ -157,7 +157,7 @@ namespace AgEitilt.CardCatalog {
 		/// This needs to be invoked via reflection since we determine the
 		/// generic type via a <see cref="Type"/> variable.
 		/// </remarks>
-		static readonly MethodInfo tagRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(Register), new Type[1] { typeof(string) });
+		static readonly MethodInfo tagRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(RegisterFormat), new Type[1] { typeof(string) });
 		/// <summary>
 		/// Cache the method used to register new field formats in
 		/// <see cref="RegisterAll(Assembly)"/>.
@@ -167,7 +167,7 @@ namespace AgEitilt.CardCatalog {
 		/// This needs to be invoked via reflection since we determine the
 		/// generic type via a <see cref="Type"/> variable.
 		/// </remarks>
-		static readonly MethodInfo fieldRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(Register), new Type[2] { typeof(string), typeof(byte[]) });
+		static readonly MethodInfo fieldRegisterGeneric = typeof(FormatRegistry).GetMethod(nameof(RegisterField), new Type[2] { typeof(string), typeof(byte[]) });
 
 		/// <summary>
 		/// Add the single given metadata format type to the lookup tables
@@ -339,7 +339,7 @@ namespace AgEitilt.CardCatalog {
 					foreach (var m in from method in fieldType.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)
 									  where method.IsDefined(typeof(HeaderParserAttribute))
 									  select method)
-						Register(name, head, m.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, m);
+						RegisterFieldParser(name, head, m.GetCustomAttribute<HeaderParserAttribute>(false).HeaderLength, m);
 				}
 			}
 		}
@@ -398,7 +398,7 @@ namespace AgEitilt.CardCatalog {
 		/// </param>
 		/// <param name="method">The method to add.</param>
 		static void RegisterFormatParser(string format, uint headerLength, MethodInfo method) {
-			logger?.LogDebug(Strings.Logger.RegisterFormatParser, method.Name, format);
+			logger?.LogTrace(Strings.Logger.RegisterFormatParser, method.Name, format);
 
 			MethodSanityChecks<MetadataTag>(method);
 
@@ -442,8 +442,8 @@ namespace AgEitilt.CardCatalog {
 		/// header.
 		/// </param>
 		/// <param name="method">The method to add.</param>
-		static void Register(string format, byte[] field, uint headerLength, MethodInfo method) {
-			logger?.LogDebug(Strings.Logger.RegisterFieldParser, method.Name, field, format);
+		static void RegisterFieldParser(string format, byte[] field, uint headerLength, MethodInfo method) {
+			logger?.LogTrace(Strings.Logger.RegisterFieldParser, method.Name, field, format);
 
 			MethodSanityChecks<TagField>(method);
 
