@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 0.3.1
 ### Added
 - Optional logging using the `Microsoft.Extensions.Logging` framework
+### Fixed
+- Exception thrown if no logger is attached before parsing a file
 
 ## 0.3.0
 ### Added

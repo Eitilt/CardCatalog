@@ -227,7 +227,7 @@ namespace AgEitilt.CardCatalog {
 		/// </param>
 		public static void RegisterFormat<T>(string format) where T : MetadataTag {
 			var formatType = typeof(T);
-			logger.LogInformation(Strings.Logger.RegisterFormat, formatType.FullName, format);
+			logger?.LogInformation(Strings.Logger.RegisterFormat, formatType.FullName, format);
 
 			tagFormats.GetOrAdd(format).Type = formatType;
 

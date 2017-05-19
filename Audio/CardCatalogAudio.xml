@@ -687,7 +687,11 @@
             Initialize the field with the proper binary header.
             </summary>
             
-            <param name="header">The binary header of the field.</param>
+            <param name="header">
+            The binary header of the field, or <c>null</c> if the subtype
+            implements its own initialization of
+            <see cref="P:AgEitilt.CardCatalog.TagField.Header"/>.
+            </param>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.Parse(System.IO.Stream)">
             <summary>
@@ -859,7 +863,7 @@
             <param name="resources">
             The resources to use when looking up dynamic strings, or
             <c>null</c> to use the default
-            <see cref="!:Strings.ID3v23Plus.ResourceManager"/>.
+            <see cref="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Fields.ResourceManager"/>.
             </param>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V3.FormatFields.TextFrame.#ctor(AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases.TextFrameBase{AgEitilt.CardCatalog.Audio.ID3v2.V3.V3Field.VersionInfo})">
@@ -1338,6 +1342,16 @@
             The ID3v2 version-specific code.
             </typeparam>
         </member>
+        <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.staticLogger">
+            <summary>
+            The specific logger instance used for static methods within
+            <see cref="T:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1"/>.
+            </summary>
+            
+            <remarks>
+            TODO: Use this in the static methods.
+            </remarks>
+        </member>
         <member name="F:AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.V3PlusField`1.version">
             <summary>
             Variables specific to the version of ID3v2 implemented.
@@ -1503,7 +1517,11 @@
             Initialize the field with the proper binary header.
             </summary>
             
-            <param name="header">The binary header of the field.</param>
+            <param name="header">
+            The binary header of the field, or <c>null</c> if the subtype
+            implements its own initialization of
+            <see cref="P:AgEitilt.CardCatalog.TagField.Header"/>.
+            </param>
             <param name="defaultName">
             The name to use if no more specific one is found, or
             <c>null</c> to use the fallback <see cref="P:AgEitilt.CardCatalog.TagField.Name"/>.
@@ -2669,7 +2687,11 @@
             Initialize the field with the proper binary header.
             </summary>
             
-            <param name="header">The binary header of the field.</param>
+            <param name="header">
+            The binary header of the field, or <c>null</c> if the subtype
+            implements its own initialization of
+            <see cref="P:AgEitilt.CardCatalog.TagField.Header"/>.
+            </param>
         </member>
         <member name="M:AgEitilt.CardCatalog.Audio.ID3v2.V4.V4Field.Parse(System.IO.Stream)">
             <summary>

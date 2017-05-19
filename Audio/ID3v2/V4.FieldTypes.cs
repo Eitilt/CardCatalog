@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 
-using AgEitilt.Common.Stream.Extensions;
 using static AgEitilt.CardCatalog.Audio.ID3v2.ID3v23Plus.FormatFieldBases;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
@@ -108,7 +106,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Initialize the field with the proper binary header.
 			/// </summary>
 			/// 
-			/// <param name="header">The binary header of the field.</param>
+			/// <param name="header">
+			/// The binary header of the field, or <c>null</c> if the subtype
+			/// implements its own initialization of
+			/// <see cref="TagField.Header"/>.
+			/// </param>
 			public V4Field(byte[] header) : base(header) { }
 
 			/// <summary>
@@ -198,8 +200,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				internal V4FieldWrapper(FieldBase<VersionInfo> inner) : base(Array.Empty<byte>()) =>
+				internal V4FieldWrapper(FieldBase<VersionInfo> inner) : base(null) {
 					fieldBase = inner;
+					Header = Array.Empty<byte>();
+				}
 
 				/// <summary>
 				/// The raw data making up this field's header.
@@ -366,8 +370,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <param name="header">The binary header to parse.</param>
-				public TextFrame(byte[] header)
-					: this(header, null) { }
+				public TextFrame(byte[] header) : this(header, null) { }
 
 				/// <summary>
 				/// The constructor required to properly initialize the inner
@@ -543,7 +546,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override IEnumerable<object> Values {
 					get {
-						if (ParsedValues.Count() == 0)
+						if ((ParsedValues == null) || (ParsedValues.Count() == 0))
 							return null;
 						return ParsedValues.Select(v => {
 							if (v is GenreText t) {
@@ -571,6 +574,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						ParsedValues = null;
+						return;
+					}
+
 					ParsedValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data[0]))
 						.Select<string, object>(s => {
 							if (s.Equals("RX")) {
@@ -674,7 +682,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				public override IEnumerable<object> Values {
 					get {
-						if (ParsedValues.Count() == 0)
+						if ((ParsedValues == null) || (ParsedValues.Count() == 0))
 							return null;
 						return ParsedValues.Select(v => {
 							if (v is Tuple<DateTimeOffset?, DateTimeOffset?> t) {
@@ -713,6 +721,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						ParsedValues = null;
+						return;
+					}
+
 					skippedValue = false;
 					ParsedValues = SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data[0]))
 						.Select<string, object>(s => {

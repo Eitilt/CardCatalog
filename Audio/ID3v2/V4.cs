@@ -122,7 +122,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
              * parsing of the tag.
              */
 			FlagUnknown = (flags.Cast<bool>().Skip(4).Contains(true));
-
 		}
 
 		/// <summary>

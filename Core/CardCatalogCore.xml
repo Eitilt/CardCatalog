@@ -770,6 +770,11 @@
               Looks up a localized string similar to Reading additional bytes into header.
             </summary>
         </member>
+        <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Skip">
+            <summary>
+              Looks up a localized string similar to Tag not able to be read as current type.
+            </summary>
+        </member>
         <member name="P:AgEitilt.CardCatalog.Strings.Logger.RegisterAll">
             <summary>
               Looks up a localized string similar to Registering all formats in assembly {Assembly}.

@@ -92,12 +92,14 @@ namespace AgEitilt.CardCatalog {
 
 					// Try to construct an empty object of the current format
 					var tag = v.function(readBytes.Take(v.length));
-					if (tag == null)
+					if (tag == null) {
 						// The header was invalid, and so this function isn't
 						// the correct type to parse next
+						logger?.LogTrace(Strings.Logger.GenericParse_Skip);
 						continue;
-					else
+					} else {
 						logger?.LogDebug(Strings.Logger.GenericParse_Found, tag.GetType().FullName);
+					}
 
 					ret.Add(tag);
 

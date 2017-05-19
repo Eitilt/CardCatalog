@@ -106,7 +106,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Initialize the field with the proper binary header.
 			/// </summary>
 			/// 
-			/// <param name="header">The binary header of the field.</param>
+			/// <param name="header">
+			/// The binary header of the field, or <c>null</c> if the subtype
+			/// implements its own initialization of
+			/// <see cref="TagField.Header"/>.
+			/// </param>
 			public V3Field(byte[] header) : base(header) { }
 
 			/// <summary>
@@ -180,8 +184,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="inner">
 				/// The underlying implementation to redirect calls to.
 				/// </param>
-				internal V3FieldWrapper(FieldBase<VersionInfo> inner) : base(Array.Empty<byte>()) =>
+				internal V3FieldWrapper(FieldBase<VersionInfo> inner) : base(null) {
 					fieldBase = inner;
+					Header = Array.Empty<byte>();
+				}
 
 				/// <summary>
 				/// The raw data making up this field's header.
@@ -366,7 +372,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <param name="resources">
 				/// The resources to use when looking up dynamic strings, or
 				/// <c>null</c> to use the default
-				/// <see cref="Strings.ID3v23Plus.ResourceManager"/>.
+				/// <see cref="Strings.ID3v2.Fields.ResourceManager"/>.
 				/// </param>
 				internal TextFrame(byte[] header, ResourceAccessor defaultName, System.Resources.ResourceManager resources = null)
 					: base(new TextFrameBase<VersionInfo>(header, defaultName, resources)) { }

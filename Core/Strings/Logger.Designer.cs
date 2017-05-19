@@ -116,6 +116,15 @@ namespace AgEitilt.CardCatalog.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag not able to be read as current type.
+        /// </summary>
+        internal static string GenericParse_Skip {
+            get {
+                return ResourceManager.GetString("GenericParse_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registering all formats in assembly {Assembly}.
         /// </summary>
         internal static string RegisterAll {

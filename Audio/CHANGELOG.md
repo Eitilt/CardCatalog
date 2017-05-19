@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 0.3.2
 ### Added
 - Optional logging using the `Microsoft.Extensions.Logging` framework
+### Fixed
+- Uninitialized value exception when trying to parse any ID3v2.3/4 file
 
 ## 0.3.1
 ### Changed

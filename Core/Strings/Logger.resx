@@ -135,6 +135,9 @@
   <data name="GenericParse_Header" xml:space="preserve">
     <value>Reading additional bytes into header</value>
   </data>
+  <data name="GenericParse_Skip" xml:space="preserve">
+    <value>Tag not able to be read as current type</value>
+  </data>
   <data name="RegisterAll" xml:space="preserve">
     <value>Registering all formats in assembly {Assembly}</value>
   </data>

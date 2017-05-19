@@ -6,6 +6,7 @@ using System.Linq;
 using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 	public partial class ID3v23Plus {
@@ -44,6 +45,16 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 		/// The ID3v2 version-specific code.
 		/// </typeparam>
 		public abstract class V3PlusField<TVersion> : TagField where TVersion : VersionInfo, new() {
+			/// <summary>
+			/// The specific logger instance used for static methods within
+			/// <see cref="V3PlusField{TVersion}"/>.
+			/// </summary>
+			/// 
+			/// <remarks>
+			/// TODO: Use this in the static methods.
+			/// </remarks>
+			protected static ILogger<V3PlusField<TVersion>> staticLogger = FormatRegistry.LoggerFactory?.CreateLogger<V3PlusField<TVersion>>();
+
 			/// <summary>
 			/// Variables specific to the version of ID3v2 implemented.
 			/// </summary>
@@ -293,13 +304,21 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			/// Initialize the field with the proper binary header.
 			/// </summary>
 			/// 
-			/// <param name="header">The binary header of the field.</param>
+			/// <param name="header">
+			/// The binary header of the field, or <c>null</c> if the subtype
+			/// implements its own initialization of
+			/// <see cref="TagField.Header"/>.
+			/// </param>
 			/// <param name="defaultName">
 			/// The name to use if no more specific one is found, or
 			/// <c>null</c> to use the fallback <see cref="TagField.Name"/>.
 			/// </param>
 			public V3PlusField(byte[] header, ResourceAccessor defaultName = null) {
-				Header = header;
+				// Allow subtypes to handle initialization, if the header is
+				// dependent on some other local member
+				if (header != null)
+					Header = header;
+
 				// Ensure that the delegate will always be assigned some
 				// callable function
 				DefaultName = defaultName ?? (() => null);
@@ -625,15 +644,23 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </summary>
 				/// 
 				/// <returns>The properly-formatted strings.</returns>
-				protected virtual IEnumerable<object> FormatValues() =>
-					StringValues;
+				protected virtual IEnumerable<object> FormatValues() {
+					if ((StringValues == null) || (StringValues.Count() == 0))
+						return null;
+					else
+						return StringValues;
+				}
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
-				internal override void ParseData() =>
-					StringValues = ParseData(SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First())));
+				internal override void ParseData() {
+					if (Data.Length > 1)
+						StringValues = ParseData(SplitStrings(Data.Skip(1).ToArray(), TryGetEncoding(Data.First())));
+					else
+						StringValues = null;
+				}
 				/// <summary>
 				/// Preform field-specific filtering of the parsed strings
 				/// before they're stored.
@@ -676,7 +703,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <returns>The properly-formatted strings.</returns>
 				public override IEnumerable<object> Values {
 					get {
-						if (ParsedValues.Count() == 0)
+						if ((ParsedValues == null) || (ParsedValues.Count() == 0))
 							return null;
 						return ParsedValues.Select(v => {
 							if (v is Tuple<int, int> t)
@@ -711,6 +738,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						ParsedValues = null;
+						return;
+					}
+
 					skippedValue = false;
 
 					// Save on complex computations by pre-parsing the strings
@@ -1222,6 +1254,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						url = null;
+						return;
+					}
+
 					var split = SplitStrings(Data, ISO88591, 2);
 
 					// Discard everything after the first null
@@ -1307,6 +1344,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						url = null;
+						description = null;
+						return;
+					}
+
 					// Get the encoding of the description
 					var encoding = TryGetEncoding(Data[0]);
 
@@ -1403,7 +1446,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				public override IEnumerable<object> Values {
 					get {
 						if ((text == null) || (text.Length == 0))
-							return Array.Empty<object>();
+							return null;
 						return new object[1] { text };
 					}
 				}
@@ -1413,6 +1456,12 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						text = null;
+						description = null;
+						return;
+					}
+
 					// Get the encoding of the description
 					var encoding = TryGetEncoding(Data[0]);
 
@@ -1495,17 +1544,29 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// <summary>
 				/// All values contained within this field.
 				/// </summary>
-				public override IEnumerable<object> Values =>
-					new object[1] { new ImageData() {
-						Data = Data.Skip(imageStart).ToArray(),
-						Type = mime
-					} };
+				public override IEnumerable<object> Values {
+					get {
+						if (mime == null)
+							return null;
+
+						return new object[1] { new ImageData() {
+							Data = Data.Skip(imageStart).ToArray(),
+							Type = mime
+						} };
+					}
+				}
 
 				/// <summary>
 				/// Preform field-specific parsing after the required common
 				/// parsing has been handled.
 				/// </summary>
 				internal override void ParseData() {
+					if (Data.Length == 0) {
+						description = null;
+						mime = null;
+						return;
+					}
+
 					Encoding encoding = TryGetEncoding(Data[0]);
 					mime = ISO88591.GetString(Data.Skip(1).TakeWhile(b => b > 0x00).ToArray());
 					category = (ImageCategory)Data[mime.Length + 2];
