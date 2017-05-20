@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource1 {
+    internal class Exceptions {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource1() {
+        internal Exceptions() {
         }
         
         /// <summary>
@@ -40,7 +40,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.Resource1", typeof(Resource1).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions", typeof(Exceptions).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -58,6 +58,42 @@ namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2 {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;CRC data present&apos; data (must be 5).
+        /// </summary>
+        internal static string HeaderCrcTooShort {
+            get {
+                return ResourceManager.GetString("HeaderCrcTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag restrictions&apos; data (must be 1).
+        /// </summary>
+        internal static string HeaderRestrictionsTooShort {
+            get {
+                return ResourceManager.GetString("HeaderRestrictionsTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extended header too short to be valid for ID3v2.4.
+        /// </summary>
+        internal static string HeaderTooShort {
+            get {
+                return ResourceManager.GetString("HeaderTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag is an update&apos; data (must be 0).
+        /// </summary>
+        internal static string HeaderUpdateTooShort {
+            get {
+                return ResourceManager.GetString("HeaderUpdateTooShort", resourceCulture);
             }
         }
     }

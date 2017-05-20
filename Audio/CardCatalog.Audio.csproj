@@ -56,12 +56,7 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
       <AutoGen>True</AutoGen>
       <DependentUpon>Images.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v2\3\Exceptions.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Exceptions.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Strings\ID3v2\4\Fields.Designer.cs">
+    <Compile Update="Strings\ID3v2\IV\Fields.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Fields.resx</DependentUpon>
@@ -76,7 +71,12 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
       <AutoGen>True</AutoGen>
       <DependentUpon>Logger.resx</DependentUpon>
     </Compile>
-    <Compile Update="Strings\ID3v2\4\Exceptions.Designer.cs">
+    <Compile Update="Strings\ID3v2\IV\Exceptions.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Exceptions.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Strings\ID3v2\III\Exceptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Exceptions.resx</DependentUpon>
@@ -96,11 +96,7 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v2\3\Exceptions.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v2\4\Fields.resx">
+    <EmbeddedResource Update="Strings\ID3v2\IV\Fields.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Fields.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -112,7 +108,11 @@ Partial read support for ID3v2.2, ID3v2.3, and ID3v2.4 tags (MP3).</Description>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Logger.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Strings\ID3v2\4\Exceptions.resx">
+    <EmbeddedResource Update="Strings\ID3v2\IV\Exceptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Strings\ID3v2\III\Exceptions.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>
     </EmbeddedResource>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2.III {
     using System;
     using System.Reflection;
     
@@ -23,24 +23,24 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ID3v23 {
+    internal class Exceptions {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ID3v23() {
+        internal Exceptions() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v23", typeof(ID3v23).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions", typeof(Exceptions).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -52,7 +52,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -64,18 +64,18 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         /// <summary>
         ///   Looks up a localized string similar to Extended header too short to be valid for ID3v2.3.
         /// </summary>
-        public static string Exception_HeaderTooShort {
+        internal static string HeaderTooShort {
             get {
-                return ResourceManager.GetString("Exception_HeaderTooShort", resourceCulture);
+                return ResourceManager.GetString("HeaderTooShort", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Extended header too short to contain a valid ID3v2.3 CRC.
         /// </summary>
-        public static string Exception_HeaderTooShortCRC {
+        internal static string HeaderTooShortCRC {
             get {
-                return ResourceManager.GetString("Exception_HeaderTooShortCRC", resourceCulture);
+                return ResourceManager.GetString("HeaderTooShortCRC", resourceCulture);
             }
         }
     }

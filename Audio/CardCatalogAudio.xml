@@ -4241,48 +4241,6 @@
               Looks up a localized string similar to World Music.
             </summary>
         </member>
-        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v23">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23.Exception_HeaderTooShort">
-            <summary>
-              Looks up a localized string similar to Extended header too short to be valid for ID3v2.3.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v23.Exception_HeaderTooShortCRC">
-            <summary>
-              Looks up a localized string similar to Extended header too short to contain a valid ID3v2.3 CRC.
-            </summary>
-        </member>
-        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Resource1">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Resource1.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Resource1.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Exceptions">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -5115,6 +5073,32 @@
               Looks up a localized string similar to Title sort order (alternate).
             </summary>
         </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions.HeaderTooShort">
+            <summary>
+              Looks up a localized string similar to Extended header too short to be valid for ID3v2.3.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.III.Exceptions.HeaderTooShortCRC">
+            <summary>
+              Looks up a localized string similar to Extended header too short to contain a valid ID3v2.3 CRC.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Images">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -5241,6 +5225,128 @@
               Looks up a localized string similar to Author or lyricist portrait.
             </summary>
         </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.HeaderCrcTooShort">
+            <summary>
+              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;CRC data present&apos; data (must be 5).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.HeaderRestrictionsTooShort">
+            <summary>
+              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag restrictions&apos; data (must be 1).
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.HeaderTooShort">
+            <summary>
+              Looks up a localized string similar to Extended header too short to be valid for ID3v2.4.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Exceptions.HeaderUpdateTooShort">
+            <summary>
+              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag is an update&apos; data (must be 0).
+            </summary>
+        </member>
+        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.DefaultName_Credits">
+            <summary>
+              Looks up a localized string similar to Other credits.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TDEN">
+            <summary>
+              Looks up a localized string similar to Encoding date.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TDOR">
+            <summary>
+              Looks up a localized string similar to Original release date.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TDRC">
+            <summary>
+              Looks up a localized string similar to Recording date.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TDRL">
+            <summary>
+              Looks up a localized string similar to Release date.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TDTG">
+            <summary>
+              Looks up a localized string similar to Tagging date.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TFLT_MIME">
+            <summary>
+              Looks up a localized string similar to MIME type as follows.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Time_End">
+            <summary>
+              Looks up a localized string similar to ???? \u2013 {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Time_Span">
+            <summary>
+              Looks up a localized string similar to {0} \u2013 {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Time_Start">
+            <summary>
+              Looks up a localized string similar to {0} \u2013 ????.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TIPL">
+            <summary>
+              Looks up a localized string similar to Production credits.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.TMCL">
+            <summary>
+              Looks up a localized string similar to Artist credits.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Value_Credits">
+            <summary>
+              Looks up a localized string similar to {0}: {1}.
+            </summary>
+        </member>
+        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields.Value_Credits_EmptyRole">
+            <summary>
+              Looks up a localized string similar to {0}.
+            </summary>
+        </member>
         <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Logger">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -5265,112 +5371,6 @@
         <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v2.Logger.ParseExtHeader_Version">
             <summary>
               Looks up a localized string similar to Parsing extended header for {Format} tag.
-            </summary>
-        </member>
-        <member name="T:AgEitilt.CardCatalog.Audio.Strings.ID3v24">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Exception_HeaderCrcTooShort">
-            <summary>
-              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;CRC data present&apos; data (must be 5).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Exception_HeaderRestrictionsTooShort">
-            <summary>
-              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag restrictions&apos; data (must be 1).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Exception_HeaderTooShort">
-            <summary>
-              Looks up a localized string similar to Extended header too short to be valid for ID3v2.4.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Exception_HeaderUpdateTooShort">
-            <summary>
-              Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag is an update&apos; data (must be 0).
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_DefaultName_Credits">
-            <summary>
-              Looks up a localized string similar to Other credits.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDEN">
-            <summary>
-              Looks up a localized string similar to Encoding date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDOR">
-            <summary>
-              Looks up a localized string similar to Original release date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDRC">
-            <summary>
-              Looks up a localized string similar to Recording date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDRL">
-            <summary>
-              Looks up a localized string similar to Release date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TDTG">
-            <summary>
-              Looks up a localized string similar to Tagging date.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TFLT_MIME">
-            <summary>
-              Looks up a localized string similar to MIME type as follows.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_End">
-            <summary>
-              Looks up a localized string similar to ???? \u2013 {1}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Span">
-            <summary>
-              Looks up a localized string similar to {0} \u2013 {1}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Time_Start">
-            <summary>
-              Looks up a localized string similar to {0} \u2013 ????.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TIPL">
-            <summary>
-              Looks up a localized string similar to Production credits.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_TMCL">
-            <summary>
-              Looks up a localized string similar to Artist credits.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Value_Credits">
-            <summary>
-              Looks up a localized string similar to {0}: {1}.
-            </summary>
-        </member>
-        <member name="P:AgEitilt.CardCatalog.Audio.Strings.ID3v24.Field_Value_Credits_EmptyRole">
-            <summary>
-              Looks up a localized string similar to {0}.
             </summary>
         </member>
     </members>

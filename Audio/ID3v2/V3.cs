@@ -128,14 +128,14 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 			logger?.LogInformation(Strings.ID3v2.Logger.ParseExtHeader_Version, Format);
 
 			if (extHeader.Length < 6)
-				throw new InvalidDataException(Strings.ID3v23.Exception_HeaderTooShort);
+				throw new InvalidDataException(Strings.ID3v2.III.Exceptions.HeaderTooShort);
 
 			var flags = new BitArray(extHeader.Take(2).ToArray());
 			PaddingSize = ParseUnsignedInteger(extHeader.ToList().GetRange(2, 4));
 
 			if (flags[0]) {
 				if (extHeader.Length < 10)
-					throw new InvalidDataException(Strings.ID3v23.Exception_HeaderTooShortCRC);
+					throw new InvalidDataException(Strings.ID3v2.III.Exceptions.HeaderTooShortCRC);
 
 				TagCRC = ParseUnsignedInteger(extHeader.ToList().GetRange(6, 4));
 			}

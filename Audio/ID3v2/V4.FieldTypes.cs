@@ -674,7 +674,7 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// 
 				/// <param name="header">The binary header to parse.</param>
 				public TimeFrame(byte[] header)
-					: base(header, (() => Strings.ID3v2.Fields.DefaultName_Time), Strings.ID3v24.ResourceManager) { }
+					: base(header, (() => Strings.ID3v2.Fields.DefaultName_Time), Strings.ID3v2.IV.Fields.ResourceManager) { }
 
 				/// <summary>
 				/// All values contained within this field.
@@ -686,11 +686,11 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 						return ParsedValues.Select(v => {
 							if (v is Tuple<DateTimeOffset?, DateTimeOffset?> t) {
 								if (t.Item1 == null)
-									return String.Format(Strings.ID3v24.Field_Time_End, t.Item2);
+									return String.Format(Strings.ID3v2.IV.Fields.Time_End, t.Item2);
 								else if (t.Item2 == null)
-									return String.Format(Strings.ID3v24.Field_Time_Start, t.Item1);
+									return String.Format(Strings.ID3v2.IV.Fields.Time_Start, t.Item1);
 								else
-									return String.Format(Strings.ID3v24.Field_Time_Span, t.Item1, t.Item2);
+									return String.Format(Strings.ID3v2.IV.Fields.Time_Span, t.Item1, t.Item2);
 							} else {
 								return v;
 							}

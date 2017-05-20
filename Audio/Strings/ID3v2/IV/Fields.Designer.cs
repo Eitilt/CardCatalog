@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AgEitilt.CardCatalog.Audio.Strings {
+namespace AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ID3v24 {
+    public class Fields {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ID3v24() {
+        internal Fields() {
         }
         
         /// <summary>
@@ -40,7 +40,7 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v24", typeof(ID3v24).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgEitilt.CardCatalog.Audio.Strings.ID3v2.IV.Fields", typeof(Fields).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,164 +62,128 @@ namespace AgEitilt.CardCatalog.Audio.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;CRC data present&apos; data (must be 5).
-        /// </summary>
-        public static string Exception_HeaderCrcTooShort {
-            get {
-                return ResourceManager.GetString("Exception_HeaderCrcTooShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag restrictions&apos; data (must be 1).
-        /// </summary>
-        public static string Exception_HeaderRestrictionsTooShort {
-            get {
-                return ResourceManager.GetString("Exception_HeaderRestrictionsTooShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Extended header too short to be valid for ID3v2.4.
-        /// </summary>
-        public static string Exception_HeaderTooShort {
-            get {
-                return ResourceManager.GetString("Exception_HeaderTooShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid length ({0}) given for ID3v2.4 &apos;Tag is an update&apos; data (must be 0).
-        /// </summary>
-        public static string Exception_HeaderUpdateTooShort {
-            get {
-                return ResourceManager.GetString("Exception_HeaderUpdateTooShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Other credits.
         /// </summary>
-        public static string Field_DefaultName_Credits {
+        public static string DefaultName_Credits {
             get {
-                return ResourceManager.GetString("Field_DefaultName_Credits", resourceCulture);
+                return ResourceManager.GetString("DefaultName_Credits", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Encoding date.
         /// </summary>
-        public static string Field_TDEN {
+        public static string TDEN {
             get {
-                return ResourceManager.GetString("Field_TDEN", resourceCulture);
+                return ResourceManager.GetString("TDEN", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Original release date.
         /// </summary>
-        public static string Field_TDOR {
+        public static string TDOR {
             get {
-                return ResourceManager.GetString("Field_TDOR", resourceCulture);
+                return ResourceManager.GetString("TDOR", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Recording date.
         /// </summary>
-        public static string Field_TDRC {
+        public static string TDRC {
             get {
-                return ResourceManager.GetString("Field_TDRC", resourceCulture);
+                return ResourceManager.GetString("TDRC", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Release date.
         /// </summary>
-        public static string Field_TDRL {
+        public static string TDRL {
             get {
-                return ResourceManager.GetString("Field_TDRL", resourceCulture);
+                return ResourceManager.GetString("TDRL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Tagging date.
         /// </summary>
-        public static string Field_TDTG {
+        public static string TDTG {
             get {
-                return ResourceManager.GetString("Field_TDTG", resourceCulture);
+                return ResourceManager.GetString("TDTG", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to MIME type as follows.
         /// </summary>
-        public static string Field_TFLT_MIME {
+        public static string TFLT_MIME {
             get {
-                return ResourceManager.GetString("Field_TFLT_MIME", resourceCulture);
+                return ResourceManager.GetString("TFLT_MIME", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ???? \u2013 {1}.
         /// </summary>
-        public static string Field_Time_End {
+        public static string Time_End {
             get {
-                return ResourceManager.GetString("Field_Time_End", resourceCulture);
+                return ResourceManager.GetString("Time_End", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} \u2013 {1}.
         /// </summary>
-        public static string Field_Time_Span {
+        public static string Time_Span {
             get {
-                return ResourceManager.GetString("Field_Time_Span", resourceCulture);
+                return ResourceManager.GetString("Time_Span", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0} \u2013 ????.
         /// </summary>
-        public static string Field_Time_Start {
+        public static string Time_Start {
             get {
-                return ResourceManager.GetString("Field_Time_Start", resourceCulture);
+                return ResourceManager.GetString("Time_Start", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Production credits.
         /// </summary>
-        public static string Field_TIPL {
+        public static string TIPL {
             get {
-                return ResourceManager.GetString("Field_TIPL", resourceCulture);
+                return ResourceManager.GetString("TIPL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Artist credits.
         /// </summary>
-        public static string Field_TMCL {
+        public static string TMCL {
             get {
-                return ResourceManager.GetString("Field_TMCL", resourceCulture);
+                return ResourceManager.GetString("TMCL", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0}: {1}.
         /// </summary>
-        public static string Field_Value_Credits {
+        public static string Value_Credits {
             get {
-                return ResourceManager.GetString("Field_Value_Credits", resourceCulture);
+                return ResourceManager.GetString("Value_Credits", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to {0}.
         /// </summary>
-        public static string Field_Value_Credits_EmptyRole {
+        public static string Value_Credits_EmptyRole {
             get {
-                return ResourceManager.GetString("Field_Value_Credits_EmptyRole", resourceCulture);
+                return ResourceManager.GetString("Value_Credits_EmptyRole", resourceCulture);
             }
         }
     }

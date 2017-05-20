@@ -881,10 +881,10 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 							yield return String.Format(CardCatalog.Strings.Fields.DefaultValue, valArray[i]);
 						// Credit title is empty
 						else if (valArray[i].Length == 0)
-							yield return String.Format(Strings.ID3v24.Field_Value_Credits_EmptyRole, valArray[j]);
+							yield return String.Format(Strings.ID3v2.IV.Fields.Value_Credits_EmptyRole, valArray[j]);
 						// Proper credit title/value pair
 						else
-							yield return String.Format(Strings.ID3v24.Field_Value_Credits, valArray[i], valArray[j]);
+							yield return String.Format(Strings.ID3v2.IV.Fields.Value_Credits, valArray[i], valArray[j]);
 					}
 				}
 			}
