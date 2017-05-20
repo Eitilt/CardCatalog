@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardCatalog.Audio", "Audio\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "CardCatalog.Test", "Test\CardCatalog.Test.fsproj", "{365B24B3-7F0D-484C-9645-FB27A497BA9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TmpTest", "TmpTest\TmpTest.csproj", "{0082475F-2B3E-439A-8C44-90DE4AF259B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{A0434629-37D9-45F7-8268-D6225C7EA969}.Release|Any CPU.Build.0 = Release|Any CPU
 		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{365B24B3-7F0D-484C-9645-FB27A497BA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0082475F-2B3E-439A-8C44-90DE4AF259B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0082475F-2B3E-439A-8C44-90DE4AF259B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0082475F-2B3E-439A-8C44-90DE4AF259B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0082475F-2B3E-439A-8C44-90DE4AF259B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
