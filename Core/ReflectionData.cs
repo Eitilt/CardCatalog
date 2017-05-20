@@ -77,7 +77,7 @@ namespace AgEitilt.CardCatalog {
 				foreach (var v in types.SelectMany(t => t.ValidationFunctions)) {
 					// Make sure we have enough bytes to check the header
 					if (readBytes.Count < v.length) {
-						logger?.LogDebug(Strings.Logger.GenericParse_Header);
+						logger?.LogDebug(Strings.Logger.GenericParse_Header, (v.length - readBytes.Count), v.length);
 
 						var buffer = new byte[v.length - readBytes.Count];
 						var readCount = stream.ReadAll(buffer, 0, buffer.Length);

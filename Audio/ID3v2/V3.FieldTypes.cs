@@ -186,7 +186,6 @@ namespace AgEitilt.CardCatalog.Audio.ID3v2 {
 				/// </param>
 				internal V3FieldWrapper(FieldBase<VersionInfo> inner) : base(null) {
 					fieldBase = inner;
-					Header = Array.Empty<byte>();
 				}
 
 				/// <summary>

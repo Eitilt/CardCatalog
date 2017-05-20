@@ -767,7 +767,7 @@
         </member>
         <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Header">
             <summary>
-              Looks up a localized string similar to Reading additional bytes into header.
+              Looks up a localized string similar to Reading {Count} additional bytes into header; total {Length}.
             </summary>
         </member>
         <member name="P:AgEitilt.CardCatalog.Strings.Logger.GenericParse_Skip">

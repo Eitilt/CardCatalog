@@ -133,7 +133,7 @@
     <value>Found header matching type {Type}</value>
   </data>
   <data name="GenericParse_Header" xml:space="preserve">
-    <value>Reading additional bytes into header</value>
+    <value>Reading {Count} additional bytes into header; total {Length}</value>
   </data>
   <data name="GenericParse_Skip" xml:space="preserve">
     <value>Tag not able to be read as current type</value>

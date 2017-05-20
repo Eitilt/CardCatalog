@@ -107,7 +107,7 @@ namespace AgEitilt.CardCatalog.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reading additional bytes into header.
+        ///   Looks up a localized string similar to Reading {Count} additional bytes into header; total {Length}.
         /// </summary>
         internal static string GenericParse_Header {
             get {
